@@ -63,7 +63,12 @@ SOURCES = [
         "url": "https://cert-agid.gov.it/feed/",
         "category_hint": "THREAT_INTEL"
     },
-    # 2. COMPLIANCE & NORMATIVE UE / ITALIA
+    # 2. TESTATE & COMMUNITY ITALIANA
+    {
+        "name": "Red Hot Cyber",
+        "url": "https://www.redhotcyber.com/feed/",
+        "category_hint": "THREAT_INTEL"
+    },
     {
         "name": "Cybersecurity360",
         "url": "https://www.cybersecurity360.it/feed/",
@@ -166,20 +171,20 @@ def analyze_with_gemini(title: str, content: str, source_name: str, category_hin
         return None
 
     prompt = f"""
-    Sei un analista senior di Cyber Threat Intelligence e Compliance normativa (NIS2, Golden Power, ISO 27001, GDPR).
+    Sei un analista e divulgatore senior di Cyber Threat Intelligence (stile pulito, diretto, zero burocrazia, focalizzato su vulnerabilità reali e impatto pratico).
     Analizza il seguente articolo di cybersecurity da '{source_name}' e produci un output JSON rigorosamente strutturato.
 
     Regole per i campi:
-    - title_it: titolo breve, professionale, autorevole in italiano (max 70 caratteri).
-    - summary_points: array di esattamente 3 stringhe:
-        1. Cosa è successo (fatto, violazione, attacco, provvedimento normativo)
-        2. Dettagli tecnici o soggetti coinvolti (CVE, vettori, obbligati, sanzioni)
-        3. Impatto o contesto operativo
-    - action_mitigation: raccomandazione chiara, concreta e azionabile per CISO / SysAdmin / DPO (es. "Applicare patch KB..., Verificare perimetro NIS2").
-    - threat_level: uno tra ["CRITICO", "ALTO", "MEDIO", "INFORMATIVO"]. Usa "CRITICO" solo per Zero-Day attivi, alert ACN/CISA ad altissima gravità o blocchi Golden Power.
+    - title_it: titolo breve, incisivo, autorevole in italiano (max 70 caratteri).
+    - summary_points: array di esattamente 3 stringhe sintetiche e chiare:
+        1. Cosa è successo (fatto, violazione, attacco, provvedimento normativo senza preamboli)
+        2. Dettagli tecnici essenziali (CVE, vettori, versioni impattate, IoC)
+        3. Conseguenze reali o chi rischia
+    - action_mitigation: raccomandazione precisa, pratica e immediatamente applicabile per CISO / SysAdmin / DPO (es. "Aggiornare a PHP 8.5.12, bloccare porta 443 se esposta").
+    - threat_level: uno tra ["CRITICO", "ALTO", "MEDIO", "INFORMATIVO"]. Usa "CRITICO" solo per Zero-Day attivi (come PHP2Shell), alert ACN/CISA ad altissima gravità o blocchi Golden Power.
     - category: uno tra ["NIS2_GOLDEN_POWER", "VULNERABILITA_ZERODAY", "RANSOMWARE_ATTACCHI", "COMPLIANCE_ISO", "THREAT_INTEL"].
-    - target_audience: uno tra ["CISO", "SysAdmin", "DPO", "DevOps", "Management"].
-    - tags: array di 3-5 tag rilevanti (es. ["ACN", "NIS2", "Fortinet", "Ransomware"]).
+    - target_audience: uno tra ["SysAdmin", "CISO", "DPO", "DevOps", "Management"].
+    - tags: array di 3-5 tag rilevanti (es. ["PHP", "PHP2Shell", "RCE", "CISA"]).
 
     Articolo:
     Titolo originale: {title}
