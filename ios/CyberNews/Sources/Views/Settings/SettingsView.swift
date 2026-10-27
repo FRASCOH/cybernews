@@ -11,6 +11,7 @@ public struct SettingsView: View {
     @State private var testAlertTitle = ""
     @State private var testAlertMessage = ""
     @State private var isPermissionDenied = false
+    @State private var showNotificationsCenter = false
 
     public init() {}
 
@@ -130,6 +131,31 @@ public struct SettingsView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .padding(.top, 6)
+
+                                // Tasto Apri Centro Notifiche
+                                Button {
+                                    HapticManager.shared.impact(.light)
+                                    showNotificationsCenter = true
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "bell.badge.fill")
+                                            .font(.system(size: 12))
+                                        Text("Visualizza Cronologia Notifiche Ricevute")
+                                    }
+                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(.white.opacity(0.85))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 11)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                            .fill(Color.white.opacity(0.06))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                                    .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                                            )
+                                    )
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
@@ -187,6 +213,9 @@ public struct SettingsView: View {
                 }
                 .padding(.horizontal, 20)
             }
+        }
+        .sheet(isPresented: $showNotificationsCenter) {
+            NotificationsCenterView()
         }
         .alert(testAlertTitle, isPresented: $showingTestSentAlert) {
             if isPermissionDenied {

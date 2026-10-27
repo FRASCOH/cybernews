@@ -3,10 +3,13 @@ import SwiftData
 
 public struct HomeFeedView: View {
     @ObservedObject public var viewModel: NewsFeedViewModel
+    @ObservedObject private var notificationManager = NotificationManager.shared
     @Query private var savedArticles: [SavedArticle]
     @Environment(\.modelContext) private var modelContext
+
     @State private var selectedArticleForDetail: Article? = nil
     @State private var isSearchVisible: Bool = false
+    @State private var showNotificationsCenter: Bool = false
 
     public init(viewModel: NewsFeedViewModel) {
         self.viewModel = viewModel
@@ -19,12 +22,47 @@ public struct HomeFeedView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Top Header: Logo CyberNews + Search Icon
-                HStack {
+                // Top Header: Logo CyberNews + Icona Notifiche + Search Icon
+                HStack(spacing: 12) {
                     CyberLogoView()
 
                     Spacer()
 
+                    // Tasto Centro Notifiche con Badge Unread
+                    Button {
+                        HapticManager.shared.impact(.light)
+                        showNotificationsCenter = true
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 15))
+                                .foregroundStyle(notificationManager.unreadCount > 0 ? CyberTheme.orangePrimary : .white.opacity(0.8))
+                                .frame(width: 38, height: 38)
+                                .background(
+                                    Circle()
+                                        .fill(Color.white.opacity(0.06))
+                                        .overlay(
+                                            Circle()
+                                                .stroke(notificationManager.unreadCount > 0 ? CyberTheme.orangePrimary.opacity(0.4) : Color.white.opacity(0.10), lineWidth: 1)
+                                        )
+                                )
+
+                            if notificationManager.unreadCount > 0 {
+                                Text("\(notificationManager.unreadCount)")
+                                    .font(.system(size: 9, weight: .heavy, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 16, height: 16)
+                                    .background(
+                                        Circle()
+                                            .fill(CyberTheme.threatCritico)
+                                    )
+                                    .offset(x: 3, y: -3)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    // Tasto Ricerca
                     Button {
                         HapticManager.shared.impact(.light)
                         withAnimation(CyberTheme.quickSpring) {
@@ -35,7 +73,7 @@ public struct HomeFeedView: View {
                         }
                     } label: {
                         Image(systemName: isSearchVisible ? "xmark" : "magnifyingglass")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(isSearchVisible ? CyberTheme.orangePrimary : .white.opacity(0.8))
                             .frame(width: 38, height: 38)
                             .background(
@@ -90,11 +128,24 @@ public struct HomeFeedView: View {
                     }
                 )
 
+                // 🏷️ Barra Tag & CVE Cliccabili
+                if !viewModel.availableTags.isEmpty {
+                    TagFilterBar(
+                        tags: viewModel.availableTags,
+                        selectedTag: $viewModel.selectedTag,
+                        onSelect: { tag in
+                            viewModel.selectTag(tag)
+                        }
+                    )
+                    .padding(.bottom, 4)
+                }
+
                 // Lista Notizie
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        // Allarmi Critici Breaking News Banner (se ce ne sono)
-                        if let topBreaking = viewModel.breakingArticles.first, viewModel.selectedCategory == .all && viewModel.searchText.isEmpty {
+                        // Allarmi Critici Breaking News Banner
+                        if let topBreaking = viewModel.breakingArticles.first,
+                           viewModel.selectedCategory == .all && viewModel.searchText.isEmpty && viewModel.selectedTag == nil {
                             Button {
                                 HapticManager.shared.impact(.medium)
                                 selectedArticleForDetail = topBreaking
@@ -135,6 +186,35 @@ public struct HomeFeedView: View {
                             .padding(.top, 4)
                         }
 
+                        // Badge indicatore filtro tag attivo
+                        if let activeTag = viewModel.selectedTag {
+                            HStack {
+                                Text("Filtro attivo: ")
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundStyle(.white.opacity(0.6))
+
+                                Text("#\(activeTag)")
+                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .foregroundStyle(CyberTheme.orangePrimary)
+
+                                Text("(\(viewModel.filteredArticles.count) risultati)")
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(.white.opacity(0.4))
+
+                                Spacer()
+
+                                Button {
+                                    viewModel.selectTag(nil)
+                                } label: {
+                                    Text("Rimuovi")
+                                        .font(.system(size: 11, weight: .bold))
+                                        .foregroundStyle(CyberTheme.orangePrimary)
+                                }
+                            }
+                            .padding(.horizontal, 4)
+                            .padding(.top, 2)
+                        }
+
                         // Lista Card Notizie
                         ForEach(viewModel.filteredArticles) { article in
                             let isArticleSaved = savedArticles.contains(where: { $0.id == article.id })
@@ -144,6 +224,9 @@ public struct HomeFeedView: View {
                                 isSaved: isArticleSaved,
                                 onSaveToggle: {
                                     toggleSaveArticle(article)
+                                },
+                                onTagTap: { tag in
+                                    viewModel.selectTag(tag)
                                 }
                             )
                             .onTapGesture {
@@ -160,12 +243,17 @@ public struct HomeFeedView: View {
                 }
                 .refreshable {
                     HapticManager.shared.impact(.light)
-                    await viewModel.loadArticles()
+                    await viewModel.loadArticles(forceRefresh: true)
                 }
             }
         }
         .sheet(item: $selectedArticleForDetail) { article in
-            ArticleDetailView(article: article)
+            ArticleDetailView(article: article) { tag in
+                viewModel.selectTag(tag)
+            }
+        }
+        .sheet(isPresented: $showNotificationsCenter) {
+            NotificationsCenterView()
         }
     }
 

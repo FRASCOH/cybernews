@@ -1,35 +1,119 @@
 import Foundation
+import WidgetKit
 
 public final class NewsAPIService {
     public static let shared = NewsAPIService()
-    private init() {}
+    private init() {
+        // Carica la cache disco in memoria all'avvio
+        if let initial = loadFromDisk() {
+            self.memoryCache = initial
+        }
+    }
 
-    // Credenziali Supabase predefinite (la chiave anon è pubblica e protetta da RLS in sola lettura)
+    // Credenziali Supabase predefinite (chiave anon pubblica protetta da RLS in sola lettura)
     public var supabaseURL: String = "https://stkmmwwpwrbnkigkuwdp.supabase.co"
     public var supabaseAnonKey: String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21td3dwd3JibmtpZ2t1d2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTgyMTksImV4cCI6MjEwODY3NDIxOX0.oT8tH06YDvfve36AIg0bvrrIa2bjXCFIJxPYLBxcoB0"
 
-    public func fetchArticles() async throws -> [Article] {
-        // Se Supabase è configurato, effettua la chiamata REST
+    private var memoryCache: [Article] = []
+    private var lastFetchTime: Date? = nil
+    private let cacheTTL: TimeInterval = 180 // 3 minuti di TTL per evitare refresh ridondanti
+
+    // MARK: - Cache Helpers
+    private var localCacheURL: URL? {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("cybernews_cache.json")
+    }
+
+    private var sharedAppGroupDefaults: UserDefaults? {
+        UserDefaults(suiteName: "group.it.cybernews.app")
+    }
+
+    /// Ritorna istantaneamente le notizie in cache (latenza 0ms all'avvio)
+    public func getCachedArticles() -> [Article]? {
+        if !memoryCache.isEmpty {
+            return memoryCache
+        }
+        return loadFromDisk()
+    }
+
+    private func loadFromDisk() -> [Article]? {
+        guard let url = localCacheURL, FileManager.default.fileExists(atPath: url.path) else {
+            return nil
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode([Article].self, from: data)
+        } catch {
+            return nil
+        }
+    }
+
+    private func saveToDiskAndShared(articles: [Article]) {
+        self.memoryCache = articles
+        self.lastFetchTime = Date()
+
+        DispatchQueue.global(qos: .utility).async {
+            do {
+                let encoder = JSONEncoder()
+                let data = try encoder.encode(articles)
+
+                // 1. Salva nella cache sandbox locale
+                if let localUrl = self.localCacheURL {
+                    try data.write(to: localUrl, options: .atomic)
+                }
+
+                // 2. Condividi con il Widget (App Group se configurato)
+                self.sharedAppGroupDefaults?.set(data, forKey: "cached_articles_json")
+
+                // 3. Notifica a WidgetKit di aggiornare i widget della schermata Home
+                WidgetCenter.shared.reloadAllTimelines()
+            } catch {
+                print("⚠️ Errore salvataggio cache notizie: \(error)")
+            }
+        }
+    }
+
+    // MARK: - Fetching
+    public func fetchArticles(forceRefresh: Bool = false) async throws -> [Article] {
+        // Se abbiamo una cache fresca e non è un force-refresh manuale (es. pull-to-refresh), usa la cache
+        if !forceRefresh,
+           let lastFetch = lastFetchTime,
+           Date().timeIntervalSince(lastFetch) < cacheTTL,
+           !memoryCache.isEmpty {
+            return memoryCache
+        }
+
+        // Chiamata REST a Supabase
         if !supabaseURL.isEmpty && !supabaseAnonKey.isEmpty,
            let url = URL(string: "\(supabaseURL)/rest/v1/news_articles?select=*&order=created_at.desc&limit=50") {
-            
+
             var request = URLRequest(url: url)
             request.addValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
             request.addValue("Bearer \(supabaseAnonKey)", forHTTPHeaderField: "Authorization")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
+            request.timeoutInterval = 8
 
             do {
                 let (data, response) = try await URLSession.shared.data(for: request)
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                     let decoder = JSONDecoder()
-                    return try decoder.decode([Article].self, from: data)
+                    let fetchedArticles = try decoder.decode([Article].self, from: data)
+                    if !fetchedArticles.isEmpty {
+                        saveToDiskAndShared(articles: fetchedArticles)
+                        return fetchedArticles
+                    }
                 }
             } catch {
-                print("⚠️ Fallback ai dati seed locali: \(error)")
+                print("⚠️ Connessione Supabase fallita, carico cache locale: \(error)")
             }
         }
 
-        // 1. Prova a caricare il feed JSON statico generato dall'ingestion (se presente nel bundle)
+        // Fallback 1: Cache disco precedentemente salvata
+        if let diskArticles = loadFromDisk(), !diskArticles.isEmpty {
+            self.memoryCache = diskArticles
+            return diskArticles
+        }
+
+        // Fallback 2: Feed JSON bundle pre-incluso
         if let bundleUrl = Bundle.main.url(forResource: "latest_news", withExtension: "json"),
            let data = try? Data(contentsOf: bundleUrl),
            let localArticles = try? JSONDecoder().decode([Article].self, from: data),
@@ -37,7 +121,7 @@ public final class NewsAPIService {
             return localArticles
         }
 
-        // 2. Dati Seed Realistici ed Esemplari come fallback finale
+        // Fallback 3: Dati seed di emergenza
         return getMockArticles()
     }
 
@@ -101,66 +185,6 @@ public final class NewsAPIService {
                 sourceName: "Agenda Digitale",
                 sourceUrl: "https://www.agendadigitale.eu",
                 publishedAt: "4 ore fa",
-                isBreaking: false
-            ),
-            Article(
-                id: "art-4",
-                urlHash: "hash4",
-                titleIt: "Nuova campagna Ransomware 'Akira' colpisce PMI e sanità in Europa",
-                originalTitle: "Akira ransomware surge targeting European healthcare and industrial sectors",
-                summaryPoints: [
-                    "Gli attaccanti sfruttano credenziali VPN compromesse e mancanza di autenticazione a due fattori (MFA).",
-                    "Esfiltrazione massiva di dati prima della cifratura per praticare la doppia estorsione.",
-                    "Impiego di tool legittimi per disabilitare software EDR/antivirus locali."
-                ],
-                actionMitigation: "Forzare MFA su tutti gli accessi VPN/RDP e verificare la segregazione dei backup offline immutabili.",
-                threatLevel: .alto,
-                category: .ransomware,
-                targetAudience: "SysAdmin",
-                tags: ["Ransomware", "Akira", "VPN", "MFA", "BleepingComputer"],
-                sourceName: "BleepingComputer",
-                sourceUrl: "https://www.bleepingcomputer.com",
-                publishedAt: "5 ore fa",
-                isBreaking: false
-            ),
-            Article(
-                id: "art-5",
-                urlHash: "hash5",
-                titleIt: "Transizione ISO/IEC 27001:2022: Guida ai nuovi controlli di Threat Intel e Cloud",
-                originalTitle: "ISO 27001:2022 migration: implementation roadmap for Annex A controls",
-                summaryPoints: [
-                    "Focalizzazione sui controlli dell'Annex A relativi a Threat Intelligence (controllo 5.7) e sicurezza cloud (controllo 5.23).",
-                    "I certificati basati sulla vecchia versione 2013 scadranno definitivamente nei prossimi mesi.",
-                    "Integrazione richiesta tra SGSI e processi di business continuity previsti da DORA."
-                ],
-                actionMitigation: "Completare il gap assessment interno e aggiornare la dichiarazione di applicabilità (SoA) per includere i nuovi 11 controlli.",
-                threatLevel: .informativo,
-                category: .complianceIso,
-                targetAudience: "CISO & Auditor",
-                tags: ["ISO 27001", "SGSI", "Audit", "DORA"],
-                sourceName: "Cybersecurity360",
-                sourceUrl: "https://www.cybersecurity360.it",
-                publishedAt: "1 giorno fa",
-                isBreaking: false
-            ),
-            Article(
-                id: "art-6",
-                urlHash: "hash6",
-                titleIt: "CISA KEV: Aggiunte 3 vulnerabilità Microsoft e Linux sfruttate attivamente",
-                originalTitle: "CISA adds three known exploited vulnerabilities to catalog",
-                summaryPoints: [
-                    "Inserite nel catalogo KEV vulnerabilità che permettono privilege escalation locale e bypass di autenticazione.",
-                    "Fissate le scadenze vincolanti per le agenzie federali e fortemente raccomandate per i privati.",
-                    "Codici CVE: CVE-2024-38124, CVE-2024-43093."
-                ],
-                actionMitigation: "Verificare l'inventario degli endpoint e procedere alla distribuzione immediata degli aggiornamenti cumulativi.",
-                threatLevel: .medio,
-                category: .vulnerabilita,
-                targetAudience: "SysAdmin",
-                tags: ["CISA", "KEV", "Windows", "Patch"],
-                sourceName: "CISA Alerts",
-                sourceUrl: "https://www.cisa.gov",
-                publishedAt: "1 giorno fa",
                 isBreaking: false
             )
         ]

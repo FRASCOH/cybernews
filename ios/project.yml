@@ -46,3 +46,23 @@ targets:
         INFOPLIST_FILE: "CyberNewsWidget/Resources/Info.plist"
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_EMIT_LOC_STRINGS: YES
+
+schemes:
+  CyberNews:
+    build:
+      targets:
+        CyberNews: all
+        CyberNewsWidget: [run]
+    run:
+      config: Debug
+    archive:
+      config: Release
+
+  CyberNewsWidget:
+    build:
+      targets:
+        CyberNewsWidget: all
+    run:
+      config: Debug
+    archive:
+      config: Release

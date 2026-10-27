@@ -166,6 +166,10 @@ def is_already_processed(url_hash: str) -> bool:
     conn.close()
     return row is not None
 
+# Session riutilizzabile per il pooling delle connessioni HTTP e massime prestazioni
+http_session = requests.Session()
+http_session.headers.update({"User-Agent": "CyberNews-Aggregator/1.0 (SecBot/1.0)"})
+
 def analyze_with_gemini(title: str, content: str, source_name: str, category_hint: str) -> Optional[Dict[str, Any]]:
     if not GEMINI_API_KEY or not GEMINI_API_KEY.strip():
         return None
@@ -202,7 +206,7 @@ def analyze_with_gemini(title: str, content: str, source_name: str, category_hin
     }
 
     try:
-        response = requests.post(url, headers=headers, json=payload, timeout=20)
+        response = http_session.post(url, headers=headers, json=payload, timeout=20)
         if response.status_code == 200:
             data = response.json()
             raw_text = data["candidates"][0]["content"]["parts"][0]["text"]

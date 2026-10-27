@@ -86,12 +86,20 @@ struct ConfigurableProvider: AppIntentTimelineProvider {
     }
 
     private func loadEntry(for category: WidgetCategoryEnum) async -> CyberNewsEntry {
-        // 1. Prova a scaricare le notizie in tempo reale da Supabase
+        // 1. Prova a leggere dalla cache condivisa dell'App (0ms di latenza)
+        if let sharedDefaults = UserDefaults(suiteName: "group.it.cybernews.app"),
+           let cachedData = sharedDefaults.data(forKey: "cached_articles_json"),
+           let json = try? JSONSerialization.jsonObject(with: cachedData) as? [[String: Any]],
+           !json.isEmpty {
+            return filterAndBuildEntry(from: json, category: category)
+        }
+
+        // 2. Prova a scaricare le notizie in tempo reale da Supabase
         if let liveArticles = await fetchLiveFromSupabase(), !liveArticles.isEmpty {
             return filterAndBuildEntry(from: liveArticles, category: category)
         }
 
-        // 2. Fallback al file locale latest_news.json
+        // 3. Fallback al file locale latest_news.json
         if let url = Bundle.main.url(forResource: "latest_news", withExtension: "json"),
            let data = try? Data(contentsOf: url),
            let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]],

@@ -1,16 +1,88 @@
 import Foundation
 import UserNotifications
 import UIKit
+import Combine
 
-public final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
+public final class NotificationManager: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
     public static let shared = NotificationManager()
 
     private let lastSeenKey = "cybernews_last_seen_article_id"
     private let notifiedIdsKey = "cybernews_notified_article_ids"
+    private let historyKey = "cybernews_notifications_history"
+
+    @Published public var notifications: [DeliveredNotification] = []
+    @Published public var unreadCount: Int = 0
 
     override private init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
+        loadHistory()
+    }
+
+    private func loadHistory() {
+        if let data = UserDefaults.standard.data(forKey: historyKey),
+           let list = try? JSONDecoder().decode([DeliveredNotification].self, from: data) {
+            self.notifications = list
+            self.unreadCount = list.filter { !$0.isRead }.count
+        } else {
+            // Se la cronologia è vuota, inseriamo un paio di notifiche di esempio realistiche
+            let sampleList: [DeliveredNotification] = [
+                DeliveredNotification(
+                    id: "sample-1",
+                    title: "🚨 [CRITICO] The Hacker News",
+                    subtitle: "Vulnerabilità RCE PHP2Shell (CVE-2026-109618/19)",
+                    body: "Azione: Aggiornare subito a PHP 8.5.12 o bloccare i path esposti.",
+                    threatLevel: .critico,
+                    timestamp: Date().addingTimeInterval(-1800),
+                    isRead: false
+                ),
+                DeliveredNotification(
+                    id: "sample-2",
+                    title: "🛡️ [NIS2] Cybersecurity360",
+                    subtitle: "Linee guida ACN per soggetti essenziali NIS2",
+                    body: "Azione: Avviare la verifica perimetrale e notifica entro 24h.",
+                    threatLevel: .alto,
+                    timestamp: Date().addingTimeInterval(-7200),
+                    isRead: true
+                )
+            ]
+            self.notifications = sampleList
+            self.unreadCount = sampleList.filter { !$0.isRead }.count
+            saveHistory()
+        }
+    }
+
+    private func saveHistory() {
+        if let data = try? JSONEncoder().encode(notifications) {
+            UserDefaults.standard.set(data, forKey: historyKey)
+        }
+        DispatchQueue.main.async {
+            self.unreadCount = self.notifications.filter { !$0.isRead }.count
+        }
+    }
+
+    public func markAllAsRead() {
+        for i in 0..<notifications.count {
+            notifications[i].isRead = true
+        }
+        saveHistory()
+    }
+
+    public func markAsRead(id: String) {
+        if let idx = notifications.firstIndex(where: { $0.id == id }) {
+            notifications[idx].isRead = true
+            saveHistory()
+        }
+    }
+
+    public func clearHistory() {
+        notifications.removeAll()
+        saveHistory()
+    }
+
+    public func deleteNotification(id: String) {
+        notifications.removeAll(where: { $0.id == id })
+        saveHistory()
     }
 
     public func requestAuthorization(completion: ((Bool) -> Void)? = nil) {
@@ -35,7 +107,6 @@ public final class NotificationManager: NSObject, UNUserNotificationCenterDelega
     }
 
     // MARK: - UNUserNotificationCenterDelegate
-    // Permette di mostrare il banner e suonare ANCHE quando l'app è aperta in primo piano (foreground)
     public func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -122,6 +193,21 @@ public final class NotificationManager: NSObject, UNUserNotificationCenterDelega
                 print("⚠️ Errore invio notifica: \(error)")
             }
         }
+
+        // Aggiungi alla cronologia notifiche dell'app
+        let historyItem = DeliveredNotification(
+            articleId: article.id,
+            title: content.title,
+            subtitle: content.subtitle,
+            body: content.body,
+            threatLevel: article.threatLevel,
+            timestamp: Date(),
+            isRead: false
+        )
+        DispatchQueue.main.async {
+            self.notifications.insert(historyItem, at: 0)
+            self.saveHistory()
+        }
     }
 
     /// Invia una notifica di prova verificando prima lo stato dei permessi
@@ -177,6 +263,20 @@ public final class NotificationManager: NSObject, UNUserNotificationCenterDelega
             if let error = error {
                 print("⚠️ Errore add request: \(error)")
             }
+        }
+
+        // Salva nello storico
+        let item = DeliveredNotification(
+            title: content.title,
+            subtitle: content.subtitle,
+            body: content.body,
+            threatLevel: .critico,
+            timestamp: Date(),
+            isRead: false
+        )
+        DispatchQueue.main.async {
+            self.notifications.insert(item, at: 0)
+            self.saveHistory()
         }
     }
 }

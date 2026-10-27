@@ -1,13 +1,26 @@
 import SwiftUI
 import SafariServices
+import AVFoundation
 
 public struct ArticleDetailView: View {
     public let article: Article
+    public var onTagTap: ((String) -> Void)? = nil
+
     @Environment(\.dismiss) private var dismiss
     @State private var showSafari = false
+    @ObservedObject private var audioManager = AudioBriefingManager.shared
 
-    public init(article: Article) {
+    public init(article: Article, onTagTap: ((String) -> Void)? = nil) {
         self.article = article
+        self.onTagTap = onTagTap
+    }
+
+    private var isCurrentArticlePlaying: Bool {
+        audioManager.currentArticleId == article.id && audioManager.isPlaying
+    }
+
+    private var isCurrentArticlePaused: Bool {
+        audioManager.currentArticleId == article.id && audioManager.isPaused
     }
 
     public var body: some View {
@@ -18,7 +31,7 @@ public struct ArticleDetailView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 22) {
+                    VStack(alignment: .leading, spacing: 20) {
                         // Header: Fonte, Data e Badge Rischio
                         HStack(alignment: .center) {
                             VStack(alignment: .leading, spacing: 4) {
@@ -57,7 +70,91 @@ public struct ArticleDetailView: View {
                                 .italic()
                         }
 
-                        // BOX CRITICO: Azione Raccomandata / Mitigazione (Cyber Orange Glow)
+                        // MARK: - 🎙️ CYBER BRIEFING VOCALE (Audio Sintetico)
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                HStack(spacing: 7) {
+                                    Image(systemName: "waveform.circle.fill")
+                                        .font(.system(size: 16))
+                                        .foregroundStyle(CyberTheme.orangePrimary)
+
+                                    Text("CYBER BRIEFING VOCALE")
+                                        .font(.system(size: 12, weight: .heavy, design: .rounded))
+                                        .foregroundStyle(CyberTheme.orangePrimary)
+                                }
+
+                                Spacer()
+
+                                if isCurrentArticlePlaying {
+                                    // Visualizer animato ad onde
+                                    HStack(spacing: 3) {
+                                        ForEach(0..<4) { idx in
+                                            RoundedRectangle(cornerRadius: 2)
+                                                .fill(CyberTheme.orangePrimary)
+                                                .frame(width: 3, height: CGFloat([12, 20, 15, 24][idx]))
+                                                .animation(.easeInOut(duration: 0.4).repeatForever().delay(Double(idx) * 0.1), value: isCurrentArticlePlaying)
+                                        }
+                                    }
+                                }
+                            }
+
+                            HStack(spacing: 12) {
+                                // Tasto Play / Pausa
+                                Button {
+                                    HapticManager.shared.impact(.medium)
+                                    if isCurrentArticlePlaying {
+                                        audioManager.pause()
+                                    } else {
+                                        audioManager.play(article: article)
+                                    }
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : "play.fill")
+                                            .font(.system(size: 14))
+
+                                        Text(isCurrentArticlePlaying ? "Metti in Pausa" : (isCurrentArticlePaused ? "Riprendi Lettura" : "Ascolta Sintesi Vocale"))
+                                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    }
+                                    .foregroundStyle(isCurrentArticlePlaying ? .black : CyberTheme.orangePrimary)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 10)
+                                    .background(
+                                        Capsule()
+                                            .fill(isCurrentArticlePlaying ? CyberTheme.orangePrimary : CyberTheme.orangePrimary.opacity(0.12))
+                                            .overlay(Capsule().stroke(CyberTheme.orangePrimary.opacity(0.4), lineWidth: 1))
+                                    )
+                                }
+                                .buttonStyle(.plain)
+
+                                if isCurrentArticlePlaying || isCurrentArticlePaused {
+                                    Button {
+                                        HapticManager.shared.impact(.light)
+                                        audioManager.stop()
+                                    } label: {
+                                        Image(systemName: "stop.fill")
+                                            .font(.system(size: 12))
+                                            .foregroundStyle(.white.opacity(0.7))
+                                            .padding(10)
+                                            .background(Circle().fill(Color.white.opacity(0.08)))
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+
+                                Spacer()
+
+                                Text(isCurrentArticlePlaying ? "In riproduzione..." : "Audio 100% Offline")
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(.white.opacity(0.45))
+                            }
+                        }
+                        .padding(14)
+                        .glassmorphic(cornerRadius: 18)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(isCurrentArticlePlaying ? CyberTheme.orangePrimary.opacity(0.5) : Color.white.opacity(0.08), lineWidth: 1)
+                        )
+
+                        // BOX CRITICO: Azione Raccomandata / Mitigazione
                         if let action = article.actionMitigation, !action.isEmpty {
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(spacing: 8) {
@@ -122,24 +219,44 @@ public struct ArticleDetailView: View {
                             }
                         }
 
-                        // TAGS TECNICI
+                        // MARK: - 🏷️ TAGS & CVE CLICCABILI
                         if !article.tags.isEmpty {
                             VStack(alignment: .leading, spacing: 10) {
-                                Text("TAG & RIFERIMENTI")
-                                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                                    .foregroundStyle(.white.opacity(0.5))
+                                HStack {
+                                    Text("TAG & RIFERIMENTI (TOCCA PER FILTRARE)")
+                                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white.opacity(0.5))
+                                    Spacer()
+                                }
 
                                 FlowLayout(spacing: 8) {
                                     ForEach(article.tags, id: \.self) { tag in
-                                        Text("#\(tag)")
-                                            .font(.system(size: 12, weight: .medium, design: .rounded))
-                                            .foregroundStyle(CyberTheme.orangeLight)
+                                        Button {
+                                            HapticManager.shared.impact(.light)
+                                            audioManager.stop()
+                                            dismiss()
+                                            onTagTap?(tag)
+                                        } label: {
+                                            HStack(spacing: 4) {
+                                                Text("#\(tag)")
+                                                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                                    .foregroundStyle(CyberTheme.orangeLight)
+                                                Image(systemName: "arrow.right")
+                                                    .font(.system(size: 9))
+                                                    .foregroundStyle(CyberTheme.orangeLight.opacity(0.6))
+                                            }
                                             .padding(.horizontal, 10)
-                                            .padding(.vertical, 5)
+                                            .padding(.vertical, 6)
                                             .background(
                                                 Capsule()
                                                     .fill(Color.white.opacity(0.06))
+                                                    .overlay(
+                                                        Capsule()
+                                                            .stroke(CyberTheme.orangePrimary.opacity(0.3), lineWidth: 1)
+                                                    )
                                             )
+                                        }
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -154,7 +271,7 @@ public struct ArticleDetailView: View {
                                 Image(systemName: "arrow.up.right.square.fill")
                                     .font(.system(size: 16))
 
-                                Text("Consulta Bollettino / Fonte Ufficiale")
+                                Text("Consulta Bollettino Ufficiale")
                                     .font(.system(size: 16, weight: .bold, design: .rounded))
                             }
                             .foregroundStyle(.white)
@@ -167,7 +284,7 @@ public struct ArticleDetailView: View {
                             )
                         }
                         .buttonStyle(.plain)
-                        .padding(.top, 10)
+                        .padding(.top, 6)
                         .padding(.bottom, 30)
                     }
                     .padding(.horizontal, 20)
@@ -177,6 +294,7 @@ public struct ArticleDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
+                        audioManager.stop()
                         dismiss()
                     } label: {
                         Image(systemName: "xmark.circle.fill")
@@ -200,6 +318,10 @@ public struct ArticleDetailView: View {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }
+            }
+            .onDisappear {
+                // Ferma l'audio se la vista viene chiusa
+                audioManager.stop()
             }
         }
     }

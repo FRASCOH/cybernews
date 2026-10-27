@@ -4,15 +4,18 @@ public struct ArticleCardView: View {
     public let article: Article
     public var isSaved: Bool = false
     public var onSaveToggle: (() -> Void)? = nil
+    public var onTagTap: ((String) -> Void)? = nil
 
     public init(
         article: Article,
         isSaved: Bool = false,
-        onSaveToggle: (() -> Void)? = nil
+        onSaveToggle: (() -> Void)? = nil,
+        onTagTap: ((String) -> Void)? = nil
     ) {
         self.article = article
         self.isSaved = isSaved
         self.onSaveToggle = onSaveToggle
+        self.onTagTap = onTagTap
     }
 
     public var body: some View {
@@ -63,6 +66,31 @@ public struct ArticleCardView: View {
                         .lineSpacing(3)
                         .lineLimit(3)
                         .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            // Tags Cliccabili
+            if !article.tags.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(article.tags.prefix(4), id: \.self) { tag in
+                            Button {
+                                HapticManager.shared.impact(.light)
+                                onTagTap?(tag)
+                            } label: {
+                                Text("#\(tag)")
+                                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(CyberTheme.orangeLight)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 3)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.white.opacity(0.06))
+                                    )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
             }
 
