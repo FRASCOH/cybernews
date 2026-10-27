@@ -29,7 +29,15 @@ public final class NewsAPIService {
             }
         }
 
-        // Dati Seed Realistici ed Esemplari
+        // 1. Prova a caricare il feed JSON statico generato dall'ingestion (se presente nel bundle)
+        if let bundleUrl = Bundle.main.url(forResource: "latest_news", withExtension: "json"),
+           let data = try? Data(contentsOf: bundleUrl),
+           let localArticles = try? JSONDecoder().decode([Article].self, from: data),
+           !localArticles.isEmpty {
+            return localArticles
+        }
+
+        // 2. Dati Seed Realistici ed Esemplari come fallback finale
         return getMockArticles()
     }
 

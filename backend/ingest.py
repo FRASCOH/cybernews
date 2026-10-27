@@ -162,10 +162,8 @@ def is_already_processed(url_hash: str) -> bool:
     return row is not None
 
 def analyze_with_gemini(title: str, content: str, source_name: str, category_hint: str) -> Optional[Dict[str, Any]]:
-    if not gemini_client:
+    if not GEMINI_API_KEY or not GEMINI_API_KEY.strip():
         return None
-    
-    from google.genai import types
 
     prompt = f"""
     Sei un analista senior di Cyber Threat Intelligence e Compliance normativa (NIS2, Golden Power, ISO 27001, GDPR).
@@ -188,16 +186,28 @@ def analyze_with_gemini(title: str, content: str, source_name: str, category_hin
     Contenuto/Estratto: {content[:2500]}
     """
 
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={GEMINI_API_KEY}"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "temperature": 0.1
+        }
+    }
+
     try:
-        response = gemini_client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.1,
-            ),
-        )
-        return json.loads(response.text)
+        response = requests.post(url, headers=headers, json=payload, timeout=20)
+        if response.status_code == 200:
+            data = response.json()
+            raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
+            parsed = json.loads(raw_text)
+            if isinstance(parsed, list) and len(parsed) > 0:
+                parsed = parsed[0]
+            return parsed if isinstance(parsed, dict) else None
+        else:
+            print(f"⚠️ Gemini API Status {response.status_code} su '{title[:30]}': {response.text[:100]}")
+            return None
     except Exception as e:
         print(f"❌ Errore Gemini su '{title[:30]}...': {e}")
         return None
@@ -252,6 +262,53 @@ def save_article(article_data: Dict[str, Any]):
             }).execute()
         except Exception as e:
             print(f"⚠️ Errore salvataggio Supabase: {e}")
+
+def export_json_feed():
+    """Esporta gli ultimi 50 articoli in un file JSON statico per l'App iOS o GitHub Pages."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, url_hash, title_it, original_title, summary_points, action_mitigation,
+               threat_level, category, target_audience, tags, source_name, source_url,
+               published_at, created_at
+        FROM articles ORDER BY created_at DESC LIMIT 50
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+
+    articles_list = []
+    for r in rows:
+        articles_list.append({
+            "id": r[0],
+            "url_hash": r[1],
+            "title_it": r[2],
+            "original_title": r[3],
+            "summary_points": json.loads(r[4]) if r[4] else [],
+            "action_mitigation": r[5],
+            "threat_level": r[6],
+            "category": r[7],
+            "target_audience": r[8],
+            "tags": json.loads(r[9]) if r[9] else [],
+            "source_name": r[10],
+            "source_url": r[11],
+            "published_at": r[12],
+            "created_at": r[13],
+            "is_breaking": r[6] == "CRITICO"
+        })
+
+    json_path = os.path.join(os.path.dirname(__file__), "latest_news.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(articles_list, f, ensure_ascii=False, indent=2)
+    print(f"📦 Esportato feed JSON statico: {json_path} ({len(articles_list)} articoli)")
+
+    # Copia anche nelle Resources dell'app iOS se presente
+    ios_res_path = os.path.join(os.path.dirname(__file__), "..", "ios", "CyberNews", "Resources", "latest_news.json")
+    try:
+        with open(ios_res_path, "w", encoding="utf-8") as f:
+            json.dump(articles_list, f, ensure_ascii=False, indent=2)
+        print(f"📱 Sincronizzato con l'app iOS: {ios_res_path}")
+    except Exception as e:
+        pass
 
 def run_ingestion(limit_per_source: int = 3):
     print("🚀 Inizio ciclo di ingestion CyberNews...")
@@ -334,6 +391,7 @@ def run_ingestion(limit_per_source: int = 3):
             print(f"❌ Errore durante il recupero da {name}: {e}")
 
     print(f"\n Ciclo completato! Nuovi articoli elaborati: {total_new}")
+    export_json_feed()
 
 if __name__ == "__main__":
     run_ingestion()

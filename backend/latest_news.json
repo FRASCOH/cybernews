@@ -1,0 +1,135 @@
+[
+  {
+    "id": "5a56b75d9a1b94de8c8e2d34a3f2b83a",
+    "url_hash": "b8af17c4e8e231442f93f67766af49c666e8a317704e8b7ed956c1ce31f9ae52",
+    "title_it": "SANS ISC Stormcast: Aggiornamento Minacce del 27 Ottobre 2026",
+    "original_title": "ISC Stormcast For Tuesday, October 27th, 2026 https://isc.sans.edu/podcastdetail/10152, (Tue, Oct 27th)",
+    "summary_points": [
+      "Pubblicato il bollettino giornaliero ISC Stormcast di SANS Institute relativo alle ultime minacce informatiche.",
+      "Analizzati vettori d'attacco emergenti e anomalie di traffico rilevate dai sensori globali dell'Internet Storm Center.",
+      "Fornito un quadro operativo di situational awareness per la gestione tempestiva degli incidenti."
+    ],
+    "action_mitigation": "Verificare i log dei sistemi di sicurezza per intercettare eventuali indicatori di compromissione (IoC) recenti.",
+    "threat_level": "INFORMATIVO",
+    "category": "THREAT_INTEL",
+    "target_audience": "CISO",
+    "tags": [
+      "SANS",
+      "Stormcast",
+      "ThreatIntel",
+      "IncidentResponse"
+    ],
+    "source_name": "SANS ISC",
+    "source_url": "https://isc.sans.edu/diary/rss/33462",
+    "published_at": "Tue, 27 Oct 2026 02:55:13 GMT",
+    "created_at": "2026-10-27T11:50:03.459304+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "ecbaf890a2970ba2102715a2634fd2c0",
+    "url_hash": "eae2a3c7c621fbaa9377337e2a6174c936467e94d1f172c44c7b9931a768facd",
+    "title_it": "ASD australiana neutralizza il backend del malware Amadey",
+    "original_title": "Australia Gets Into Amadey Malware Backend, Cuts Off Access to 180,000 Infected Computers",
+    "summary_points": [
+      "L'Australian Signals Directorate (ASD) ha compromesso e disconnesso il backend del malware Amadey.",
+      "L'azione ha interrotto l'accesso e il furto di dati da 180.000 computer infetti a livello globale.",
+      "L'operazione riduce significativamente la capacità operativa della botnet e il rischio di esfiltrazione dati."
+    ],
+    "action_mitigation": "Verificare la presenza di IOC associati ad Amadey tramite strumenti EDR e avviare procedure di bonifica per gli endpoint compromessi.",
+    "threat_level": "ALTO",
+    "category": "THREAT_INTEL",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "Amadey",
+      "Malware",
+      "ASD",
+      "Botnet",
+      "ThreatIntel"
+    ],
+    "source_name": "The Hacker News",
+    "source_url": "https://thehackernews.com/2026/10/australia-gets-into-amadey-malware.html",
+    "published_at": "Tue, 27 Oct 2026 15:03:06 +0530",
+    "created_at": "2026-10-27T11:50:00.481479+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "bff6c8a42674debe47fb350ac72d1e08",
+    "url_hash": "a40721cff07a0d8ded284c44fb2fc26a5c11fea5b7b432c0a68625104358a7e6",
+    "title_it": "Apple rilascia patch zero-day per dispositivi iOS meno recenti",
+    "original_title": "Apple backports CoreGraphics zero-day patches to older iPhones",
+    "summary_points": [
+      "Apple ha esteso i rilasci di sicurezza dello scorso mese ai modelli di iPhone e iPad più datati, risolvendo una vulnerabilità zero-day.",
+      "La falla in CoreGraphics è stata sfruttata attivamente in attacchi mirati ed estremamente sofisticati contro dispositivi iOS.",
+      "Il rischio operativo riguarda la compromissione totale del dispositivo attraverso vettori di attacco avanzati su hardware non coperto dagli ultimi OS."
+    ],
+    "action_mitigation": "Aggiornare immediatamente tutti i dispositivi iOS e iPadOS supportati all'ultima versione disponibile per mitigare il rischio di sfruttamento della vulnerabilità zero-day.",
+    "threat_level": "CRITICO",
+    "category": "VULNERABILITA_ZERODAY",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "Apple",
+      "Zero-Day",
+      "iOS",
+      "CoreGraphics",
+      "Patch"
+    ],
+    "source_name": "BleepingComputer",
+    "source_url": "https://www.bleepingcomputer.com/news/apple/apple-backports-coregraphics-zero-day-patches-to-older-iphones/",
+    "published_at": "Tue, 27 Oct 2026 06:36:12 -0400",
+    "created_at": "2026-10-27T11:49:55.118626+00:00",
+    "is_breaking": true
+  },
+  {
+    "id": "e95d50587e2e2bab04919b9ae99c4dcb",
+    "url_hash": "2b7c29474cdf353e8f673eff7b5bcafcbb10160b4ca96ed3ccae42a633f93977",
+    "title_it": "Aruba lancia SuperSite con AI generativa per siti ed e-commerce",
+    "original_title": "Piattaforma Aruba SuperSite: creazione di siti ed e-commerce con intelligenza artificiale generativa",
+    "summary_points": [
+      "Aruba ha introdotto la nuova piattaforma SuperSite che integra strumenti di intelligenza artificiale generativa per la creazione di siti web ed e-commerce.",
+      "La soluzione è disponibile nei piani Easy e Professional, permettendo la produzione di contenuti e la gestione di progetti online senza competenze di programmazione.",
+      "L'adozione di strumenti basati su IA generativa nei servizi di hosting commerciali amplia la superficie digitale aziendale, richiedendo attenzione alla conformità dei contenuti generati."
+    ],
+    "action_mitigation": "Verificare le politiche di governance sull'uso di contenuti generati da IA e valutare la sicurezza applicativa delle piattaforme di terze parti adottate.",
+    "threat_level": "INFORMATIVO",
+    "category": "COMPLIANCE_ISO",
+    "target_audience": "Management",
+    "tags": [
+      "Aruba",
+      "Intelligenza Artificiale",
+      "Web Hosting",
+      "E-commerce"
+    ],
+    "source_name": "Cybersecurity360",
+    "source_url": "https://www.cybersecurity360.it/cultura-cyber/aruba-supersite-creazione-siti-web-intelligenza-artificiale/",
+    "published_at": "Tue, 27 Oct 2026 09:52:11 +0000",
+    "created_at": "2026-10-27T11:49:47.409743+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "44aa039194ac91b138f00955b87a7a69",
+    "url_hash": "bc4305b4e1ef1b7a8e60dc9703fef1edc85ebfb56306347e3510f6884405d3dc",
+    "title_it": "Campagna Phishing PagoPA tramite PEC compromesse",
+    "original_title": "Phishing PagoPA: nuove campagne a tema multe diffuse tramite PEC compromesse",
+    "summary_points": [
+      "Il CERT-AGID ha rilevato campagne di phishing che sfruttano caselle PEC compromesse per diffondere false notifiche di sanzioni a nome di PagoPA.",
+      "I siti fraudolenti utilizzano script di comunicazione in tempo reale con server di comando per rubare dati di pagamento e codici OTP bancari.",
+      "L'attacco sfrutta l'autorevolezza della PEC per ingannare gli utenti, aumentando il rischio di frodi finanziarie e compromissione delle credenziali."
+    ],
+    "action_mitigation": "Verificare la configurazione e la sicurezza degli account PEC aziendali, implementare l'autenticazione a due fattori e sensibilizzare il personale su false comunicazioni di pagamento.",
+    "threat_level": "MEDIO",
+    "category": "THREAT_INTEL",
+    "target_audience": "CISO",
+    "tags": [
+      "CERT-AGID",
+      "Phishing",
+      "PEC",
+      "PagoPA",
+      "CyberSecurity"
+    ],
+    "source_name": "CERT-AGID",
+    "source_url": "https://cert-agid.gov.it/news/phishing-pagopa-nuove-campagne-a-tema-multe-diffuse-tramite-pec-compromesse/",
+    "published_at": "Tue, 27 Oct 2026 08:19:49 +0000",
+    "created_at": "2026-10-27T11:49:43.416667+00:00",
+    "is_breaking": false
+  }
+]
