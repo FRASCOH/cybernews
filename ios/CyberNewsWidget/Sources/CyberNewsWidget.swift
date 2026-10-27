@@ -161,6 +161,13 @@ struct CyberNewsEntry: TimelineEntry {
     let action: String
     let summaryPoints: [String]
     let criticalCount: Int
+
+    var extendedSummary: String {
+        if summaryPoints.isEmpty {
+            return "Monitoraggio continuo delle fonti ufficiali per la sicurezza perimetrale e la conformità normativa."
+        }
+        return summaryPoints.joined(separator: " ")
+    }
 }
 
 // MARK: - 5. Viste del Widget
@@ -232,16 +239,16 @@ struct CyberNewsWidgetEntryView : View {
 
     // MEDIUM WIDGET (Home Screen)
     var mediumWidgetView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             // Header
-            HStack {
-                HStack(spacing: 6) {
+            HStack(alignment: .center) {
+                HStack(spacing: 5) {
                     Circle()
                         .fill(Color(red: 1.0, green: 0.42, blue: 0.0))
-                        .frame(width: 7, height: 7)
+                        .frame(width: 6, height: 6)
 
                     Text(entry.categoryName)
-                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                        .font(.system(size: 10, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
                 }
 
@@ -249,49 +256,56 @@ struct CyberNewsWidgetEntryView : View {
 
                 HStack(spacing: 6) {
                     Text(entry.threatLevel)
-                        .font(.system(size: 10, weight: .heavy, design: .rounded))
-                        .foregroundStyle(entry.threatLevel == "CRITICO" ? Color.red : Color.orange)
-                        .padding(.horizontal, 7)
+                        .font(.system(size: 9, weight: .heavy, design: .rounded))
+                        .foregroundStyle(entry.threatLevel == "CRITICO" ? Color.red : Color(red: 1.0, green: 0.42, blue: 0.0))
+                        .padding(.horizontal, 6)
                         .padding(.vertical, 2)
                         .background(
                             Capsule()
-                                .fill((entry.threatLevel == "CRITICO" ? Color.red : Color.orange).opacity(0.15))
+                                .fill((entry.threatLevel == "CRITICO" ? Color.red : Color(red: 1.0, green: 0.42, blue: 0.0)).opacity(0.15))
                         )
 
                     Text("• \(entry.source)")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.6))
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.55))
                 }
             }
 
-            // Titolo Notizia
+            // Titolo Notizia (1 riga compatta)
             Text(entry.title)
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .font(.system(size: 12, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
-                .lineLimit(2)
+                .lineLimit(1)
 
-            Spacer()
+            // Riassunto Esteso: almeno 3 righe piene di testo
+            Text(entry.extendedSummary)
+                .font(.system(size: 11, weight: .regular))
+                .foregroundStyle(.white.opacity(0.85))
+                .lineSpacing(2)
+                .lineLimit(3)
+
+            Spacer(minLength: 0)
 
             // Box Azione Rapida
-            HStack(spacing: 6) {
+            HStack(spacing: 5) {
                 Image(systemName: "bolt.shield.fill")
-                    .font(.system(size: 10))
+                    .font(.system(size: 9))
                     .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
 
                 Text(entry.action)
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.9))
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.95))
                     .lineLimit(1)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(Color(red: 1.0, green: 0.42, blue: 0.0).opacity(0.12))
             )
         }
-        .padding(14)
+        .padding(12)
         .containerBackground(Color(red: 0.04, green: 0.04, blue: 0.05), for: .widget)
     }
 

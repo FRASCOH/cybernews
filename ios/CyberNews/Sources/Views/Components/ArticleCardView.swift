@@ -49,18 +49,20 @@ public struct ArticleCardView: View {
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            // Anteprima primo punto sintetico (AI)
-            if let firstPoint = article.summaryPoints.first {
+            // Anteprima sintetica estesa (AI) - almeno 3 righe di testo
+            if !article.summaryPoints.isEmpty {
                 HStack(alignment: .top, spacing: 8) {
                     Circle()
                         .fill(CyberTheme.orangePrimary)
                         .frame(width: 5, height: 5)
                         .padding(.top, 6)
 
-                    Text(firstPoint)
+                    Text(article.summaryPoints.joined(separator: " "))
                         .font(.system(size: 13, weight: .regular))
-                        .foregroundStyle(.white.opacity(0.70))
-                        .lineLimit(2)
+                        .foregroundStyle(.white.opacity(0.80))
+                        .lineSpacing(3)
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 
