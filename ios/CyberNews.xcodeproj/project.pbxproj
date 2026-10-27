@@ -1,0 +1,488 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0F0E70F9352DB87E4ECBEBF9 /* BookmarksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8A374DC1ACED1F1BBC4479 /* BookmarksView.swift */; };
+		1C62C0358F0AEB5BF62FB197 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78F9C79F5E5489558B15 /* SettingsView.swift */; };
+		20E6C485A2F5B7A9B4EACAB9 /* SavedArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F5CA6D02517C354D922BAD /* SavedArticle.swift */; };
+		23D8B77AB89FC890B9BF8CBD /* ThreatBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6468F65967A8A6025FFD52AB /* ThreatBadgeView.swift */; };
+		255A31823481083C2B49403A /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F19B62635FACC0253AD74CD /* HapticManager.swift */; };
+		32128126ACB965ABF4CB3EC6 /* NewsAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463CCD9581D492A28E35A71E /* NewsAPIService.swift */; };
+		46A0E132FA0FF2786517F281 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE5771D9789F56104BDB015 /* MainTabView.swift */; };
+		52E6CE3E76BC8DA84D521B4A /* NewsFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0135649DF2F960EA40A04710 /* NewsFeedViewModel.swift */; };
+		5F80959DAC2666C4E633BAFF /* GovernanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3608E9227EF97E053F04F274 /* GovernanceView.swift */; };
+		A9C85364019ED8F9644C9472 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9074656C45F63F586D17881F /* Assets.xcassets */; };
+		C6CBF3F4955A7A67D42AD27C /* ThreatLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C816C8CA984EB629D388FC /* ThreatLevel.swift */; };
+		D6EEA61B81FACAC233B513A0 /* HomeFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8A7FE0FF9442FE2CA0044E /* HomeFeedView.swift */; };
+		D8EEECF31E9D163092425604 /* CyberTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22E164138CC0E88FCBD8237 /* CyberTheme.swift */; };
+		E338EE3A4D4DD4032C55A551 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD4E8F480B19849AEB66B08 /* Article.swift */; };
+		E6C87629A69115F920C8E0A7 /* ArticleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF3BB99260AF7DABE4CAFAA /* ArticleDetailView.swift */; };
+		E98362E972562030502F1BA3 /* CyberNewsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C2744A8E2BDC3F5513BD67 /* CyberNewsApp.swift */; };
+		EA2E3FAEA03A214D42E56BCD /* CategoryPillBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D23E4D797B50A6D204ED2 /* CategoryPillBar.swift */; };
+		EB4AD088D927356945C23541 /* NewsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1594B261B79144C39D2001CA /* NewsCategory.swift */; };
+		ED114CB3ECCED34E064B95E4 /* CyberLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E61C13DFC1CCEE9D7856FA8 /* CyberLogoView.swift */; };
+		F1AE90D5FF00FC7E971960A3 /* ArticleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32DB55DDF7FB2895A481940 /* ArticleCardView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0135649DF2F960EA40A04710 /* NewsFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewModel.swift; sourceTree = "<group>"; };
+		0DE5771D9789F56104BDB015 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		1594B261B79144C39D2001CA /* NewsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCategory.swift; sourceTree = "<group>"; };
+		17C816C8CA984EB629D388FC /* ThreatLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreatLevel.swift; sourceTree = "<group>"; };
+		3608E9227EF97E053F04F274 /* GovernanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GovernanceView.swift; sourceTree = "<group>"; };
+		3AD4E8F480B19849AEB66B08 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		3EBD78F9C79F5E5489558B15 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		463CCD9581D492A28E35A71E /* NewsAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPIService.swift; sourceTree = "<group>"; };
+		499D23E4D797B50A6D204ED2 /* CategoryPillBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPillBar.swift; sourceTree = "<group>"; };
+		5E61C13DFC1CCEE9D7856FA8 /* CyberLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyberLogoView.swift; sourceTree = "<group>"; };
+		5F19B62635FACC0253AD74CD /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		6468F65967A8A6025FFD52AB /* ThreatBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreatBadgeView.swift; sourceTree = "<group>"; };
+		6C8A374DC1ACED1F1BBC4479 /* BookmarksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksView.swift; sourceTree = "<group>"; };
+		8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CyberNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9074656C45F63F586D17881F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9CF3BB99260AF7DABE4CAFAA /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
+		9D8A7FE0FF9442FE2CA0044E /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
+		A22E164138CC0E88FCBD8237 /* CyberTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyberTheme.swift; sourceTree = "<group>"; };
+		C5F5CA6D02517C354D922BAD /* SavedArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedArticle.swift; sourceTree = "<group>"; };
+		CB2A2C2703CC3D3B85E8E35C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D3C2744A8E2BDC3F5513BD67 /* CyberNewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyberNewsApp.swift; sourceTree = "<group>"; };
+		F32DB55DDF7FB2895A481940 /* ArticleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		16E67F54FADBDA83B9E47BF2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0DE5771D9789F56104BDB015 /* MainTabView.swift */,
+				D1119ECB56255008D4F47F41 /* Bookmarks */,
+				6DCBF05264628E1D3E660277 /* Components */,
+				3721F26B859A6EC74271875B /* Detail */,
+				26EB793647CD0DB479C699B6 /* Feed */,
+				5B89F719E838C9C020412BFC /* Governance */,
+				4F2656B71EA2364775F74B1D /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		26EB793647CD0DB479C699B6 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				9D8A7FE0FF9442FE2CA0044E /* HomeFeedView.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		3721F26B859A6EC74271875B /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				9CF3BB99260AF7DABE4CAFAA /* ArticleDetailView.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		4867A773EF12BACAF482CF69 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0135649DF2F960EA40A04710 /* NewsFeedViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		4F2656B71EA2364775F74B1D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				3EBD78F9C79F5E5489558B15 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		51F822E3AF6605C22A27A551 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9074656C45F63F586D17881F /* Assets.xcassets */,
+				CB2A2C2703CC3D3B85E8E35C /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5B89F719E838C9C020412BFC /* Governance */ = {
+			isa = PBXGroup;
+			children = (
+				3608E9227EF97E053F04F274 /* GovernanceView.swift */,
+			);
+			path = Governance;
+			sourceTree = "<group>";
+		};
+		6DCBF05264628E1D3E660277 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F32DB55DDF7FB2895A481940 /* ArticleCardView.swift */,
+				499D23E4D797B50A6D204ED2 /* CategoryPillBar.swift */,
+				5E61C13DFC1CCEE9D7856FA8 /* CyberLogoView.swift */,
+				6468F65967A8A6025FFD52AB /* ThreatBadgeView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		947987D2B7A7A00352C55E7F = {
+			isa = PBXGroup;
+			children = (
+				A65E6CD2245DF846532BE9F4 /* CyberNews */,
+				B10F939DAFD1931F45CCBDBB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A65E6CD2245DF846532BE9F4 /* CyberNews */ = {
+			isa = PBXGroup;
+			children = (
+				51F822E3AF6605C22A27A551 /* Resources */,
+				EC6DBD897546C9AD2A7269F4 /* Sources */,
+			);
+			path = CyberNews;
+			sourceTree = "<group>";
+		};
+		B10F939DAFD1931F45CCBDBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D1119ECB56255008D4F47F41 /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				6C8A374DC1ACED1F1BBC4479 /* BookmarksView.swift */,
+			);
+			path = Bookmarks;
+			sourceTree = "<group>";
+		};
+		DED9563DC76DF14EDE939401 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A22E164138CC0E88FCBD8237 /* CyberTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		E00077700BE2523D9EC8E58F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5F19B62635FACC0253AD74CD /* HapticManager.swift */,
+				463CCD9581D492A28E35A71E /* NewsAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		EC6DBD897546C9AD2A7269F4 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D3C2744A8E2BDC3F5513BD67 /* CyberNewsApp.swift */,
+				F9B90868E5B12D130FE921B5 /* Models */,
+				E00077700BE2523D9EC8E58F /* Services */,
+				DED9563DC76DF14EDE939401 /* Theme */,
+				4867A773EF12BACAF482CF69 /* ViewModels */,
+				16E67F54FADBDA83B9E47BF2 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		F9B90868E5B12D130FE921B5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3AD4E8F480B19849AEB66B08 /* Article.swift */,
+				1594B261B79144C39D2001CA /* NewsCategory.swift */,
+				C5F5CA6D02517C354D922BAD /* SavedArticle.swift */,
+				17C816C8CA984EB629D388FC /* ThreatLevel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3C2B7267233364F5B905DD50 /* CyberNews */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07F1CF22B7029EE01030AAA3 /* Build configuration list for PBXNativeTarget "CyberNews" */;
+			buildPhases = (
+				DBB7E73AE4724D5F7C71A648 /* Sources */,
+				F67279846F34F730161E7218 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CyberNews;
+			packageProductDependencies = (
+			);
+			productName = CyberNews;
+			productReference = 8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		877C90A176A7BC7D769C6409 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					3C2B7267233364F5B905DD50 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 2935F39986B633C2047FADD0 /* Build configuration list for PBXProject "CyberNews" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 947987D2B7A7A00352C55E7F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B10F939DAFD1931F45CCBDBB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3C2B7267233364F5B905DD50 /* CyberNews */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F67279846F34F730161E7218 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9C85364019ED8F9644C9472 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DBB7E73AE4724D5F7C71A648 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E338EE3A4D4DD4032C55A551 /* Article.swift in Sources */,
+				F1AE90D5FF00FC7E971960A3 /* ArticleCardView.swift in Sources */,
+				E6C87629A69115F920C8E0A7 /* ArticleDetailView.swift in Sources */,
+				0F0E70F9352DB87E4ECBEBF9 /* BookmarksView.swift in Sources */,
+				EA2E3FAEA03A214D42E56BCD /* CategoryPillBar.swift in Sources */,
+				ED114CB3ECCED34E064B95E4 /* CyberLogoView.swift in Sources */,
+				E98362E972562030502F1BA3 /* CyberNewsApp.swift in Sources */,
+				D8EEECF31E9D163092425604 /* CyberTheme.swift in Sources */,
+				5F80959DAC2666C4E633BAFF /* GovernanceView.swift in Sources */,
+				255A31823481083C2B49403A /* HapticManager.swift in Sources */,
+				D6EEA61B81FACAC233B513A0 /* HomeFeedView.swift in Sources */,
+				46A0E132FA0FF2786517F281 /* MainTabView.swift in Sources */,
+				32128126ACB965ABF4CB3EC6 /* NewsAPIService.swift in Sources */,
+				EB4AD088D927356945C23541 /* NewsCategory.swift in Sources */,
+				52E6CE3E76BC8DA84D521B4A /* NewsFeedViewModel.swift in Sources */,
+				20E6C485A2F5B7A9B4EACAB9 /* SavedArticle.swift in Sources */,
+				1C62C0358F0AEB5BF62FB197 /* SettingsView.swift in Sources */,
+				23D8B77AB89FC890B9BF8CBD /* ThreatBadgeView.swift in Sources */,
+				C6CBF3F4955A7A67D42AD27C /* ThreatLevel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		359D9FC534D3513D27F8C528 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CyberNews/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = it.cybernews.app;
+				PRODUCT_NAME = CyberNews;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		40E59764CC4CE0A024EE7A42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CyberNews/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = it.cybernews.app;
+				PRODUCT_NAME = CyberNews;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		727BAE4CE25C4B770A03FB33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		89F9BCA75EC5E6EB94FE8297 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07F1CF22B7029EE01030AAA3 /* Build configuration list for PBXNativeTarget "CyberNews" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				359D9FC534D3513D27F8C528 /* Debug */,
+				40E59764CC4CE0A024EE7A42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2935F39986B633C2047FADD0 /* Build configuration list for PBXProject "CyberNews" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89F9BCA75EC5E6EB94FE8297 /* Debug */,
+				727BAE4CE25C4B770A03FB33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 877C90A176A7BC7D769C6409 /* Project object */;
+}
