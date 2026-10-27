@@ -1,9 +1,12 @@
 import SwiftUI
 
 public struct SettingsView: View {
-    @AppStorage("supabase_url") private var supabaseURL: String = ""
-    @AppStorage("supabase_anon_key") private var supabaseAnonKey: String = ""
-    @State private var showingSavedAlert = false
+    @AppStorage("push_notifications_enabled") private var pushNotificationsEnabled: Bool = true
+    @AppStorage("notify_all_news") private var notifyAllNews: Bool = true
+    @AppStorage("notify_critical") private var notifyCritical: Bool = true
+    @AppStorage("notify_governance") private var notifyGovernance: Bool = true
+
+    @State private var showingTestSentAlert = false
 
     public init() {}
 
@@ -20,11 +23,110 @@ public struct SettingsView: View {
                             .font(.system(size: 26, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
 
-                        Text("Sicurezza & Configurazione")
+                        Text("Notifiche Push & Preferenze")
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(CyberTheme.orangePrimary)
                     }
                     .padding(.top, 10)
+
+                    // Card Notifiche Push in Tempo Reale
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "bell.badge.fill")
+                                .font(.system(size: 16))
+                                .foregroundStyle(CyberTheme.orangePrimary)
+
+                            Text("NOTIFICHE PUSH IN TEMPO REALE")
+                                .font(.system(size: 12, weight: .heavy, design: .rounded))
+                                .foregroundStyle(CyberTheme.orangePrimary)
+                        }
+
+                        VStack(spacing: 14) {
+                            // Toggle Principale
+                            Toggle(isOn: $pushNotificationsEnabled) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Notifiche Push Attive")
+                                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(.white)
+                                    Text("Avviso istantaneo non appena esce una notizia")
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(.white.opacity(0.55))
+                                }
+                            }
+                            .tint(CyberTheme.orangePrimary)
+
+                            if pushNotificationsEnabled {
+                                Divider()
+                                    .background(Color.white.opacity(0.08))
+
+                                // Filtri Notifica
+                                Toggle(isOn: $notifyAllNews) {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Tutte le Nuove Notizie")
+                                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                                            .foregroundStyle(.white)
+                                        Text("Ricevi un avviso per ogni articolo pubblicato")
+                                            .font(.system(size: 11))
+                                            .foregroundStyle(.white.opacity(0.5))
+                                    }
+                                }
+                                .tint(CyberTheme.orangePrimary)
+
+                                Toggle(isOn: $notifyCritical) {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Zero-Day & Allarmi Critici")
+                                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                                            .foregroundStyle(.white)
+                                        Text("Notifiche prioritarie ad alto volume sonoro")
+                                            .font(.system(size: 11))
+                                            .foregroundStyle(.white.opacity(0.5))
+                                    }
+                                }
+                                .tint(CyberTheme.orangePrimary)
+
+                                Toggle(isOn: $notifyGovernance) {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Alert ACN & Normative (NIS2)")
+                                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                                            .foregroundStyle(.white)
+                                        Text("Aggiornamenti su direttive NIS2 e Golden Power")
+                                            .font(.system(size: 11))
+                                            .foregroundStyle(.white.opacity(0.5))
+                                    }
+                                }
+                                .tint(CyberTheme.orangePrimary)
+
+                                // Tasto di Prova Notifica
+                                Button {
+                                    HapticManager.shared.notification(.success)
+                                    NotificationManager.shared.sendTestNotification()
+                                    showingTestSentAlert = true
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "paperplane.fill")
+                                            .font(.system(size: 12))
+                                        Text("Invia Notifica di Prova (Blocca lo schermo per vederla)")
+                                    }
+                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .foregroundStyle(CyberTheme.orangePrimary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                            .fill(CyberTheme.orangePrimary.opacity(0.12))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                                    .stroke(CyberTheme.orangePrimary.opacity(0.3), lineWidth: 1)
+                                            )
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.top, 6)
+                            }
+                        }
+                    }
+                    .padding(18)
+                    .glassmorphic(cornerRadius: 20)
 
                     // Card Architettura di Sicurezza
                     VStack(alignment: .leading, spacing: 10) {
@@ -33,12 +135,12 @@ public struct SettingsView: View {
                                 .font(.system(size: 16))
                                 .foregroundStyle(CyberTheme.orangePrimary)
 
-                            Text("SICUREZZA ZERO-KEY ON DEVICE")
+                            Text("SICUREZZA & ZERO-KEY")
                                 .font(.system(size: 12, weight: .heavy, design: .rounded))
                                 .foregroundStyle(CyberTheme.orangePrimary)
                         }
 
-                        Text("Questa app non memorizza alcuna chiave API privata di Gemini. L'elaborazione con AI avviene in un ambiente protetto sul cloud, garantendo l'assoluta protezione da furti di credenziali o reverse engineering.")
+                        Text("L'app legge le notizie direttamente dal database cloud sicuro protetto da Row-Level Security (RLS). Nessuna chiave privata è archiviata sull'iPhone.")
                             .font(.system(size: 13, weight: .regular))
                             .foregroundStyle(.white.opacity(0.8))
                             .lineSpacing(3)
@@ -46,77 +148,13 @@ public struct SettingsView: View {
                     .padding(18)
                     .glassmorphic(cornerRadius: 20)
 
-                    // Collegamento Database Supabase (Opzionale)
-                    VStack(alignment: .leading, spacing: 14) {
-                        Text("CONNESSIONE CLOUD (SUPABASE)")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.6))
-
-                        VStack(spacing: 12) {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text("Project URL")
-                                    .font(.system(size: 11, weight: .medium))
-                                    .foregroundStyle(.white.opacity(0.5))
-
-                                TextField("https://xyz.supabase.co", text: $supabaseURL)
-                                    .font(.system(size: 14, design: .monospaced))
-                                    .foregroundStyle(.white)
-                                    .autocorrectionDisabled()
-                                    .textInputAutocapitalization(.never)
-                                    .padding(12)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                            .fill(Color.white.opacity(0.05))
-                                    )
-                            }
-
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text("Anon Public Key")
-                                    .font(.system(size: 11, weight: .medium))
-                                    .foregroundStyle(.white.opacity(0.5))
-
-                                SecureField("eyJhbGciOi...", text: $supabaseAnonKey)
-                                    .font(.system(size: 14, design: .monospaced))
-                                    .foregroundStyle(.white)
-                                    .autocorrectionDisabled()
-                                    .textInputAutocapitalization(.never)
-                                    .padding(12)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                            .fill(Color.white.opacity(0.05))
-                                    )
-                            }
-
-                            Button {
-                                HapticManager.shared.notification(.success)
-                                NewsAPIService.shared.supabaseURL = supabaseURL
-                                NewsAPIService.shared.supabaseAnonKey = supabaseAnonKey
-                                showingSavedAlert = true
-                            } label: {
-                                Text("Salva e Connetti")
-                                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                                    .foregroundStyle(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                            .fill(CyberTheme.orangeGradient)
-                                    )
-                            }
-                            .buttonStyle(.plain)
-                            .padding(.top, 4)
-                        }
-                    }
-                    .padding(18)
-                    .glassmorphic(cornerRadius: 20)
-
                     // Fonti Monitorate
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("FONTI UFFICIALI ATTIVE (19)")
+                        Text("FONTI UFFICIALI ATTIVE (20)")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundStyle(.white.opacity(0.6))
 
-                        Text("ACN, CSIRT Italia, CERT-AGID, Golden Power (CdM), Gazzetta Ufficiale, Portale NIS2, Cybersecurity360, Agenda Digitale, EDPB, Garante Privacy, EBA (DORA), ISO/IEC 27001, NIST CSF 2.0, ENISA, CISA Alerts/KEV, BleepingComputer, The Hacker News, SANS ISC, SecurityWeek.")
+                        Text("ACN, CSIRT Italia, CERT-AGID, Golden Power (CdM), Gazzetta Ufficiale, Portale NIS2, Red Hot Cyber, Cybersecurity360, Agenda Digitale, EDPB, Garante Privacy, EBA (DORA), ISO/IEC 27001, NIST CSF 2.0, ENISA, CISA Alerts/KEV, BleepingComputer, The Hacker News, SANS ISC, SecurityWeek.")
                             .font(.system(size: 12, weight: .regular))
                             .foregroundStyle(.white.opacity(0.65))
                             .lineSpacing(3)
@@ -130,7 +168,7 @@ public struct SettingsView: View {
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white.opacity(0.5))
 
-                        Text("Made with SwiftUI & Gemini 2.0 Flash")
+                        Text("Made with SwiftUI & Gemini AI")
                             .font(.system(size: 11, weight: .regular))
                             .foregroundStyle(.white.opacity(0.35))
                     }
@@ -142,10 +180,10 @@ public struct SettingsView: View {
                 .padding(.horizontal, 20)
             }
         }
-        .alert("Configurazione Salvata", isPresented: $showingSavedAlert) {
+        .alert("Notifica di Prova Inviata! 🔔", isPresented: $showingTestSentAlert) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text("L'app tenterà di connettersi al database Supabase al prossimo aggiornamento.")
+            Text("La notifica è stata programmata. Se blocchi lo schermo o esci dall'app, vedrai apparire l'avviso con audio e badge.")
         }
     }
 }

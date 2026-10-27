@@ -52,6 +52,8 @@ public final class NewsFeedViewModel: ObservableObject {
             withAnimation(CyberTheme.smoothSpring) {
                 self.articles = fetched
             }
+            // Controlla e invia notifiche per le nuove notizie
+            NotificationManager.shared.checkAndNotifyNewArticles(articles: fetched)
         } catch {
             self.errorMessage = "Impossibile aggiornare i dati: \(error.localizedDescription)"
         }
