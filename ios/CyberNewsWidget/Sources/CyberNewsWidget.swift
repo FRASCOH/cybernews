@@ -1,24 +1,57 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
-// MARK: - Timeline Provider
-struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> CyberNewsEntry {
-        fallbackEntry
-    }
+// MARK: - 1. Enum Argomenti / Categorie Configurabili
+public enum WidgetCategoryEnum: String, AppEnum {
+    case all = "ALL"
+    case nis2GoldenPower = "NIS2_GOLDEN_POWER"
+    case vulnerabilita = "VULNERABILITA_ZERODAY"
+    case ransomware = "RANSOMWARE_ATTACCHI"
+    case complianceIso = "COMPLIANCE_ISO"
+    case threatIntel = "THREAT_INTEL"
 
-    func getSnapshot(in context: Context, completion: @escaping (CyberNewsEntry) -> ()) {
-        let entry = loadLatestEntry()
-        completion(entry)
-    }
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation = "Argomento"
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        let entry = loadLatestEntry()
-        // Aggiorna ogni 30 minuti
-        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date()) ?? Date()
-        let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
-        completion(timeline)
+    public static var caseDisplayRepresentations: [WidgetCategoryEnum: DisplayRepresentation] = [
+        .all: "Tutte le Notizie",
+        .nis2GoldenPower: "NIS2 & Golden Power",
+        .vulnerabilita: "Zero-Day & Vulnerabilità",
+        .ransomware: "Ransomware & Attacchi",
+        .complianceIso: "ISO 27001 & DORA",
+        .threatIntel: "Threat Intelligence"
+    ]
+
+    public var displayName: String {
+        switch self {
+        case .all:               return "In Primo Piano"
+        case .nis2GoldenPower:   return "NIS2 & Golden Power"
+        case .vulnerabilita:     return "Zero-Day & Bug"
+        case .ransomware:        return "Ransomware"
+        case .complianceIso:     return "ISO 27001 & DORA"
+        case .threatIntel:       return "Threat Intel"
+        }
     }
+}
+
+// MARK: - 2. Intent di Configurazione per l'Utente
+public struct SelectCategoryIntent: WidgetConfigurationIntent {
+    public static var title: LocalizedStringResource = "Scegli Argomento"
+    public static var description = IntentDescription("Seleziona l'argomento di cui vuoi monitorare l'ultima notizia importante.")
+
+    @Parameter(title: "Argomento", default: .all)
+    public var category: WidgetCategoryEnum
+
+    public init() {}
+    public init(category: WidgetCategoryEnum) {
+        self.category = category
+    }
+}
+
+// MARK: - 3. Timeline Provider con Supporto Configurazione Utente
+struct ConfigurableProvider: AppIntentTimelineProvider {
+    typealias Entry = CyberNewsEntry
+    typealias Intent = SelectCategoryIntent
 
     private var fallbackEntry: CyberNewsEntry {
         CyberNewsEntry(
@@ -26,46 +59,113 @@ struct Provider: TimelineProvider {
             title: "Vulnerabilità critiche RCE PHP2Shell (CVE-2026-109618/19)",
             source: "The Hacker News",
             threatLevel: "CRITICO",
+            categoryName: "Zero-Day & Bug",
             action: "Aggiornare immediatamente a PHP 8.5.12 o versioni patchate.",
+            summaryPoints: [
+                "Falla RCE non autenticata su core PHP da 5.4 a 8.5.",
+                "Sfruttamento attivo confermato in-the-wild.",
+                "CISA ha ordinato la patch con inserimento nel catalogo KEV."
+            ],
             criticalCount: 4
         )
     }
 
-    private func loadLatestEntry() -> CyberNewsEntry {
-        guard let url = Bundle.main.url(forResource: "latest_news", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]],
-              !json.isEmpty else {
-            return fallbackEntry
+    func placeholder(in context: Context) -> CyberNewsEntry {
+        fallbackEntry
+    }
+
+    func snapshot(for configuration: SelectCategoryIntent, in context: Context) async -> CyberNewsEntry {
+        await loadEntry(for: configuration.category)
+    }
+
+    func timeline(for configuration: SelectCategoryIntent, in context: Context) async -> Timeline<CyberNewsEntry> {
+        let entry = await loadEntry(for: configuration.category)
+        // Aggiorna il widget ogni 30 minuti
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date()) ?? Date()
+        return Timeline(entries: [entry], policy: .after(nextUpdate))
+    }
+
+    private func loadEntry(for category: WidgetCategoryEnum) async -> CyberNewsEntry {
+        // 1. Prova a scaricare le notizie in tempo reale da Supabase
+        if let liveArticles = await fetchLiveFromSupabase(), !liveArticles.isEmpty {
+            return filterAndBuildEntry(from: liveArticles, category: category)
         }
 
-        let criticals = json.filter { ($0["threat_level"] as? String) == "CRITICO" }
-        let top = criticals.first ?? json.first!
+        // 2. Fallback al file locale latest_news.json
+        if let url = Bundle.main.url(forResource: "latest_news", withExtension: "json"),
+           let data = try? Data(contentsOf: url),
+           let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]],
+           !json.isEmpty {
+            return filterAndBuildEntry(from: json, category: category)
+        }
+
+        return fallbackEntry
+    }
+
+    private func fetchLiveFromSupabase() async -> [[String: Any]]? {
+        let endpoint = "https://stkmmwwpwrbnkigkuwdp.supabase.co/rest/v1/news_articles?select=*&order=created_at.desc&limit=30"
+        let anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21td3dwd3JibmtpZ2t1d2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTgyMTksImV4cCI6MjEwODY3NDIxOX0.oT8tH06YDvfve36AIg0bvrrIa2bjXCFIJxPYLBxcoB0"
+
+        guard let url = URL(string: endpoint) else { return nil }
+        var request = URLRequest(url: url)
+        request.addValue(anonKey, forHTTPHeaderField: "apikey")
+        request.addValue("Bearer \(anonKey)", forHTTPHeaderField: "Authorization")
+        request.timeoutInterval = 6
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse, http.statusCode == 200 {
+                return try? JSONSerialization.jsonObject(with: data) as? [[String: Any]]
+            }
+        } catch {
+            print("⚠️ Widget offline fallback")
+        }
+        return nil
+    }
+
+    private func filterAndBuildEntry(from articles: [[String: Any]], category: WidgetCategoryEnum) -> CyberNewsEntry {
+        let matching: [[String: Any]]
+        if category == .all {
+            matching = articles
+        } else {
+            let filtered = articles.filter { ($0["category"] as? String) == category.rawValue }
+            matching = filtered.isEmpty ? articles : filtered
+        }
+
+        // Cerca prima un allarme critico, altrimenti il più recente
+        let top = matching.first { ($0["threat_level"] as? String) == "CRITICO" } ?? matching.first ?? articles.first!
+        let criticals = articles.filter { ($0["threat_level"] as? String) == "CRITICO" }
+
+        let points = top["summary_points"] as? [String] ?? []
 
         return CyberNewsEntry(
             date: Date(),
-            title: top["title_it"] as? String ?? "Nessun allarme critico",
+            title: top["title_it"] as? String ?? "Nessuna notizia",
             source: top["source_name"] as? String ?? "CyberNews",
             threatLevel: top["threat_level"] as? String ?? "MEDIO",
-            action: top["action_mitigation"] as? String ?? "Consultare bollettino.",
+            categoryName: category.displayName,
+            action: top["action_mitigation"] as? String ?? "Verificare configurazione dei sistemi.",
+            summaryPoints: points,
             criticalCount: criticals.count
         )
     }
 }
 
-// MARK: - Entry
+// MARK: - 4. Entry Dati
 struct CyberNewsEntry: TimelineEntry {
     let date: Date
     let title: String
     let source: String
     let threatLevel: String
+    let categoryName: String
     let action: String
+    let summaryPoints: [String]
     let criticalCount: Int
 }
 
-// MARK: - Widget View
+// MARK: - 5. Viste del Widget
 struct CyberNewsWidgetEntryView : View {
-    var entry: Provider.Entry
+    var entry: ConfigurableProvider.Entry
     @Environment(\.widgetFamily) var family
 
     var body: some View {
@@ -74,6 +174,8 @@ struct CyberNewsWidgetEntryView : View {
             smallWidgetView
         case .systemMedium:
             mediumWidgetView
+        case .systemLarge:
+            largeWidgetView
         case .accessoryRectangular:
             lockScreenRectangularView
         case .accessoryInline:
@@ -85,25 +187,21 @@ struct CyberNewsWidgetEntryView : View {
 
     // SMALL WIDGET (Home Screen)
     var smallWidgetView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
+            // Header: Categoria scelta
             HStack {
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(Color(red: 1.0, green: 0.42, blue: 0.0))
-                        .frame(width: 7, height: 7)
-
-                    Text("CyberNews")
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
-                }
+                Text(entry.categoryName.uppercased())
+                    .font(.system(size: 9, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                    .lineLimit(1)
 
                 Spacer()
 
-                Text("\(entry.criticalCount)")
-                    .font(.system(size: 11, weight: .heavy, design: .rounded))
-                    .foregroundStyle(.white)
-                    .frame(width: 20, height: 20)
-                    .background(Circle().fill(Color.red.opacity(0.8)))
+                if entry.threatLevel == "CRITICO" {
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 8, height: 8)
+                }
             }
 
             Text(entry.title)
@@ -116,10 +214,10 @@ struct CyberNewsWidgetEntryView : View {
             HStack {
                 Text(entry.threatLevel)
                     .font(.system(size: 9, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color.red)
+                    .foregroundStyle(entry.threatLevel == "CRITICO" ? Color.red : Color(red: 1.0, green: 0.42, blue: 0.0))
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(Capsule().fill(Color.red.opacity(0.15)))
+                    .background(Capsule().fill(Color.white.opacity(0.08)))
 
                 Spacer()
 
@@ -134,20 +232,16 @@ struct CyberNewsWidgetEntryView : View {
 
     // MEDIUM WIDGET (Home Screen)
     var mediumWidgetView: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             // Header
             HStack {
-                HStack(spacing: 5) {
+                HStack(spacing: 6) {
                     Circle()
                         .fill(Color(red: 1.0, green: 0.42, blue: 0.0))
-                        .frame(width: 8, height: 8)
+                        .frame(width: 7, height: 7)
 
-                    Text("Cyber")
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-
-                    Text("News")
-                        .font(.system(size: 13, weight: .heavy, design: .rounded))
+                    Text(entry.categoryName)
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
                 }
 
@@ -156,13 +250,12 @@ struct CyberNewsWidgetEntryView : View {
                 HStack(spacing: 6) {
                     Text(entry.threatLevel)
                         .font(.system(size: 10, weight: .heavy, design: .rounded))
-                        .foregroundStyle(Color.red)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
+                        .foregroundStyle(entry.threatLevel == "CRITICO" ? Color.red : Color.orange)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 2)
                         .background(
                             Capsule()
-                                .fill(Color.red.opacity(0.15))
-                                .overlay(Capsule().stroke(Color.red.opacity(0.4), lineWidth: 1))
+                                .fill((entry.threatLevel == "CRITICO" ? Color.red : Color.orange).opacity(0.15))
                         )
 
                     Text("• \(entry.source)")
@@ -171,9 +264,9 @@ struct CyberNewsWidgetEntryView : View {
                 }
             }
 
-            // Titolo Allarme
+            // Titolo Notizia
             Text(entry.title)
-                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .font(.system(size: 14, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .lineLimit(2)
 
@@ -182,7 +275,7 @@ struct CyberNewsWidgetEntryView : View {
             // Box Azione Rapida
             HStack(spacing: 6) {
                 Image(systemName: "bolt.shield.fill")
-                    .font(.system(size: 11))
+                    .font(.system(size: 10))
                     .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
 
                 Text(entry.action)
@@ -192,6 +285,7 @@ struct CyberNewsWidgetEntryView : View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(Color(red: 1.0, green: 0.42, blue: 0.0).opacity(0.12))
@@ -201,48 +295,121 @@ struct CyberNewsWidgetEntryView : View {
         .containerBackground(Color(red: 0.04, green: 0.04, blue: 0.05), for: .widget)
     }
 
+    // LARGE WIDGET (Home Screen)
+    var largeWidgetView: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Header
+            HStack {
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(Color(red: 1.0, green: 0.42, blue: 0.0))
+                        .frame(width: 8, height: 8)
+
+                    Text("CyberNews • \(entry.categoryName)")
+                        .font(.system(size: 12, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                }
+
+                Spacer()
+
+                Text(entry.threatLevel)
+                    .font(.system(size: 10, weight: .heavy, design: .rounded))
+                    .foregroundStyle(entry.threatLevel == "CRITICO" ? Color.red : Color.orange)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(Color.white.opacity(0.08)))
+            }
+
+            Text(entry.title)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+
+            // Punti sintetici AI
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(Array(entry.summaryPoints.prefix(2).enumerated()), id: \.offset) { _, p in
+                    HStack(alignment: .top, spacing: 6) {
+                        Text("•")
+                            .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                        Text(p)
+                            .font(.system(size: 12))
+                            .foregroundStyle(.white.opacity(0.8))
+                            .lineLimit(2)
+                    }
+                }
+            }
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.white.opacity(0.04))
+            )
+
+            Spacer()
+
+            // Box Azione
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 4) {
+                    Image(systemName: "bolt.shield.fill")
+                        .font(.system(size: 10))
+                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                    Text("AZIONE RACCOMANDATA")
+                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                }
+                Text(entry.action)
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(red: 1.0, green: 0.42, blue: 0.0).opacity(0.12))
+            )
+        }
+        .padding(16)
+        .containerBackground(Color(red: 0.04, green: 0.04, blue: 0.05), for: .widget)
+    }
+
     // LOCK SCREEN (Rectangular)
     var lockScreenRectangularView: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 4) {
-                Image(systemName: "exclamationmark.shield.fill")
-                    .font(.system(size: 10))
-
-                Text("ALLARME \(entry.threatLevel)")
+                Image(systemName: "shield.fill")
+                    .font(.system(size: 9))
+                Text("\(entry.categoryName): \(entry.threatLevel)")
                     .font(.system(size: 10, weight: .bold))
             }
-
             Text(entry.title)
                 .font(.system(size: 12, weight: .semibold))
                 .lineLimit(2)
-
-            Text(entry.action)
-                .font(.system(size: 10))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
         }
     }
 
     // LOCK SCREEN (Inline)
     var lockScreenInlineView: some View {
         HStack(spacing: 4) {
-            Image(systemName: "shield.checkered")
-            Text("🚨 \(entry.title)")
+            Image(systemName: "shield.fill")
+            Text("\(entry.categoryName): \(entry.title)")
         }
     }
 }
 
-// MARK: - Widget Configuration
+// MARK: - 6. Configurazione Widget con AppIntent
 @main
 struct CyberNewsWidget: Widget {
     let kind: String = "CyberNewsWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        AppIntentConfiguration(
+            kind: kind,
+            intent: SelectCategoryIntent.self,
+            provider: ConfigurableProvider()
+        ) { entry in
             CyberNewsWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("CyberNews Alerts")
-        .description("Monitora in tempo reale gli allarmi critici di sicurezza e le azioni di mitigazione.")
-        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryInline])
+        .configurationDisplayName("CyberNews Argomenti")
+        .description("Tieni premuto il widget per scegliere l'argomento (es. NIS2, Zero-Day, Ransomware) da monitorare.")
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryRectangular, .accessoryInline])
     }
 }

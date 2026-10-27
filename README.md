@@ -1,59 +1,34 @@
-# CyberNews iOS 🛡️
+# CyberNews 🛡️
 
-App nativa per iPhone dedicata a **Cybersecurity, IT Security, ACN, NIS2, Golden Power e ISO 27001**, sviluppata in **SwiftUI / Xcode** con intelligenza artificiale potenziata da **Google Gemini 2.0 Flash**.
+**CyberNews** è una piattaforma e applicazione mobile nativa per iOS concepita per monitorare, aggregare e analizzare in tempo reale le minacce cibernetiche, gli avvisi di sicurezza critici e l'evoluzione del quadro normativo nazionale ed europeo.
 
----
-
-## 🎨 Design & Stile
-* **Tema**: Minimal Dark profondo (`#09090C`).
-* **Accento**: Cyber Orange vibrante (`#FF6B00`).
-* **Materiali**: Glassmorfismo (`.ultraThinMaterial`), bordi sfumati hairline e linee morbide con curve continue.
-* **Interazioni**: Animazioni spring fluide a 120 FPS e feedback aptico nativo Apple.
+> Un progetto ideato e sviluppato da **Lorenzo Frasconi** per professionisti della sicurezza informatica, CISO, amministratori di sistema, DPO e decision-maker aziendali.
 
 ---
 
-## 📂 Struttura del Progetto
+## 🎯 A Cosa Serve
 
-```
-NewsCyber/
-├── backend/                       # Motore di Ingestion & AI
-│   ├── .env                       # Variabili d'ambiente locali (PROTETTO DA GIT)
-│   ├── .env.example               # Template per le credenziali
-│   ├── requirements.txt           # Dipendenze Python
-│   ├── ingest.py                  # Script di scansione 19 fonti + sintesi Gemini 2.0
-│   ├── test_gemini.py             # Test rapido di connessione e prompt AI
-│   └── schema.sql                 # Schema PostgreSQL per Supabase con Row Level Security
-│
-├── ios/                           # Applicazione Nativa iPhone
-│   ├── CyberNews.xcodeproj        # Progetto Xcode (apribile con doppio clic)
-│   ├── project.yml                # Configurazione xcodegen
-│   └── CyberNews/
-│       ├── Sources/
-│       │   ├── CyberNewsApp.swift # Entry point SwiftUI con SwiftData
-│       │   ├── Theme/             # Palette colori, glassmorfismo e animazioni
-│       │   ├── Models/            # Article, ThreatLevel, NewsCategory, SavedArticle
-│       │   ├── ViewModels/        # NewsFeedViewModel
-│       │   ├── Services/          # NewsAPIService, HapticManager
-│       │   └── Views/             # HomeFeed, Governance, Bookmarks, Detail, Settings
-│       └── Resources/             # Assets.xcassets, Info.plist
-│
-└── .github/workflows/ingest.yml   # Automazione schedulata gratuita su GitHub Actions
-```
+Nel panorama odierno, le organizzazioni sono costantemente esposte a vulnerabilità critiche, incidenti ransomware e nuovi adempimenti di conformità perentori. CyberNews nasce per colmare il divario tra la massa eterogenea di bollettini tecnici e la necessità di prendere decisioni operative rapide ed efficaci.
+
+### 1. Monitoraggio Minacce & Zero-Day
+* Rilevamento immediato di vulnerabilità attivamente sfruttate (*Known Exploited Vulnerabilities*), zero-day ad altissimo impatto (come *PHP2Shell* o falle perimetrali) e campagne ransomware in corso.
+* Schede operative sintetiche con l'indicazione chiara del livello di gravità (*Critico, Alto, Medio, Informativo*) e dei sistemi impattati.
+
+### 2. Azioni Immediate di Mitigazione
+Ogni notizia critica include una sezione dedicata con la contromisura tecnica precisa: patch da applicare, firmware di emergenza, porte o interfacce da isolare e indicatori di compromissione (IoC) da verificare nei log.
+
+### 3. Governance, Compliance & Sovranità Tecnologica
+Una sezione interamente dedicata alle normative e alle disposizioni delle autorità italiane ed europee:
+* **ACN (Agenzia per la Cybersicurezza Nazionale)**: circolari, avvisi del CVCN e strategie cyber.
+* **Direttiva NIS2 (D.Lgs. 138/2024)**: adempimenti per soggetti essenziali e importanti, perimetri e obblighi di notifica incidenti entro 24 ore.
+* **Disciplina Golden Power (D.L. 21/2012)**: decreti governativi su 5G, cloud strategico, datacenter e fornitori di tecnologie critiche.
+* **DORA (Digital Operational Resilience Act)**: standard tecnici di resilienza per il comparto bancario e assicurativo.
+* **Standard ISO/IEC 27001**: transizione ai nuovi controlli dell'Annex A (Threat Intelligence e sicurezza cloud).
+
+### 4. Alert in Tempo Reale & Widget Personalizzabili
+* **Notifiche Push Prioritarie**: avvisi sonori e visivi tempestivi per le minacce a rischio critico.
+* **Widget iOS Configurabili**: widget per la Home e per la Schermata di Blocco che permettono di selezionare l'argomento preferito (es. *Zero-Day*, *NIS2 & Golden Power*, *Ransomware*) per visualizzare a colpo d'occhio l'ultimo allarme e la relativa azione preventiva.
 
 ---
 
-## 🚀 Come avviare l'App su iPhone
-
-1. Fai doppio clic sul file [`ios/CyberNews.xcodeproj`](file:///Users/lorenzofrasconi/Desktop/Progetti/NewsCyber/ios/CyberNews.xcodeproj) per aprirlo in **Xcode**.
-2. Collega il tuo iPhone al Mac tramite cavo o Wi-Fi.
-3. Nella scheda **Signing & Capabilities**, seleziona il tuo **Team Apple Developer**.
-4. Seleziona il tuo iPhone nel selettore in alto e premi il tasto **Play (Run)** ▶️.
-
----
-
-## 🔒 Sicurezza e Protezione Chiave Gemini
-
-L'applicazione segue l'architettura **Zero-Key on Device**:
-* Nessuna chiave privata è inclusa nell'app iPhone.
-* L'elaborazione con Gemini 2.0 Flash avviene esclusivamente nel backend schedulato.
-* L'app legge solo i dati già pronti via API REST con permessi di sola lettura.
+*Progetto riservato per uso e monitoraggio professionale.*
