@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import Combine
 
+@MainActor
 public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     public static let shared = AudioBriefingManager()
 
@@ -94,17 +95,17 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         currentArticleId = nil
     }
 
-    // MARK: - AVSpeechSynthesizerDelegate
-    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async {
+    // MARK: - AVSpeechSynthesizerDelegate (nonisolated per compatibilità Swift Concurrency)
+    nonisolated public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        Task { @MainActor in
             self.isPlaying = false
             self.isPaused = false
             self.currentArticleId = nil
         }
     }
 
-    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async {
+    nonisolated public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        Task { @MainActor in
             self.isPlaying = false
             self.isPaused = false
             self.currentArticleId = nil

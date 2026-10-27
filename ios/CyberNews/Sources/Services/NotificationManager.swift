@@ -214,7 +214,7 @@ public final class NotificationManager: NSObject, ObservableObject, UNUserNotifi
     public func sendTestNotification(completion: @escaping (Bool, String, Bool) -> Void) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
-            case .authorized, .provisional:
+            case .authorized, .provisional, .ephemeral:
                 self.dispatchTestNotification()
                 DispatchQueue.main.async {
                     completion(true, "Notifica di test inviata! Apparirà dall'alto tra 1 secondo (anche con l'app aperta).", false)
