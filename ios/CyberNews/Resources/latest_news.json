@@ -1,5 +1,410 @@
 [
   {
+    "id": "f612d52aa54e233b493f83f35a37c12e",
+    "url_hash": "300669ac76a8e6ebeea4a98dc7ec728e972dcaa79e0103231dd9b5cf313b2734",
+    "title_it": "ENISA Threat Landscape: Ransomware e Supply Chain dominano in Europa",
+    "original_title": "ENISA Threat Landscape: Ransomware e violazioni della Supply Chain al primo posto in Europa",
+    "summary_points": [
+      "L'ENISA ha pubblicato il rapporto annuale evidenziando ransomware e attacchi alla supply chain come principali minacce in Europa.",
+      "Gli attaccanti sfruttano identità compromesse e intelligenza artificiale generativa per spear phishing avanzato ed evasione EDR.",
+      "Aumenta la gravità degli incidenti, mettendo a rischio la resilienza operativa delle organizzazioni pubbliche e private."
+    ],
+    "action_mitigation": "Rafforzare i controlli IAM (Identity and Access Management) con MFA obbligatoria, auditare la supply chain e aggiornare le difese EDR contro le minacce basate su AI.",
+    "threat_level": "ALTO",
+    "category": "THREAT_INTEL",
+    "target_audience": "CISO",
+    "tags": [
+      "ENISA",
+      "Ransomware",
+      "SupplyChain",
+      "AI",
+      "ThreatLandscape"
+    ],
+    "source_name": "ENISA",
+    "source_url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2026",
+    "published_at": "1 mese fa",
+    "created_at": "2026-10-27T12:00:00.950482+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "b99a4e342af5daee5d7bd2def10fb1e0",
+    "url_hash": "861badd563135d063e7fb14acf34a2dc2a4a32ad7183f5c1810ab79cd441abc1",
+    "title_it": "CISA e NSA: Guida urgente per la sicurezza OT e SCADA industriali",
+    "original_title": "CISA & NSA: Guida urgente per la protezione dei sistemi OT e SCADA industriali",
+    "summary_points": [
+      "CISA e NSA hanno emesso un avviso congiunto per la protezione dei sistemi OT e SCADA in settori critici.",
+      "Attori statali stanno scansionando attivamente PLC e pannelli HMI esposti direttamente su internet.",
+      "Rischio di compromissione delle infrastrutture critiche con conseguenti interruzioni operative e di fornitura."
+    ],
+    "action_mitigation": "Segmentare immediatamente le reti OT da quelle IT e bloccare l'esposizione diretta su internet dei protocolli di telecontrollo.",
+    "threat_level": "CRITICO",
+    "category": "NIS2_GOLDEN_POWER",
+    "target_audience": "CISO",
+    "tags": [
+      "OT",
+      "SCADA",
+      "CISA",
+      "NSA",
+      "InfrastruttureCritiche"
+    ],
+    "source_name": "SecurityWeek",
+    "source_url": "https://www.securityweek.com/cisa-alert-critical-infrastructure-ot-scada/",
+    "published_at": "3 settimane fa",
+    "created_at": "2026-10-27T11:59:54.815534+00:00",
+    "is_breaking": true
+  },
+  {
+    "id": "eba5abcaee67eb73a68f66cf503dc60d",
+    "url_hash": "d7ff745d48455316e4838d52ded5e4e1f59028b9b2082361e86bc739e6d6294e",
+    "title_it": "Supply Chain Attack: 200+ pacchetti NPM e PyPI rubano credenziali AWS",
+    "original_title": "Supply Chain Cyber: Oltre 200 pacchetti NPM e PyPI malevoli trovati a rubare chiavi AWS e API token",
+    "summary_points": [
+      "Individuata una vasta campagna di attacco alla supply chain open source basata su centinaia di pacchetti typosquatting su NPM e PyPI.",
+      "I pacchetti malevoli imitano librerie popolari per Kubernetes, React e Python, utilizzando script di installazione con payload offuscati.",
+      "L'attacco esfiltra file di configurazione .env, chiavi SSH e credenziali AWS ~/.aws/credentials verso server C2 esterni."
+    ],
+    "action_mitigation": "Scansionare la supply chain software con strumenti SCA (Software Composition Analysis), verificare l'integrità delle dipendenze e revocare immediatamente le credenziali AWS e le chiavi SSH potenzialmente compromesse.",
+    "threat_level": "ALTO",
+    "category": "THREAT_INTEL",
+    "target_audience": "CISO",
+    "tags": [
+      "Supply Chain",
+      "NPM",
+      "PyPI",
+      "Typosquatting",
+      "Data Exfiltration"
+    ],
+    "source_name": "The Hacker News",
+    "source_url": "https://thehackernews.com/2026/10/npm-pypi-supply-chain-attacks.html",
+    "published_at": "3 settimane fa",
+    "created_at": "2026-10-27T11:59:53.425323+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "3bdae01a07ff010ac46b002207a87438",
+    "url_hash": "23ca285f6c4bc33156588f6e01cad17f913b3b970d0037cb1dc611b2e3968ad3",
+    "title_it": "Campagna phishing massiva in Italia a tema Agenzia Entrate e INPS",
+    "original_title": "CERT-AGID: Campagne massive di Phishing e Malware in Italia a tema Agenzia Entrate e INPS",
+    "summary_points": [
+      "Il CERT-AGID ha rilevato una vasta ondata di email di phishing e malware camuffate da comunicazioni istituzionali.",
+      "Gli attacchi utilizzano archivi ZIP protetti da password contenenti script o link a siti contraffatti per veicolare gli info-stealer AgentTesla e Formbook.",
+      "L'obiettivo è il furto di credenziali, password salvate nei browser e token di sessione di migliaia di utenti pubblici e privati."
+    ],
+    "action_mitigation": "Bloccare i domini e gli IP malevoli noti, sensibilizzare il personale contro il phishing a tema istituzionale e implementare l'autenticazione a due fattori (MFA) per mitigare il furto di credenziali.",
+    "threat_level": "ALTO",
+    "category": "THREAT_INTEL",
+    "target_audience": "CISO",
+    "tags": [
+      "CERT-AGID",
+      "Phishing",
+      "AgentTesla",
+      "Formbook",
+      "InfoStealer"
+    ],
+    "source_name": "CERT-AGID",
+    "source_url": "https://cert-agid.gov.it/notizie/campagne-malware-settimanali-italia",
+    "published_at": "2 settimane fa",
+    "created_at": "2026-10-27T11:59:47.044506+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "db26b70ad51f7ca62e9cab9da202fd87",
+    "url_hash": "41398944d4bba1a19531b32e066a6aa2a4976b5ae3c17464f4235ad406d7175a",
+    "title_it": "Garante Privacy: Sanzioni per mancata adozione di MFA e log",
+    "original_title": "Garante Privacy: Sanzioni e monito sull'adozione obbligatoria di MFA per amministratori di sistema",
+    "summary_points": [
+      "Il Garante Privacy ha sanzionato aziende sanitarie e private per inadeguatezza delle misure tecniche ex art. 32 GDPR.",
+      "L'Autorità ha imposto l'obbligo di MFA con canali cifrati e tracciamento immutabile dei log per i privilegi di amministratore.",
+      "La violazione espone i sistemi a accessi non autorizzati e comporta sanzioni amministrative pecuniarie rilevanti."
+    ],
+    "action_mitigation": "Implementare immediatamente l'autenticazione a più fattori (MFA) per tutti gli account con privilegi di amministratore di sistema e verificare la conservazione immutabile dei log per almeno sei mesi.",
+    "threat_level": "ALTO",
+    "category": "COMPLIANCE_ISO",
+    "target_audience": "DPO",
+    "tags": [
+      "GDPR",
+      "MFA",
+      "GarantePrivacy",
+      "Compliance",
+      "SysAdmin"
+    ],
+    "source_name": "Garante Privacy",
+    "source_url": "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/mfa-linee-guida",
+    "published_at": "2 settimane fa",
+    "created_at": "2026-10-27T11:59:38.045975+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "4ee488db4bc081e4c3202f0492611e2c",
+    "url_hash": "8670c97b448d1e5da1e5a178419aaed37a468b2790839259c85e132b977fe935",
+    "title_it": "Akira Ransomware intensifica gli attacchi contro VMware ESXi",
+    "original_title": "Ransomware Akira intensifica gli attacchi mirati a server VMware ESXi",
+    "summary_points": [
+      "Il gruppo cybercriminale Akira ha rilasciato una variante ottimizzata del proprio encryptor mirata agli hypervisor VMware ESXi.",
+      "Gli attacchi sfruttano credenze amministrative deboli o vulnerabilità non patchate per accedere agli host e arrestare le macchine virtuali.",
+      "L'attacco causa la rapida cifratura dei dischi virtuali (.vmdk) e colpisce organizzazioni sprovviste di backup isolati."
+    ],
+    "action_mitigation": "Applicare immediatamente le patch di sicurezza per le vulnerabilità note di VMware ESXi, rafforzare le policy di autenticazione amministrativa con MFA e verificare l'isolamento e l'immutabilità dei backup.",
+    "threat_level": "ALTO",
+    "category": "RANSOMWARE_ATTACCHI",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "Akira",
+      "Ransomware",
+      "VMware",
+      "ESXi",
+      "CyberAttacks"
+    ],
+    "source_name": "BleepingComputer",
+    "source_url": "https://www.bleepingcomputer.com/news/security/ransomware-akira-vmware-esxi-attacks/",
+    "published_at": "2 settimane fa",
+    "created_at": "2026-10-27T11:59:35.810754+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "eb80a07fedf5a98770c2e19611d5df7d",
+    "url_hash": "aee76e5c689951db9eba524f93402e17099da230b25ea4c4abba96c9c10cd883",
+    "title_it": "DORA: Pubblicati gli Standard Tecnici Definitivi (RTS)",
+    "original_title": "DORA: Pubblicati gli Standard Tecnici Definitivi (RTS) per banche e assicurazioni",
+    "summary_points": [
+      "Le Autorità Europee di Vigilanza (EBA, EIOPA, ESMA) hanno emanato il pacchetto finale di norme tecniche di regolamentazione (RTS) per il regolamento DORA.",
+      "Gli istituti finanziari devono implementare test avanzati TLPT, classificare i fornitori ICT critici e garantire adeguati accordi contrattuali.",
+      "Il mancato adeguamento espone a sanzioni e non conformità normativa nel settore finanziario e assicurativo europeo."
+    ],
+    "action_mitigation": "Aggiornare il framework di risk management ICT integrando i requisiti RTS, pianificare i test TLPT e rivedere i contratti con i fornitori terzi.",
+    "threat_level": "ALTO",
+    "category": "COMPLIANCE_ISO",
+    "target_audience": "CISO",
+    "tags": [
+      "DORA",
+      "EBA",
+      "TLPT",
+      "Compliance",
+      "ICT Risk"
+    ],
+    "source_name": "Cybersecurity360",
+    "source_url": "https://www.cybersecurity360.it/normative/dora-regolamento-finanziario-linee-guida-eba",
+    "published_at": "1 settimana fa",
+    "created_at": "2026-10-27T11:59:31.715381+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "c19460da32eea4a9927ef68dc30196c3",
+    "url_hash": "e88a306876e231d9f5ee70cbe321359aaa0feaa48611f707ea50fe71afe3a927",
+    "title_it": "Ivanti Connect Secure ed EPMM: exploit attivi in-the-wild da APT",
+    "original_title": "Ivanti Connect Secure ed EPMM: Rilevati exploit in-the-wild da gruppi APT",
+    "summary_points": [
+      "Rilevate catene di exploit attive contro le appliance Ivanti VPN ed Endpoint Manager da parte di gruppi APT.",
+      "Sfruttato un bypass di autenticazione combinato con injection per installare webshell in memoria e rubare credenziali AD, cancellando i log.",
+      "Compromissione totale della confidenzialità e integrità del perimetro di rete con perdita di visibilità forense."
+    ],
+    "action_mitigation": "Eseguire immediatamente lo strumento di integrità ICT di Ivanti, applicare le patch di sicurezza disponibili, revocare i certificati compromessi e verificare i log di accesso.",
+    "threat_level": "CRITICO",
+    "category": "VULNERABILITA_ZERODAY",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "Ivanti",
+      "RCE",
+      "APT",
+      "Webshell",
+      "ActiveDirectory"
+    ],
+    "source_name": "The Hacker News",
+    "source_url": "https://thehackernews.com/2026/10/ivanti-epmm-connect-secure-flaws.html",
+    "published_at": "1 settimana fa",
+    "created_at": "2026-10-27T11:59:21.155112+00:00",
+    "is_breaking": true
+  },
+  {
+    "id": "7ac4ec3321c3a1983ffce87e1e8980ac",
+    "url_hash": "613f778f564c08b24cd1eb6744512c64ed9888baa3db666bd56f89917482ab37",
+    "title_it": "Vulnerabilità Command Injection in Palo Alto Networks PAN-OS",
+    "original_title": "CSIRT Italia: Allerta su vulnerabilità critica di Command Injection in Palo Alto Networks PAN-OS",
+    "summary_points": [
+      "Rilevata una vulnerabilità critica di Command Injection nell'interfaccia di gestione di Palo Alto Networks PAN-OS.",
+      "Un utente non autenticato può sfruttare richieste HTTP crafted per eseguire comandi con privilegi root sul firewall.",
+      "Il vettore di attacco espone i dispositivi al rischio di compromissione totale se esposti direttamente su Internet."
+    ],
+    "action_mitigation": "Applicare immediatamente le hotfix fornite dal produttore e verificare che l'interfaccia di amministrazione sia isolata e non accessibile da Internet pubblico.",
+    "threat_level": "ALTO",
+    "category": "VULNERABILITA_ZERODAY",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "PaloAlto",
+      "PAN-OS",
+      "CommandInjection",
+      "RCE",
+      "CSIRT"
+    ],
+    "source_name": "CSIRT Italia",
+    "source_url": "https://www.csirt.gov.it/notizie/bollettino-palo-alto-panos",
+    "published_at": "1 settimana fa",
+    "created_at": "2026-10-27T11:59:19.427124+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "119ee305bd23412e8162d4815feaf99d",
+    "url_hash": "d40ae09a97d5d2667abc9ca9a7ccf021cd646438c33f8f4d9539a28f8dbc183a",
+    "title_it": "Apple: patch urgente per zero-day in CoreGraphics sfruttato attivamente",
+    "original_title": "Apple rilascia patch di sicurezza urgenti per zero-day in CoreGraphics sfruttato attivamente",
+    "summary_points": [
+      "Apple ha rilasciato aggiornamenti di emergenza per iOS, iPadOS e macOS per correggere una vulnerabilità zero-day.",
+      "La falla risiede in CoreGraphics e viene sfruttata tramite file immagine o PDF appositamente manipolati per l'esecuzione di codice.",
+      "La vulnerabilità è utilizzata in attacchi mirati da operatori di spyware mercenario, esponendo i dispositivi aziendali a gravi rischi."
+    ],
+    "action_mitigation": "Aggiornare immediatamente tutti i dispositivi iOS, iPadOS e macOS aziendali all'ultima versione disponibile fornita da Apple.",
+    "threat_level": "CRITICO",
+    "category": "VULNERABILITA_ZERODAY",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "Apple",
+      "Zero-Day",
+      "CoreGraphics",
+      "Spyware",
+      "RCE"
+    ],
+    "source_name": "BleepingComputer",
+    "source_url": "https://www.bleepingcomputer.com/news/security/apple-coregraphics-zeroday-ios-macos-patch/",
+    "published_at": "6 giorni fa",
+    "created_at": "2026-10-27T11:59:14.928883+00:00",
+    "is_breaking": true
+  },
+  {
+    "id": "5b3da9e33c069dd55b1b0d801c56ce67",
+    "url_hash": "b93404aca56e1f3f2e8bc6195cd464ea11903ee86234bab8d338086a5b9105f5",
+    "title_it": "Scadenza transizione ISO/IEC 27001:2022: adempimenti obbligatori",
+    "original_title": "ISO/IEC 27001:2022: Il conto alla rovescia per la transizione dei Sistemi di Gestione della Sicurezza",
+    "summary_points": [
+      "Si avvicina la scadenza definitiva per completare la transizione delle certificazioni ISO/IEC 27001 alla versione 2022.",
+      "I nuovi requisiti impongono l'implementazione formale dei controlli Annex A 5.7, 5.23 e 8.9 con aggiornamento della SoA.",
+      "La mancata conformità comporterà il mancato rinnovo dei certificati da parte degli auditor internazionali."
+    ],
+    "action_mitigation": "Aggiornare immediatamente la Dichiarazione di Applicabilità (SoA) e implementare i nuovi controlli dell'Annex A relativi a Threat Intelligence, Cloud Services e Configuration Management prima dell'audit di transizione.",
+    "threat_level": "MEDIO",
+    "category": "COMPLIANCE_ISO",
+    "target_audience": "CISO",
+    "tags": [
+      "ISO27001",
+      "Compliance",
+      "AnnexA",
+      "SoA",
+      "Governance"
+    ],
+    "source_name": "Cybersecurity360",
+    "source_url": "https://www.cybersecurity360.it/normative/iso-27001-2022-scadenza-transizione",
+    "published_at": "5 giorni fa",
+    "created_at": "2026-10-27T11:59:11.433481+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "b3b2f0060d8097630f6cbfd2d6029f65",
+    "url_hash": "ba46bb5b9ca1ec7e492eebe605871011a1a8414e78a1e84db5552244e78feaee",
+    "title_it": "Golden Power: nuovi obblighi per cloud e infrastrutture telco",
+    "original_title": "Golden Power: Rafforzati i poteri speciali su accordi cloud e infrastrutture critiche delle telco",
+    "summary_points": [
+      "Il Governo italiano ha approvato nuove linee guida operative sul Golden Power per reti telco e datacenter strategici.",
+      "Obbligo di notifica preventiva per contratti cloud e componenti core, con verifiche di sicurezza obbligatorie del CVCN (ACN).",
+      "Maggiore controllo statale sulle catene di fornitura digitali per prevenire rischi geopolitici e vulnerabilità sistemiche."
+    ],
+    "action_mitigation": "Aggiornare le procedure di compliance e due diligence per i contratti di fornitura cloud e hardware strategico, pianificando i tempi di notifica preventiva al Dipartimento e le verifiche CVCN/ACN.",
+    "threat_level": "ALTO",
+    "category": "NIS2_GOLDEN_POWER",
+    "target_audience": "CISO",
+    "tags": [
+      "GoldenPower",
+      "ACN",
+      "Cloud",
+      "Telecomunicazioni",
+      "Compliance"
+    ],
+    "source_name": "Agenda Digitale",
+    "source_url": "https://www.agendadigitale.eu/sicurezza/golden-power-cloud-5g",
+    "published_at": "4 giorni fa",
+    "created_at": "2026-10-27T11:59:05.047949+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "6bc94f0973465afb383360fda88ef7d4",
+    "url_hash": "5c869083517a66efa62476c10416efac3793999d2e66f6bb19c339e25d9e0ec5",
+    "title_it": "ACN: Operativa la piattaforma nazionale di registrazione NIS2",
+    "original_title": "ACN: Avviata la piattaforma nazionale NIS2 per la registrazione dei soggetti essenziali e importanti",
+    "summary_points": [
+      "L'Agenzia per la Cybersicurezza Nazionale ha attivato la piattaforma ufficiale per gli adempimenti del D.Lgs. 138/2024 (recepimento NIS2).",
+      "I soggetti essenziali e importanti dei settori critici (energia, trasporti, finanza, sanità, digitale) devono registrarsi e indicare i referenti.",
+      "Il mancato rispetto degli obblighi e la mancata notifica degli incidenti entro 24 ore comportano pesanti sanzioni e responsabilità dirette."
+    ],
+    "action_mitigation": "Verificare l'inclusione della propria organizzazione tra i soggetti essenziali o importanti, accedere alla piattaforma ACN e completare la registrazione dei referenti tecnici e legali.",
+    "threat_level": "ALTO",
+    "category": "NIS2_GOLDEN_POWER",
+    "target_audience": "CISO",
+    "tags": [
+      "NIS2",
+      "ACN",
+      "Compliance",
+      "D.Lgs.138/2024",
+      "IncidentResponse"
+    ],
+    "source_name": "ACN",
+    "source_url": "https://www.acn.gov.it/portale-nis2/comunicati",
+    "published_at": "3 giorni fa",
+    "created_at": "2026-10-27T11:58:58.948982+00:00",
+    "is_breaking": false
+  },
+  {
+    "id": "a48f786ebd8aba67d5b382a9a5cf0094",
+    "url_hash": "48c22019ead89f16053f0854a46fac8f23a92c9aa0cdf6884e1ac9048a77e2a9",
+    "title_it": "CISA inserisce le vulnerabilità PHP2Shell nel catalogo KEV",
+    "original_title": "CISA Adds PHP2Shell Flaws to Known Exploited Vulnerabilities (KEV) Catalog",
+    "summary_points": [
+      "La CISA ha aggiunto le vulnerabilità PHP2Shell (CVE-2026-109618 e CVE-2026-109619) al catalogo Known Exploited Vulnerabilities a seguito di evidenze di sfruttamento attivo.",
+      "Le falle consentono ad attaccanti remoti non autenticati di causare corruzione della memoria arbitraria ed esecuzione di codice sui server web vulnerabili.",
+      "Rischio critico per le applicazioni web esposte, con obbligo di patch immediata entro 48 ore per prevenire compromissioni totali del sistema."
+    ],
+    "action_mitigation": "Applicare immediatamente le patch di sicurezza ufficiali rilasciate dai vendor per le CVE-2026-109618 e CVE-2026-109619 entro 48 ore, o isolare i servizi vulnerabili dalla rete.",
+    "threat_level": "CRITICO",
+    "category": "VULNERABILITA_ZERODAY",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "PHP2Shell",
+      "KEV",
+      "RCE",
+      "CISA",
+      "Vulnerability"
+    ],
+    "source_name": "CISA Alerts",
+    "source_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-php2shell",
+    "published_at": "Ieri, 21:00",
+    "created_at": "2026-10-27T11:58:57.640002+00:00",
+    "is_breaking": true
+  },
+  {
+    "id": "ba9da2792d3101df9f1ce51231d1395c",
+    "url_hash": "d8f2b9703f84b9e34af2d0c9382b2bf06327d50316f27dee3ea3324166e256ec",
+    "title_it": "Vulnerabilità critiche RCE PHP2Shell (CVE-2026-109618/19)",
+    "original_title": "PHP2Shell: Critical Remote Code Execution Flaws (CVE-2026-109618 & CVE-2026-109619) Threaten Core PHP",
+    "summary_points": [
+      "Rilevate due gravi vulnerabilità di memory safety (CVE-2026-109618 e CVE-2026-109619) nel core di PHP.",
+      "Le falle permettono esecuzione di codice remoto (RCE) non autenticato su versioni da PHP 5.4 a PHP 8.5 tramite corruzione della memoria.",
+      "CISA ha inserito le CVE nel catalogo KEV a seguito di attacchi attivi confermati in natura."
+    ],
+    "action_mitigation": "Aggiornare immediatamente PHP alle versioni 8.5.12, 8.4.27, 8.3.36 o 8.2.35 e verificare i log di Apache mod_php, PHP-FPM e LiteSpeed.",
+    "threat_level": "CRITICO",
+    "category": "VULNERABILITA_ZERODAY",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "PHP",
+      "PHP2Shell",
+      "RCE",
+      "CISA",
+      "CVE-2026-109618"
+    ],
+    "source_name": "The Hacker News",
+    "source_url": "https://thehackernews.com/2026/10/php2shell-critical-rce-vulnerabilities.html",
+    "published_at": "Ieri, 18:30",
+    "created_at": "2026-10-27T11:58:51.749136+00:00",
+    "is_breaking": true
+  },
+  {
     "id": "5a56b75d9a1b94de8c8e2d34a3f2b83a",
     "url_hash": "b8af17c4e8e231442f93f67766af49c666e8a317704e8b7ed956c1ce31f9ae52",
     "title_it": "SANS ISC Stormcast: Aggiornamento Minacce del 27 Ottobre 2026",
