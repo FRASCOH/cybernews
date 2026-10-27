@@ -12,6 +12,9 @@ struct CyberNewsApp: App {
         let key = UserDefaults.standard.string(forKey: "supabase_anon_key") ?? ""
         NewsAPIService.shared.supabaseURL = url
         NewsAPIService.shared.supabaseAnonKey = key
+
+        // Richiedi permessi per gli allarmi critici
+        NotificationManager.shared.requestAuthorization()
     }
 
     var body: some Scene {

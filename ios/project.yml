@@ -8,7 +8,7 @@ settings:
   base:
     IPHONEOS_DEPLOYMENT_TARGET: "17.0"
     SWIFT_VERSION: "5.9"
-    DEVELOPMENT_TEAM: "" # Inserire il Team ID Apple Developer in Xcode
+    DEVELOPMENT_TEAM: ""
 
 targets:
   CyberNews:
@@ -18,6 +18,8 @@ targets:
     sources:
       - path: CyberNews/Sources
       - path: CyberNews/Resources
+    dependencies:
+      - target: CyberNewsWidget
     settings:
       base:
         PRODUCT_NAME: "CyberNews"
@@ -25,6 +27,22 @@ targets:
         INFOPLIST_FILE: "CyberNews/Resources/Info.plist"
         ASSETCATALOG_COMPILER_APPICON_NAME: "AppIcon"
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: "AccentColor"
-        TARGETED_DEVICE_FAMILY: "1" # Solo iPhone
+        TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+
+  CyberNewsWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: CyberNewsWidget/Sources
+      - path: CyberNewsWidget/Resources
+      - path: CyberNews/Resources/latest_news.json
+    settings:
+      base:
+        PRODUCT_NAME: "CyberNewsWidget"
+        PRODUCT_BUNDLE_IDENTIFIER: "it.cybernews.app.CyberNewsWidget"
+        INFOPLIST_FILE: "CyberNewsWidget/Resources/Info.plist"
+        TARGETED_DEVICE_FAMILY: "1"
         SWIFT_EMIT_LOC_STRINGS: YES
