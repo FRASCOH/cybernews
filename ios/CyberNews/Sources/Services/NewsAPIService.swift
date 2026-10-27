@@ -4,9 +4,9 @@ public final class NewsAPIService {
     public static let shared = NewsAPIService()
     private init() {}
 
-    // Inserire le credenziali Supabase (opzionale, se vuote usa i dati simulati realistici)
-    public var supabaseURL: String = ""
-    public var supabaseAnonKey: String = ""
+    // Credenziali Supabase predefinite (la chiave anon è pubblica e protetta da RLS in sola lettura)
+    public var supabaseURL: String = "https://stkmmwwpwrbnkigkuwdp.supabase.co"
+    public var supabaseAnonKey: String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21td3dwd3JibmtpZ2t1d2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTgyMTksImV4cCI6MjEwODY3NDIxOX0.oT8tH06YDvfve36AIg0bvrrIa2bjXCFIJxPYLBxcoB0"
 
     public func fetchArticles() async throws -> [Article] {
         // Se Supabase è configurato, effettua la chiamata REST
