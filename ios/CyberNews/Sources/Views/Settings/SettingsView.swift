@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 public struct SettingsView: View {
     @AppStorage("push_notifications_enabled") private var pushNotificationsEnabled: Bool = true
@@ -7,6 +8,9 @@ public struct SettingsView: View {
     @AppStorage("notify_governance") private var notifyGovernance: Bool = true
 
     @State private var showingTestSentAlert = false
+    @State private var testAlertTitle = ""
+    @State private var testAlertMessage = ""
+    @State private var isPermissionDenied = false
 
     public init() {}
 
@@ -48,7 +52,7 @@ public struct SettingsView: View {
                                     Text("Notifiche Push Attive")
                                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                                         .foregroundStyle(.white)
-                                    Text("Avviso istantaneo non appena esce una notizia")
+                                    Text("Avviso prioritario con audio e vibrazione aptica")
                                         .font(.system(size: 12))
                                         .foregroundStyle(.white.opacity(0.55))
                                 }
@@ -99,13 +103,17 @@ public struct SettingsView: View {
                                 // Tasto di Prova Notifica
                                 Button {
                                     HapticManager.shared.notification(.success)
-                                    NotificationManager.shared.sendTestNotification()
-                                    showingTestSentAlert = true
+                                    NotificationManager.shared.sendTestNotification { success, message, isDenied in
+                                        testAlertTitle = success ? "Notifica Inviata! 🔔" : "Permessi Richiesti ⚠️"
+                                        testAlertMessage = message
+                                        isPermissionDenied = isDenied
+                                        showingTestSentAlert = true
+                                    }
                                 } label: {
                                     HStack(spacing: 8) {
                                         Image(systemName: "paperplane.fill")
                                             .font(.system(size: 12))
-                                        Text("Invia Notifica di Prova (Blocca lo schermo per vederla)")
+                                        Text("Invia Notifica di Prova Adesso")
                                     }
                                     .font(.system(size: 13, weight: .bold, design: .rounded))
                                     .foregroundStyle(CyberTheme.orangePrimary)
@@ -140,7 +148,7 @@ public struct SettingsView: View {
                                 .foregroundStyle(CyberTheme.orangePrimary)
                         }
 
-                        Text("L'app legge le notizie direttamente dal database cloud sicuro protetto da Row-Level Security (RLS). Nessuna chiave privata è archiviata sull'iPhone.")
+                        Text("L'app legge le notizie direttamente dal database cloud sicuro protetto da Row-Level Security (RLS). Nessuna chiave privata o credenziale Gemini è archiviata sull'iPhone.")
                             .font(.system(size: 13, weight: .regular))
                             .foregroundStyle(.white.opacity(0.8))
                             .lineSpacing(3)
@@ -180,10 +188,19 @@ public struct SettingsView: View {
                 .padding(.horizontal, 20)
             }
         }
-        .alert("Notifica di Prova Inviata! 🔔", isPresented: $showingTestSentAlert) {
-            Button("OK", role: .cancel) {}
+        .alert(testAlertTitle, isPresented: $showingTestSentAlert) {
+            if isPermissionDenied {
+                Button("Apri Impostazioni iPhone") {
+                    if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(settingsUrl)
+                    }
+                }
+                Button("Annulla", role: .cancel) {}
+            } else {
+                Button("OK", role: .cancel) {}
+            }
         } message: {
-            Text("La notifica è stata programmata. Se blocchi lo schermo o esci dall'app, vedrai apparire l'avviso con audio e badge.")
+            Text(testAlertMessage)
         }
     }
 }

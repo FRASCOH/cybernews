@@ -1,21 +1,55 @@
 import Foundation
 import UserNotifications
+import UIKit
 
-public final class NotificationManager {
+public final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     public static let shared = NotificationManager()
-    private init() {}
 
     private let lastSeenKey = "cybernews_last_seen_article_id"
     private let notifiedIdsKey = "cybernews_notified_article_ids"
 
-    public func requestAuthorization() {
+    override private init() {
+        super.init()
+        UNUserNotificationCenter.current().delegate = self
+    }
+
+    public func requestAuthorization(completion: ((Bool) -> Void)? = nil) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted {
                 print("✅ Permesso notifiche concesso dall'utente")
             } else if let error = error {
                 print("❌ Errore richiesta permessi notifiche: \(error)")
             }
+            DispatchQueue.main.async {
+                completion?(granted)
+            }
         }
+    }
+
+    public func checkPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                completion(settings.authorizationStatus)
+            }
+        }
+    }
+
+    // MARK: - UNUserNotificationCenterDelegate
+    // Permette di mostrare il banner e suonare ANCHE quando l'app è aperta in primo piano (foreground)
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .sound, .badge, .list])
+    }
+
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        completionHandler()
     }
 
     /// Controlla se sono arrivate nuove notizie e invia notifiche in base alle preferenze dell'utente
@@ -90,21 +124,59 @@ public final class NotificationManager {
         }
     }
 
-    /// Invia una notifica di prova immediata per verificare audio, badge e anteprima
-    public func sendTestNotification() {
-        let content = UNMutableNotificationContent()
-        content.title = "🚨 [TEST] CyberNews Alert"
-        content.subtitle = "Vulnerabilità RCE rilevata (Esempio Test)"
-        content.body = "Azione consigliata: Patch d'emergenza rilasciata. Verifica la configurazione dei sistemi."
-        content.sound = .default
+    /// Invia una notifica di prova verificando prima lo stato dei permessi
+    public func sendTestNotification(completion: @escaping (Bool, String, Bool) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional:
+                self.dispatchTestNotification()
+                DispatchQueue.main.async {
+                    completion(true, "Notifica di test inviata! Apparirà dall'alto tra 1 secondo (anche con l'app aperta).", false)
+                }
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.5, repeats: false)
+            case .notDetermined:
+                self.requestAuthorization { granted in
+                    if granted {
+                        self.dispatchTestNotification()
+                        completion(true, "Permesso concesso! Notifica di test inviata.", false)
+                    } else {
+                        completion(false, "Permesso notifiche rifiutato. Puoi abilitarlo dalle Impostazioni di iOS.", true)
+                    }
+                }
+
+            case .denied:
+                DispatchQueue.main.async {
+                    completion(false, "Le notifiche sono DISATTIVATE per CyberNews nelle Impostazioni di iOS. Tocca il tasto qui sotto per aprirle e abilitarle.", true)
+                }
+
+            @unknown default:
+                self.dispatchTestNotification()
+                DispatchQueue.main.async {
+                    completion(true, "Notifica di test programmata.", false)
+                }
+            }
+        }
+    }
+
+    private func dispatchTestNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "🚨 [TEST CRITICO] CyberNews Alert"
+        content.subtitle = "Vulnerabilità RCE Rilevata (Simulazione)"
+        content.body = "Azione consigliata: Rilasciata patch di emergenza. Verifica e aggiorna i server esposti."
+        content.sound = .defaultCritical
+        content.badge = 1
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
         let request = UNNotificationRequest(
             identifier: "test-notification-\(UUID().uuidString)",
             content: content,
             trigger: trigger
         )
 
-        UNUserNotificationCenter.current().add(request)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("⚠️ Errore add request: \(error)")
+            }
+        }
     }
 }
