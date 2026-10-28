@@ -216,6 +216,8 @@ struct CyberNewsWidgetEntryView : View {
                 mediumWidgetView
             case .systemLarge:
                 largeWidgetView
+            case .systemExtraLarge:
+                largeWidgetView
             case .accessoryRectangular:
                 lockScreenRectangularView
             case .accessoryInline:
@@ -249,44 +251,106 @@ struct CyberNewsWidgetEntryView : View {
 
     // SMALL WIDGET (Home Screen)
     var smallWidgetView: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            // Header: Categoria scelta
-            HStack {
-                Text(entry.categoryName.uppercased())
-                    .font(.system(size: 9, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+        VStack(alignment: .leading, spacing: 5) {
+            // Header: Categoria + Threat Level Badge
+            HStack(alignment: .center) {
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(Color(red: 1.0, green: 0.42, blue: 0.0))
+                        .frame(width: 5.5, height: 5.5)
+
+                    Text(entry.categoryName)
+                        .font(.system(size: 9.5, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 2)
+
+                Text(entry.threatLevel)
+                    .font(.system(size: 8, weight: .heavy, design: .rounded))
+                    .foregroundStyle(threatColor(for: entry.threatLevel))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(
+                        Capsule()
+                            .fill(threatColor(for: entry.threatLevel).opacity(0.16))
+                    )
+                    .overlay(
+                        Capsule()
+                            .strokeBorder(threatColor(for: entry.threatLevel).opacity(0.35), lineWidth: 0.7)
+                    )
+            }
+
+            // Titolo Notizia (2 righe)
+            Text(entry.title)
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .lineLimit(2)
+                .lineSpacing(1.2)
+                .fixedSize(horizontal: false, vertical: true)
+
+            // Box Azione / Mitigazione Rapida
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 3) {
+                    Image(systemName: "bolt.shield.fill")
+                        .font(.system(size: 7.5))
+                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+
+                    Text("AZIONE")
+                        .font(.system(size: 7.5, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color(red: 1.0, green: 0.42, blue: 0.0))
+                }
+
+                Text(entry.action)
+                    .font(.system(size: 9.5, weight: .medium, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.92))
+                    .lineLimit(2)
+                    .lineSpacing(1.1)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(6)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(red: 1.0, green: 0.42, blue: 0.0).opacity(0.12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .stroke(Color(red: 1.0, green: 0.42, blue: 0.0).opacity(0.22), lineWidth: 0.8)
+                    )
+            )
+
+            Spacer(minLength: 0)
+
+            // Footer: Fonte + Tag primario
+            HStack(alignment: .center) {
+                Text(entry.source)
+                    .font(.system(size: 8.5, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.55))
                     .lineLimit(1)
 
-                Spacer()
+                Spacer(minLength: 2)
 
-                Circle()
-                    .fill(threatColor(for: entry.threatLevel))
-                    .frame(width: 8, height: 8)
-            }
-
-            Text(entry.title)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
-                .lineLimit(3)
-
-            Spacer()
-
-            HStack {
-                Text(entry.threatLevel)
-                    .font(.system(size: 9, weight: .heavy, design: .rounded))
-                    .foregroundStyle(threatColor(for: entry.threatLevel))
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Capsule().fill(threatColor(for: entry.threatLevel).opacity(0.15)))
-
-                Spacer()
-
-                Text(entry.source)
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.5))
+                if let firstTag = entry.tags.first, !firstTag.isEmpty {
+                    Text("#\(firstTag)")
+                        .font(.system(size: 8, weight: .medium, design: .monospaced))
+                        .foregroundStyle(Color(red: 0.40, green: 0.94, blue: 1.0))
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1.5)
+                        .background(
+                            Capsule()
+                                .fill(Color(red: 0.0, green: 0.75, blue: 1.0).opacity(0.12))
+                        )
+                        .lineLimit(1)
+                } else if let pub = entry.publishedAt, !pub.isEmpty {
+                    Text(pub)
+                        .font(.system(size: 8, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.45))
+                        .lineLimit(1)
+                }
             }
         }
-        .padding(14)
+        .padding(11)
         .containerBackground(Color(red: 0.04, green: 0.04, blue: 0.05), for: .widget)
     }
 
@@ -560,6 +624,6 @@ struct CyberNewsWidget: Widget {
         }
         .configurationDisplayName("CyberNews Argomenti")
         .description("Tieni premuto il widget per scegliere l'argomento (es. NIS2, Zero-Day, Ransomware) da monitorare.")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryRectangular, .accessoryInline])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge, .accessoryRectangular, .accessoryInline])
     }
 }
