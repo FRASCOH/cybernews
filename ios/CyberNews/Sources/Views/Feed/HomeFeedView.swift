@@ -4,6 +4,7 @@ import SwiftData
 public struct HomeFeedView: View {
     @ObservedObject public var viewModel: NewsFeedViewModel
     @ObservedObject private var readTracker = ArticleReadTracker.shared
+    @ObservedObject private var audioManager = AudioBriefingManager.shared
     @Query private var savedArticles: [SavedArticle]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
@@ -186,6 +187,65 @@ public struct HomeFeedView: View {
                             }
                             .buttonStyle(.plain)
                             .padding(.top, 4)
+                        }
+
+                        // 🎙️ Card Rassegna Vocale del Giorno (Hands-Free)
+                        if !viewModel.filteredArticles.isEmpty {
+                            Button {
+                                HapticManager.shared.impact(.medium)
+                                if audioManager.isDailyBriefingMode && audioManager.isPlaying {
+                                    audioManager.pause()
+                                } else if audioManager.isDailyBriefingMode && audioManager.isPaused {
+                                    audioManager.resume()
+                                } else {
+                                    audioManager.startDailyBriefing(articles: viewModel.filteredArticles)
+                                }
+                            } label: {
+                                HStack(spacing: 12) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(CyberTheme.orangePrimary.opacity(0.18))
+                                            .frame(width: 40, height: 40)
+                                        Image(systemName: "waveform.circle.fill")
+                                            .font(.system(size: 22))
+                                            .foregroundStyle(CyberTheme.orangePrimary)
+                                    }
+
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        HStack(spacing: 6) {
+                                            Text("RASSEGNA VOCALE DEL GIORNO")
+                                                .font(.system(size: 11, weight: .heavy, design: .rounded))
+                                                .foregroundStyle(CyberTheme.orangePrimary)
+
+                                            Text("• CONTINUA")
+                                                .font(.system(size: 9, weight: .bold))
+                                                .foregroundStyle(CyberTheme.cyanPrimary)
+                                        }
+
+                                        Text(audioManager.isDailyBriefingMode && audioManager.isPlaying
+                                             ? "In riproduzione: \(audioManager.playlistProgressText)"
+                                             : "Ascolta rassegna hands-free (\(viewModel.filteredArticles.count) notizie)")
+                                            .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                            .foregroundStyle(.white)
+                                            .lineLimit(1)
+                                    }
+
+                                    Spacer()
+
+                                    Image(systemName: audioManager.isDailyBriefingMode && audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                                        .font(.system(size: 28))
+                                        .foregroundStyle(CyberTheme.orangePrimary)
+                                }
+                                .padding(12)
+                                .glassmorphic(cornerRadius: 18)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                        .stroke(audioManager.isDailyBriefingMode && audioManager.isPlaying
+                                                ? CyberTheme.orangePrimary.opacity(0.6)
+                                                : Color.white.opacity(0.08), lineWidth: 1)
+                                )
+                            }
+                            .buttonStyle(.plain)
                         }
 
                         // Badge indicatore filtro tag attivo

@@ -24,7 +24,9 @@ public enum CyberTab: Int, CaseIterable {
 
 public struct MainTabView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
+    @ObservedObject private var audioManager = AudioBriefingManager.shared
     @State private var selectedTab: CyberTab = .feed
+    @State private var selectedArticleForDetail: Article? = nil
 
     public init() {}
 
@@ -43,57 +45,70 @@ public struct MainTabView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            // Floating Glassmorphic Tab Bar a 3 Tab
-            HStack(spacing: 0) {
-                ForEach(CyberTab.allCases, id: \.self) { tab in
-                    let isSelected = tab == selectedTab
-
-                    Button {
-                        HapticManager.shared.selection()
-                        withAnimation(CyberTheme.quickSpring) {
-                            selectedTab = tab
-                        }
-                    } label: {
-                        VStack(spacing: 4) {
-                            Image(systemName: tab.iconName)
-                                .font(.system(size: 19, weight: isSelected ? .bold : .medium))
-                                .foregroundStyle(isSelected ? CyberTheme.orangePrimary : .white.opacity(0.45))
-                                .scaleEffect(isSelected ? 1.12 : 1.0)
-
-                            Text(tab.title)
-                                .font(.system(size: 11, weight: isSelected ? .bold : .medium, design: .rounded))
-                                .foregroundStyle(isSelected ? CyberTheme.orangePrimary : .white.opacity(0.45))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+            VStack(spacing: 8) {
+                // Floating Mini Audio Player (Rassegna & Singolo Articolo)
+                if audioManager.currentArticleId != nil {
+                    FloatingAudioPlayerView { article in
+                        selectedArticleForDetail = article
                     }
-                    .buttonStyle(.plain)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
+
+                // Floating Glassmorphic Tab Bar a 3 Tab
+                HStack(spacing: 0) {
+                    ForEach(CyberTab.allCases, id: \.self) { tab in
+                        let isSelected = tab == selectedTab
+
+                        Button {
+                            HapticManager.shared.selection()
+                            withAnimation(CyberTheme.quickSpring) {
+                                selectedTab = tab
+                            }
+                        } label: {
+                            VStack(spacing: 4) {
+                                Image(systemName: tab.iconName)
+                                    .font(.system(size: 19, weight: isSelected ? .bold : .medium))
+                                    .foregroundStyle(isSelected ? CyberTheme.orangePrimary : .white.opacity(0.45))
+                                    .scaleEffect(isSelected ? 1.12 : 1.0)
+
+                                Text(tab.title)
+                                    .font(.system(size: 11, weight: isSelected ? .bold : .medium, design: .rounded))
+                                    .foregroundStyle(isSelected ? CyberTheme.orangePrimary : .white.opacity(0.45))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .background(
+                    Capsule()
+                        .fill(.ultraThinMaterial)
+                        .overlay(
+                            Capsule()
+                                .stroke(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.white.opacity(0.20),
+                                            Color.white.opacity(0.05),
+                                            CyberTheme.orangePrimary.opacity(0.2)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1.2
+                                )
+                        )
+                        .shadow(color: Color.black.opacity(0.45), radius: 16, x: 0, y: 8)
+                )
+                .padding(.horizontal, 36)
+                .padding(.bottom, 14)
             }
-            .padding(.horizontal, 20)
-            .background(
-                Capsule()
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        Capsule()
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        Color.white.opacity(0.20),
-                                        Color.white.opacity(0.05),
-                                        CyberTheme.orangePrimary.opacity(0.2)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 1.2
-                            )
-                    )
-                    .shadow(color: Color.black.opacity(0.45), radius: 16, x: 0, y: 8)
-            )
-            .padding(.horizontal, 36)
-            .padding(.bottom, 14)
         }
         .ignoresSafeArea(.keyboard)
+        .sheet(item: $selectedArticleForDetail) { article in
+            ArticleDetailView(article: article)
+        }
     }
 }
