@@ -17,6 +17,14 @@ from dotenv import load_dotenv
 import feedparser
 import requests
 
+try:
+    from notifier import dispatch_remote_alerts
+except ImportError:
+    try:
+        from backend.notifier import dispatch_remote_alerts
+    except ImportError:
+        dispatch_remote_alerts = lambda a: False
+
 # Carica le variabili da backend/.env
 load_dotenv()
 
@@ -395,6 +403,13 @@ def run_ingestion(limit_per_source: int = 3):
                 save_article(article_record)
                 total_new += 1
                 print(f"    Salvato: [{article_record['threat_level']}] {article_record['title_it'][:45]}...")
+
+                # Spedisci notifica push remota (Telegram / OneSignal) per allarmi critici
+                if article_record.get("threat_level") == "CRITICO":
+                    try:
+                        dispatch_remote_alerts(article_record)
+                    except Exception as notify_err:
+                        print(f"    ⚠️ Errore invio alert remoto: {notify_err}")
 
         except Exception as e:
             print(f"❌ Errore durante il recupero da {name}: {e}")
