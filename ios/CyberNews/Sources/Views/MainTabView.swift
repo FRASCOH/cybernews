@@ -110,5 +110,38 @@ public struct MainTabView: View {
         .sheet(item: $selectedArticleForDetail) { article in
             ArticleDetailView(article: article)
         }
+        .onOpenURL { url in
+            handleDeepLink(url: url)
+        }
+    }
+
+    // MARK: - Gestione Deep Link (Widget & Notifiche)
+    private func handleDeepLink(url: URL) {
+        guard url.scheme?.lowercased() == "cybernews" else { return }
+
+        // Caso 1: cybernews://article/<article_id>
+        if url.host == "article" {
+            let targetId = url.lastPathComponent
+            guard !targetId.isEmpty, targetId != "article" else { return }
+
+            if let matched = viewModel.articles.first(where: { $0.id == targetId || $0.urlHash == targetId }) {
+                selectedArticleForDetail = matched
+                ArticleReadTracker.shared.markAsRead(id: matched.id)
+            } else {
+                Task {
+                    await viewModel.loadArticles(forceRefresh: false)
+                    if let matched = viewModel.articles.first(where: { $0.id == targetId || $0.urlHash == targetId }) {
+                        selectedArticleForDetail = matched
+                        ArticleReadTracker.shared.markAsRead(id: matched.id)
+                    }
+                }
+            }
+        } else if url.host == "audio" {
+            // Caso 2: cybernews://audio (avvia rassegna)
+            AudioBriefingManager.shared.startDailyBriefing(articles: viewModel.filteredArticles)
+        } else {
+            // Caso 3: cybernews://feed
+            selectedTab = .feed
+        }
     }
 }

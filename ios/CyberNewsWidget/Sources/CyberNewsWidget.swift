@@ -56,6 +56,7 @@ struct ConfigurableProvider: AppIntentTimelineProvider {
     private var fallbackEntry: CyberNewsEntry {
         CyberNewsEntry(
             date: Date(),
+            articleId: "art-1",
             title: "Vulnerabilità critiche RCE PHP2Shell (CVE-2026-109618/19)",
             source: "The Hacker News",
             threatLevel: "CRITICO",
@@ -145,9 +146,11 @@ struct ConfigurableProvider: AppIntentTimelineProvider {
         let criticals = articles.filter { ($0["threat_level"] as? String) == "CRITICO" }
 
         let points = top["summary_points"] as? [String] ?? []
+        let articleId = top["id"] as? String ?? top["url_hash"] as? String
 
         return CyberNewsEntry(
             date: Date(),
+            articleId: articleId,
             title: top["title_it"] as? String ?? "Nessuna notizia",
             source: top["source_name"] as? String ?? "CyberNews",
             threatLevel: top["threat_level"] as? String ?? "MEDIO",
@@ -162,6 +165,7 @@ struct ConfigurableProvider: AppIntentTimelineProvider {
 // MARK: - 4. Entry Dati
 struct CyberNewsEntry: TimelineEntry {
     let date: Date
+    let articleId: String?
     let title: String
     let source: String
     let threatLevel: String
@@ -184,20 +188,30 @@ struct CyberNewsWidgetEntryView : View {
     @Environment(\.widgetFamily) var family
 
     var body: some View {
-        switch family {
-        case .systemSmall:
-            smallWidgetView
-        case .systemMedium:
-            mediumWidgetView
-        case .systemLarge:
-            largeWidgetView
-        case .accessoryRectangular:
-            lockScreenRectangularView
-        case .accessoryInline:
-            lockScreenInlineView
-        default:
-            mediumWidgetView
+        Group {
+            switch family {
+            case .systemSmall:
+                smallWidgetView
+            case .systemMedium:
+                mediumWidgetView
+            case .systemLarge:
+                largeWidgetView
+            case .accessoryRectangular:
+                lockScreenRectangularView
+            case .accessoryInline:
+                lockScreenInlineView
+            default:
+                mediumWidgetView
+            }
         }
+        .widgetURL(deepLinkURL)
+    }
+
+    private var deepLinkURL: URL? {
+        if let id = entry.articleId, !id.isEmpty {
+            return URL(string: "cybernews://article/\(id)")
+        }
+        return URL(string: "cybernews://feed")
     }
 
     // SMALL WIDGET (Home Screen)

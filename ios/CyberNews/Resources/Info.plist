@@ -42,6 +42,19 @@
         <string>processing</string>
         <string>remote-notification</string>
     </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>it.cybernews.app</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>cybernews</string>
+            </array>
+        </dict>
+    </array>
     <key>BGTaskSchedulerPermittedIdentifiers</key>
     <array>
         <string>it.cybernews.app.refresh</string>
