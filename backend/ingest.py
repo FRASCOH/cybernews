@@ -25,6 +25,16 @@ except ImportError:
     except ImportError:
         dispatch_remote_alerts = lambda a: False
 
+try:
+    from deduplicator import is_semantic_duplicate, merge_article_sources, extract_cves
+except ImportError:
+    try:
+        from backend.deduplicator import is_semantic_duplicate, merge_article_sources, extract_cves
+    except ImportError:
+        is_semantic_duplicate = lambda t, c, a: (False, None, "")
+        merge_article_sources = lambda e, s, u, t, tags: e
+        extract_cves = lambda t: []
+
 # Carica le variabili da backend/.env
 load_dotenv()
 
@@ -170,9 +180,69 @@ def is_already_processed(url_hash: str) -> bool:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM articles WHERE url_hash = ?", (url_hash,))
-    row = cursor.fetchone()
+    if cursor.fetchone():
+        conn.close()
+        return True
+
+    # Verifica anche tra gli URL duplicati unificati
+    cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='processed_urls'")
+    if cursor.fetchone():
+        cursor.execute("SELECT 1 FROM processed_urls WHERE url_hash = ?", (url_hash,))
+        if cursor.fetchone():
+            conn.close()
+            return True
+
     conn.close()
-    return row is not None
+    return False
+
+def mark_url_processed(url_hash: str):
+    """Memorizza un URL secondario duplicato per non rianalizzarlo al prossimo giro."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS processed_urls (
+            url_hash TEXT PRIMARY KEY,
+            created_at TEXT
+        )
+    """)
+    now_iso = datetime.now(timezone.utc).isoformat()
+    cursor.execute("INSERT OR IGNORE INTO processed_urls (url_hash, created_at) VALUES (?, ?)", (url_hash, now_iso))
+    conn.commit()
+    conn.close()
+
+def get_recent_articles(limit: int = 80) -> List[Dict[str, Any]]:
+    """Carica gli articoli più recenti per il confronto di deduplicazione semantica."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, url_hash, title_it, original_title, summary_points, action_mitigation,
+               threat_level, category, target_audience, tags, source_name, source_url,
+               published_at, created_at
+        FROM articles ORDER BY created_at DESC LIMIT ?
+    """, (limit,))
+    rows = cursor.fetchall()
+    conn.close()
+
+    results = []
+    for r in rows:
+        results.append({
+            "id": r[0],
+            "url_hash": r[1],
+            "title_it": r[2],
+            "original_title": r[3],
+            "summary_points": json.loads(r[4]) if r[4] else [],
+            "action_mitigation": r[5],
+            "threat_level": r[6],
+            "category": r[7],
+            "target_audience": r[8],
+            "tags": json.loads(r[9]) if r[9] else [],
+            "source_name": r[10],
+            "source_url": r[11],
+            "published_at": r[12],
+            "created_at": r[13],
+            "is_breaking": r[6] == "CRITICO"
+        })
+    return results
 
 # Session riutilizzabile per il pooling delle connessioni HTTP e massime prestazioni
 http_session = requests.Session()
@@ -338,10 +408,12 @@ def export_json_feed():
         pass
 
 def run_ingestion(limit_per_source: int = 3):
-    print("🚀 Inizio ciclo di ingestion CyberNews...")
+    print("🚀 Inizio ciclo di ingestion CyberNews con Deduplicazione Semantica...")
     init_local_db()
 
     total_new = 0
+    total_deduplicated = 0
+    recent_articles = get_recent_articles(limit=100)
 
     for source in SOURCES:
         name = source["name"]
@@ -374,6 +446,36 @@ def run_ingestion(limit_per_source: int = 3):
                 original_title = entry.get("title", "")
                 content = entry.get("summary", "") or entry.get("description", "") or original_title
                 pub_date = entry.get("published", "") or datetime.now(timezone.utc).isoformat()
+
+                # 🧠 Controllo di Deduplicazione Semantica (CVE & Entity Overlap)
+                is_dup, matched_art, reason = is_semantic_duplicate(
+                    original_title,
+                    content,
+                    recent_articles
+                )
+
+                if is_dup and matched_art:
+                    print(f"  🔁 [DEDUPLICAZIONE] Notizia già presente via {reason}!")
+                    print(f"     ↪️ Unisco '{name}' all'articolo: '{matched_art['title_it'][:45]}...'")
+
+                    new_cves = extract_cves(f"{original_title} {content}")
+                    merged_record = merge_article_sources(
+                        matched_art,
+                        new_source_name=name,
+                        new_source_url=article_url,
+                        new_tags=[name] + new_cves
+                    )
+                    save_article(merged_record)
+                    mark_url_processed(u_hash)
+
+                    # Aggiorna la memoria per i controlli successivi nel ciclo
+                    for i, r_art in enumerate(recent_articles):
+                        if r_art["id"] == matched_art["id"]:
+                            recent_articles[i] = merged_record
+                            break
+
+                    total_deduplicated += 1
+                    continue
 
                 print(f"  ✨ Nuovo articolo rilevato: '{original_title[:50]}...'")
 
@@ -411,10 +513,11 @@ def run_ingestion(limit_per_source: int = 3):
                 }
 
                 save_article(article_record)
+                recent_articles.insert(0, article_record)
                 total_new += 1
                 print(f"    Salvato: [{article_record['threat_level']}] {article_record['title_it'][:45]}...")
 
-                # Spedisci notifica push remota (Telegram / OneSignal) per allarmi critici
+                # Spedisci notifica push remota per allarmi critici
                 if article_record.get("threat_level") == "CRITICO":
                     try:
                         dispatch_remote_alerts(article_record)
@@ -424,7 +527,7 @@ def run_ingestion(limit_per_source: int = 3):
         except Exception as e:
             print(f"❌ Errore durante il recupero da {name}: {e}")
 
-    print(f"\n Ciclo completato! Nuovi articoli elaborati: {total_new}")
+    print(f"\n Ciclo completato! Nuovi articoli: {total_new} | Notizie deduplicate e unificate: {total_deduplicated}")
     export_json_feed()
 
 if __name__ == "__main__":
