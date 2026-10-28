@@ -10,6 +10,12 @@ public enum CyberTheme {
     public static let orangeDark    = Color(red: 0.88, green: 0.32, blue: 0.0)     // #E05200
     public static let orangeGlow    = Color(red: 1.0, green: 0.42, blue: 0.0).opacity(0.35)
 
+    /// Cyber Cyan / Neon per notizie nuove (non lette)
+    public static let cyanPrimary   = Color(red: 0.0, green: 0.88, blue: 1.0)       // #00E0FF
+    public static let cyanLight     = Color(red: 0.40, green: 0.94, blue: 1.0)     // #66F0FF
+    public static let cyanDark      = Color(red: 0.0, green: 0.55, blue: 0.85)      // #008CD9
+    public static let cyanGlow      = Color(red: 0.0, green: 0.88, blue: 1.0).opacity(0.25)
+
     /// Sfondo profondo Minimal Dark
     public static let backgroundDark = Color(red: 0.035, green: 0.035, blue: 0.045) // #09090C
     public static let surfaceDark    = Color(red: 0.07, green: 0.07, blue: 0.09)     // #121217
@@ -42,6 +48,17 @@ public enum CyberTheme {
         colors: [
             orangePrimary.opacity(0.25),
             orangeDark.opacity(0.15)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
+    public static let unreadCardGradient = LinearGradient(
+        colors: [
+            cyanLight.opacity(0.95),
+            cyanPrimary.opacity(0.65),
+            cyanDark.opacity(0.25),
+            Color.white.opacity(0.06)
         ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing

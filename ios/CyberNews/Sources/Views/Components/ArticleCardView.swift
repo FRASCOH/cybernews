@@ -23,33 +23,12 @@ public struct ArticleCardView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Header Card: Badge Nuova + Fonte + Data + Badge Rischio
+            // Header Card: Fonte + Data + Badge Rischio
             HStack(alignment: .center) {
                 HStack(spacing: 6) {
-                    if !isRead {
-                        HStack(spacing: 3) {
-                            Circle()
-                                .fill(CyberTheme.orangePrimary)
-                                .frame(width: 5, height: 5)
-                            Text("NUOVA")
-                                .font(.system(size: 8, weight: .heavy, design: .rounded))
-                                .foregroundStyle(CyberTheme.orangePrimary)
-                        }
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(
-                            Capsule()
-                                .fill(CyberTheme.orangePrimary.opacity(0.18))
-                                .overlay(
-                                    Capsule()
-                                        .stroke(CyberTheme.orangePrimary.opacity(0.4), lineWidth: 0.8)
-                                )
-                        )
-                    }
-
                     Image(systemName: "newspaper.fill")
                         .font(.system(size: 11))
-                        .foregroundStyle(CyberTheme.orangePrimary)
+                        .foregroundStyle(isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary)
 
                     Text(article.sourceName)
                         .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -68,7 +47,7 @@ public struct ArticleCardView: View {
                 ThreatBadgeView(level: article.threatLevel, compact: true)
             }
 
-            // Titolo Principale in Italiano
+            // Titolo Principale in Italiano a tutta larghezza
             Text(article.titleIt)
                 .font(.system(size: 17, weight: isRead ? .medium : .bold, design: .rounded))
                 .foregroundStyle(.white)
@@ -76,11 +55,11 @@ public struct ArticleCardView: View {
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            // Anteprima sintetica estesa (AI) - almeno 3 righe di testo
+            // Anteprima sintetica estesa (AI) - almeno 3 righe piene
             if !article.summaryPoints.isEmpty {
                 HStack(alignment: .top, spacing: 8) {
                     Circle()
-                        .fill(CyberTheme.orangePrimary)
+                        .fill(isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary)
                         .frame(width: 5, height: 5)
                         .padding(.top, 6)
 
@@ -104,7 +83,7 @@ public struct ArticleCardView: View {
                             } label: {
                                 Text("#\(tag)")
                                     .font(.system(size: 10, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(CyberTheme.orangeLight)
+                                    .foregroundStyle(isRead ? CyberTheme.orangeLight : CyberTheme.cyanLight)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 3)
                                     .background(
@@ -124,7 +103,7 @@ public struct ArticleCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "bolt.shield.fill")
                             .font(.system(size: 11))
-                            .foregroundStyle(CyberTheme.orangePrimary)
+                            .foregroundStyle(isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary)
 
                         Text(action)
                             .font(.system(size: 11, weight: .medium, design: .rounded))
@@ -135,10 +114,10 @@ public struct ArticleCardView: View {
                     .padding(.vertical, 6)
                     .background(
                         Capsule()
-                            .fill(CyberTheme.orangePrimary.opacity(0.10))
+                            .fill((isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary).opacity(0.10))
                             .overlay(
                                 Capsule()
-                                    .stroke(CyberTheme.orangePrimary.opacity(0.25), lineWidth: 1)
+                                    .stroke((isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary).opacity(0.25), lineWidth: 1)
                             )
                     )
                 }
@@ -168,9 +147,15 @@ public struct ArticleCardView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .stroke(
-                    !isRead ? CyberTheme.orangePrimary.opacity(0.25) : Color.clear,
-                    lineWidth: 1
+                    !isRead ? CyberTheme.unreadCardGradient : LinearGradient(colors: [Color.white.opacity(0.12), Color.white.opacity(0.03)], startPoint: .topLeading, endPoint: .bottomTrailing),
+                    lineWidth: !isRead ? 1.6 : 1.0
                 )
+        )
+        .shadow(
+            color: !isRead ? CyberTheme.cyanGlow : Color.clear,
+            radius: 10,
+            x: 0,
+            y: 3
         )
     }
 }
