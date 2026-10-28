@@ -8,7 +8,7 @@ settings:
   base:
     IPHONEOS_DEPLOYMENT_TARGET: "17.0"
     SWIFT_VERSION: "5.9"
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: "N6TKCS2AYD"
 
 targets:
   CyberNews:
