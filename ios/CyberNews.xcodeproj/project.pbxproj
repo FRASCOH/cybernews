@@ -19,8 +19,10 @@
 		658843968FE4DBC70C9D4CCA /* latest_news.json in Resources */ = {isa = PBXBuildFile; fileRef = C8B95D3725EBC40F307B1D17 /* latest_news.json */; };
 		68F78AEF0287EE838B36803A /* latest_news.json in Resources */ = {isa = PBXBuildFile; fileRef = C8B95D3725EBC40F307B1D17 /* latest_news.json */; };
 		7866074288B4A5A6D2904557 /* AudioBriefingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E389C406E45DBCCCB86BFACE /* AudioBriefingManager.swift */; };
+		9B3E4B84469AA67B4B80CCCD /* CVEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E88068DC88B19310D778DD /* CVEService.swift */; };
 		A66DC385AF07B40BCFED1982 /* ArticleReadTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F263A6D61B3E3DE6DC3E721A /* ArticleReadTracker.swift */; };
 		A9C85364019ED8F9644C9472 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9074656C45F63F586D17881F /* Assets.xcassets */; };
+		AB7F0CD01A40211422BCCC97 /* CVEQuickSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A4E848A5269EE262D5B2A6 /* CVEQuickSheetView.swift */; };
 		B01681F9DAA186A5E4E9731C /* CyberNewsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F9C87D2D0A26CDD038B9CE63 /* CyberNewsWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C6CBF3F4955A7A67D42AD27C /* ThreatLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C816C8CA984EB629D388FC /* ThreatLevel.swift */; };
 		D1EEC772B6F6997E0F679477 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85194DA7A9BDD0C31674811F /* NotificationManager.swift */; };
@@ -66,6 +68,7 @@
 		0DE5771D9789F56104BDB015 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		1594B261B79144C39D2001CA /* NewsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCategory.swift; sourceTree = "<group>"; };
 		17C816C8CA984EB629D388FC /* ThreatLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreatLevel.swift; sourceTree = "<group>"; };
+		23A4E848A5269EE262D5B2A6 /* CVEQuickSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVEQuickSheetView.swift; sourceTree = "<group>"; };
 		3AD4E8F480B19849AEB66B08 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		3EBD78F9C79F5E5489558B15 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		463CCD9581D492A28E35A71E /* NewsAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPIService.swift; sourceTree = "<group>"; };
@@ -76,7 +79,7 @@
 		6C8A374DC1ACED1F1BBC4479 /* BookmarksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksView.swift; sourceTree = "<group>"; };
 		73B7CD11A88FC0B6F7238D6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		85194DA7A9BDD0C31674811F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyberNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CyberNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9074656C45F63F586D17881F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9CF3BB99260AF7DABE4CAFAA /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
 		9D8A7FE0FF9442FE2CA0044E /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
@@ -88,9 +91,10 @@
 		D3C2744A8E2BDC3F5513BD67 /* CyberNewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyberNewsApp.swift; sourceTree = "<group>"; };
 		E389C406E45DBCCCB86BFACE /* AudioBriefingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBriefingManager.swift; sourceTree = "<group>"; };
 		EF67500304487B9570DAC98A /* TagFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFilterBar.swift; sourceTree = "<group>"; };
+		F1E88068DC88B19310D778DD /* CVEService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVEService.swift; sourceTree = "<group>"; };
 		F263A6D61B3E3DE6DC3E721A /* ArticleReadTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReadTracker.swift; sourceTree = "<group>"; };
 		F32DB55DDF7FB2895A481940 /* ArticleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardView.swift; sourceTree = "<group>"; };
-		F9C87D2D0A26CDD038B9CE63 /* CyberNewsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CyberNewsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9C87D2D0A26CDD038B9CE63 /* CyberNewsWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CyberNewsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -119,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				9CF3BB99260AF7DABE4CAFAA /* ArticleDetailView.swift */,
+				23A4E848A5269EE262D5B2A6 /* CVEQuickSheetView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -235,6 +240,7 @@
 			children = (
 				F263A6D61B3E3DE6DC3E721A /* ArticleReadTracker.swift */,
 				E389C406E45DBCCCB86BFACE /* AudioBriefingManager.swift */,
+				F1E88068DC88B19310D778DD /* CVEService.swift */,
 				5F19B62635FACC0253AD74CD /* HapticManager.swift */,
 				463CCD9581D492A28E35A71E /* NewsAPIService.swift */,
 				85194DA7A9BDD0C31674811F /* NotificationManager.swift */,
@@ -314,7 +320,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2710;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					3C2B7267233364F5B905DD50 = {
+						DevelopmentTeam = "";
+					};
+					D7621F8838E6AF0D919E23B3 = {
+						DevelopmentTeam = "";
+					};
+				};
 			};
 			buildConfigurationList = 2935F39986B633C2047FADD0 /* Build configuration list for PBXProject "CyberNews" */;
 			developmentRegion = en;
@@ -375,6 +389,8 @@
 				A66DC385AF07B40BCFED1982 /* ArticleReadTracker.swift in Sources */,
 				7866074288B4A5A6D2904557 /* AudioBriefingManager.swift in Sources */,
 				0F0E70F9352DB87E4ECBEBF9 /* BookmarksView.swift in Sources */,
+				AB7F0CD01A40211422BCCC97 /* CVEQuickSheetView.swift in Sources */,
+				9B3E4B84469AA67B4B80CCCD /* CVEService.swift in Sources */,
 				EA2E3FAEA03A214D42E56BCD /* CategoryPillBar.swift in Sources */,
 				ED114CB3ECCED34E064B95E4 /* CyberLogoView.swift in Sources */,
 				E98362E972562030502F1BA3 /* CyberNewsApp.swift in Sources */,
@@ -408,7 +424,6 @@
 		07A736FE52439BF8D2294752 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				INFOPLIST_FILE = CyberNewsWidget/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -431,7 +446,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CyberNews/Resources/CyberNews.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CyberNews/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -454,7 +468,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CyberNews/Resources/CyberNews.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CyberNews/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -508,7 +521,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -522,7 +534,6 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
@@ -567,7 +578,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -588,7 +598,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
@@ -598,7 +607,6 @@
 		DE451F6DB1BF942EE4FC3A09 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				INFOPLIST_FILE = CyberNewsWidget/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

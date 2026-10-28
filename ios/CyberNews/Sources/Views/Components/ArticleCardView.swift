@@ -44,7 +44,23 @@ public struct ArticleCardView: View {
 
                 Spacer()
 
-                ThreatBadgeView(level: article.threatLevel, compact: true)
+                HStack(spacing: 6) {
+                    if let firstCVE = article.detectedCVEs.first {
+                        HStack(spacing: 4) {
+                            Image(systemName: "shield.lefthalf.filled")
+                                .font(.system(size: 8))
+                            Text(firstCVE)
+                                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        }
+                        .foregroundStyle(CyberTheme.threatCritico)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(CyberTheme.threatCritico.opacity(0.15))
+                        .clipShape(Capsule())
+                    }
+
+                    ThreatBadgeView(level: article.threatLevel, compact: true)
+                }
             }
 
             // Titolo Principale in Italiano a tutta larghezza

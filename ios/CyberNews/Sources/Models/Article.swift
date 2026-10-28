@@ -73,4 +73,31 @@ public struct Article: Identifiable, Codable, Hashable {
         }
         return "Poco fa"
     }
+
+    /// Riconoscimento automatico delle vulnerabilità CVE citate nel testo e nei tag
+    public var detectedCVEs: [String] {
+        let pattern = #"\bCVE-\d{4}-\d{4,7}\b"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            return []
+        }
+
+        var textPool = "\(titleIt) \(originalTitle ?? "") \(actionMitigation ?? "") \(tags.joined(separator: " "))"
+        for point in summaryPoints {
+            textPool += " \(point)"
+        }
+
+        let range = NSRange(textPool.startIndex..<textPool.endIndex, in: textPool)
+        let matches = regex.matches(in: textPool, options: [], range: range)
+
+        var result: [String] = []
+        for match in matches {
+            if let swiftRange = Range(match.range, in: textPool) {
+                let cve = String(textPool[swiftRange]).uppercased()
+                if !result.contains(cve) {
+                    result.append(cve)
+                }
+            }
+        }
+        return result
+    }
 }

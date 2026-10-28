@@ -221,7 +221,17 @@ def analyze_with_gemini(title: str, content: str, source_name: str, category_hin
             parsed = json.loads(raw_text)
             if isinstance(parsed, list) and len(parsed) > 0:
                 parsed = parsed[0]
-            return parsed if isinstance(parsed, dict) else None
+            if isinstance(parsed, dict):
+                # Estrai automaticamente eventuali CVE citati per arricchire i tag
+                cves = list(set(re.findall(r"\bCVE-\d{4}-\d{4,7}\b", f"{title} {content}", re.IGNORECASE)))
+                tags = parsed.get("tags", [])
+                for c in cves:
+                    cu = c.upper()
+                    if cu not in tags:
+                        tags.append(cu)
+                parsed["tags"] = tags
+                return parsed
+            return None
         else:
             print(f"⚠️ Gemini API Status {response.status_code} su '{title[:30]}': {response.text[:100]}")
             return None

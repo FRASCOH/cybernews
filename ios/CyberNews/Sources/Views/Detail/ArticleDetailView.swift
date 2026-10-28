@@ -8,6 +8,7 @@ public struct ArticleDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var showSafari = false
+    @State private var selectedCVE: CVEItem? = nil
     @ObservedObject private var audioManager = AudioBriefingManager.shared
 
     public init(article: Article, onTagTap: ((String) -> Void)? = nil) {
@@ -185,6 +186,73 @@ public struct ArticleDetailView: View {
                             )
                         }
 
+                        // MARK: - 🛡️ SCHEDE RAPIDE CVE (NVD / MITRE)
+                        if !article.detectedCVEs.isEmpty {
+                            VStack(alignment: .leading, spacing: 10) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "shield.lefthalf.filled")
+                                        .font(.system(size: 15))
+                                        .foregroundStyle(CyberTheme.threatCritico)
+
+                                    Text("VULNERABILITÀ IDENTIFICATE (\(article.detectedCVEs.count))")
+                                        .font(.system(size: 12, weight: .heavy, design: .rounded))
+                                        .foregroundStyle(CyberTheme.threatCritico)
+
+                                    Spacer()
+
+                                    Text("NVD / MITRE")
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white.opacity(0.45))
+                                }
+
+                                VStack(spacing: 8) {
+                                    ForEach(article.detectedCVEs, id: \.self) { cveId in
+                                        Button {
+                                            HapticManager.shared.impact(.medium)
+                                            selectedCVE = CVEItem(id: cveId)
+                                        } label: {
+                                            HStack(spacing: 12) {
+                                                Image(systemName: "exclamationmark.shield.fill")
+                                                    .font(.system(size: 16))
+                                                    .foregroundStyle(CyberTheme.threatCritico)
+
+                                                VStack(alignment: .leading, spacing: 2) {
+                                                    Text(cveId)
+                                                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                                        .foregroundStyle(.white)
+
+                                                    Text("Tocca per Scheda Rapida CVSS e Bollettino")
+                                                        .font(.system(size: 11))
+                                                        .foregroundStyle(.white.opacity(0.6))
+                                                }
+
+                                                Spacer()
+
+                                                HStack(spacing: 4) {
+                                                    Text("Scheda")
+                                                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                                                    Image(systemName: "chevron.right")
+                                                        .font(.system(size: 10))
+                                                }
+                                                .foregroundStyle(CyberTheme.cyanPrimary)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 6)
+                                                .background(CyberTheme.cyanPrimary.opacity(0.12))
+                                                .clipShape(Capsule())
+                                            }
+                                            .padding(14)
+                                            .glassmorphic(cornerRadius: 16)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                    .stroke(CyberTheme.threatCritico.opacity(0.35), lineWidth: 1)
+                                            )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                            }
+                        }
+
                         // SEZIONE: Analisi AI in 3 Punti Chiave
                         VStack(alignment: .leading, spacing: 14) {
                             HStack(spacing: 8) {
@@ -319,6 +387,10 @@ public struct ArticleDetailView: View {
                         .ignoresSafeArea()
                 }
             }
+            .sheet(item: $selectedCVE) { item in
+                CVEQuickSheetView(cveId: item.id)
+                    .presentationDetents([.fraction(0.85), .large])
+            }
             .onAppear {
                 ArticleReadTracker.shared.markAsRead(id: article.id)
             }
@@ -327,6 +399,14 @@ public struct ArticleDetailView: View {
                 audioManager.stop()
             }
         }
+    }
+}
+
+// MARK: - CVE Item Helper
+public struct CVEItem: Identifiable {
+    public let id: String
+    public init(id: String) {
+        self.id = id
     }
 }
 
