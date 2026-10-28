@@ -71,8 +71,9 @@ public struct ArticleDetailView: View {
                                 .italic()
                         }
 
-                        // MARK: - 🎙️ CYBER BRIEFING VOCALE (Audio Sintetico)
-                        VStack(alignment: .leading, spacing: 10) {
+                        // MARK: - 🎙️ CYBER BRIEFING VOCALE (Audio Neurale)
+                        VStack(alignment: .leading, spacing: 12) {
+                            // Intestazione con badge stato
                             HStack {
                                 HStack(spacing: 7) {
                                     Image(systemName: "waveform.circle.fill")
@@ -80,7 +81,7 @@ public struct ArticleDetailView: View {
                                         .foregroundStyle(CyberTheme.orangePrimary)
 
                                     Text("CYBER BRIEFING VOCALE")
-                                        .font(.system(size: 12, weight: .heavy, design: .rounded))
+                                        .font(.system(size: 11, weight: .heavy, design: .rounded))
                                         .foregroundStyle(CyberTheme.orangePrimary)
 
                                     if article.resolvedAudioUrl != nil {
@@ -96,20 +97,28 @@ public struct ArticleDetailView: View {
                                 Spacer()
 
                                 if isCurrentArticlePlaying {
-                                    // Visualizer animato ad onde
-                                    HStack(spacing: 3) {
-                                        ForEach(0..<4) { idx in
-                                            RoundedRectangle(cornerRadius: 2)
-                                                .fill(CyberTheme.orangePrimary)
-                                                .frame(width: 3, height: CGFloat([12, 20, 15, 24][idx]))
-                                                .animation(.easeInOut(duration: 0.4).repeatForever().delay(Double(idx) * 0.1), value: isCurrentArticlePlaying)
-                                        }
+                                    HStack(spacing: 4) {
+                                        Circle()
+                                            .fill(CyberTheme.cyanPrimary)
+                                            .frame(width: 6, height: 6)
+                                        Text("IN ASCOLTO")
+                                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                                            .foregroundStyle(CyberTheme.cyanPrimary)
                                     }
                                 }
                             }
 
-                            HStack(spacing: 12) {
-                                // Tasto Play / Pausa
+                            // Descrizione
+                            Text(article.resolvedAudioUrl != nil
+                                 ? "Lettura integrale fluente con voce neurale AI da studio radiofonico."
+                                 : "Sintesi vocale del bollettino disponibile anche in modalità offline.")
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundStyle(.white.opacity(0.65))
+                                .lineSpacing(2)
+
+                            // Riga Controlli di Riproduzione
+                            HStack(spacing: 10) {
+                                // Tasto Principale Play / Pausa
                                 Button {
                                     HapticManager.shared.impact(.medium)
                                     if isCurrentArticlePlaying {
@@ -118,19 +127,19 @@ public struct ArticleDetailView: View {
                                         audioManager.play(article: article)
                                     }
                                 } label: {
-                                    HStack(spacing: 8) {
-                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : (article.resolvedAudioUrl != nil ? "sparkles" : "play.fill"))
-                                            .font(.system(size: 14))
+                                    HStack(spacing: 7) {
+                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : "play.fill")
+                                            .font(.system(size: 13, weight: .bold))
 
-                                        Text(isCurrentArticlePlaying ? "Metti in Pausa" : (isCurrentArticlePaused ? "Riprendi Lettura" : (article.resolvedAudioUrl != nil ? "Ascolta Voce Neurale AI" : "Ascolta Sintesi Vocale")))
+                                        Text(isCurrentArticlePlaying ? "Pausa" : (isCurrentArticlePaused ? "Riprendi" : "Ascolta Notizia"))
                                             .font(.system(size: 13, weight: .bold, design: .rounded))
                                     }
                                     .foregroundStyle(isCurrentArticlePlaying ? .black : CyberTheme.orangePrimary)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 18)
+                                    .padding(.vertical, 9)
                                     .background(
                                         Capsule()
-                                            .fill(isCurrentArticlePlaying ? CyberTheme.orangePrimary : CyberTheme.orangePrimary.opacity(0.12))
+                                            .fill(isCurrentArticlePlaying ? CyberTheme.orangePrimary : CyberTheme.orangePrimary.opacity(0.15))
                                             .overlay(Capsule().stroke(CyberTheme.orangePrimary.opacity(0.4), lineWidth: 1))
                                     )
                                 }
@@ -141,20 +150,21 @@ public struct ArticleDetailView: View {
                                         HapticManager.shared.impact(.light)
                                         audioManager.stop()
                                     } label: {
-                                        Image(systemName: "stop.fill")
-                                            .font(.system(size: 12))
-                                            .foregroundStyle(.white.opacity(0.7))
-                                            .padding(10)
-                                            .background(Circle().fill(Color.white.opacity(0.08)))
+                                        HStack(spacing: 5) {
+                                            Image(systemName: "stop.fill")
+                                                .font(.system(size: 10))
+                                            Text("Stop")
+                                                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                        }
+                                        .foregroundStyle(.white.opacity(0.8))
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 9)
+                                        .background(Capsule().fill(Color.white.opacity(0.08)))
                                     }
                                     .buttonStyle(.plain)
                                 }
 
                                 Spacer()
-
-                                Text(isCurrentArticlePlaying ? "In riproduzione..." : "Audio 100% Offline")
-                                    .font(.system(size: 11, weight: .medium))
-                                    .foregroundStyle(.white.opacity(0.45))
                             }
                         }
                         .padding(14)

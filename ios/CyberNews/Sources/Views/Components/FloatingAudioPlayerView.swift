@@ -10,48 +10,64 @@ public struct FloatingAudioPlayerView: View {
 
     public var body: some View {
         if let article = audioManager.currentArticle {
-            HStack(spacing: 12) {
-                // Visualizer Animato o Icona
+            HStack(spacing: 10) {
+                // Tasto principale per aprire il dettaglio della notizia in riproduzione
                 Button {
                     onArticleTap?(article)
                 } label: {
-                    HStack(spacing: 8) {
-                        // Visualizer ad onde sonore
-                        HStack(spacing: 2.5) {
-                            ForEach(0..<4) { idx in
-                                RoundedRectangle(cornerRadius: 1.5)
-                                    .fill(CyberTheme.orangePrimary)
-                                    .frame(width: 2.5, height: audioManager.isPlaying ? CGFloat([8, 16, 12, 18][idx]) : 4)
-                                    .animation(
-                                        audioManager.isPlaying
-                                            ? .easeInOut(duration: 0.35).repeatForever().delay(Double(idx) * 0.08)
-                                            : .default,
-                                        value: audioManager.isPlaying
-                                    )
+                    HStack(spacing: 10) {
+                        // Badge / Visualizer animato ad onde
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(CyberTheme.surfaceCard)
+                                .frame(width: 38, height: 38)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(CyberTheme.orangePrimary.opacity(0.35), lineWidth: 1)
+                                )
+
+                            if audioManager.isPlaying {
+                                HStack(spacing: 2) {
+                                    ForEach(0..<4) { idx in
+                                        RoundedRectangle(cornerRadius: 1.5)
+                                            .fill(CyberTheme.orangePrimary)
+                                            .frame(width: 2.5, height: CGFloat([8, 16, 12, 18][idx]))
+                                            .animation(
+                                                .easeInOut(duration: 0.35).repeatForever().delay(Double(idx) * 0.08),
+                                                value: audioManager.isPlaying
+                                            )
+                                    }
+                                }
+                            } else {
+                                Image(systemName: "waveform")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(CyberTheme.orangePrimary.opacity(0.8))
                             }
                         }
-                        .frame(width: 18, height: 20)
 
+                        // Testi Notizia (Metadati + Titolo)
                         VStack(alignment: .leading, spacing: 2) {
-                            HStack(spacing: 4) {
+                            // Riga superiore: Badge Rassegna + Fonte + Tag AI
+                            HStack(spacing: 5) {
                                 if audioManager.isDailyBriefingMode {
-                                    Text(audioManager.playlistProgressText.uppercased())
+                                    Text("\(audioManager.currentIndex + 1)/\(audioManager.playlist.count)")
                                         .font(.system(size: 9, weight: .heavy, design: .rounded))
                                         .foregroundStyle(CyberTheme.cyanPrimary)
-                                    Text("•")
-                                        .font(.system(size: 8))
-                                        .foregroundStyle(.white.opacity(0.3))
+                                        .padding(.horizontal, 4)
+                                        .padding(.vertical, 1)
+                                        .background(Capsule().fill(CyberTheme.cyanPrimary.opacity(0.18)))
                                 }
 
                                 Text(article.sourceName)
                                     .font(.system(size: 10, weight: .bold, design: .rounded))
                                     .foregroundStyle(CyberTheme.orangePrimary)
+                                    .lineLimit(1)
 
                                 if audioManager.isNeuralVoice {
                                     HStack(spacing: 2) {
                                         Image(systemName: "sparkles")
                                             .font(.system(size: 7))
-                                        Text("AI VOICE")
+                                        Text("AI")
                                             .font(.system(size: 8, weight: .heavy, design: .rounded))
                                     }
                                     .padding(.horizontal, 4)
@@ -61,19 +77,21 @@ public struct FloatingAudioPlayerView: View {
                                 }
                             }
 
+                            // Titolo notizia troncato elegantemente senza sovrapposizioni
                             Text(article.titleIt)
                                 .font(.system(size: 12, weight: .semibold, design: .rounded))
                                 .foregroundStyle(.white)
                                 .lineLimit(1)
+                                .truncationMode(.tail)
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
                 .buttonStyle(.plain)
+                .layoutPriority(1)
 
-                Spacer()
-
-                // Controlli Traccia
-                HStack(spacing: 10) {
+                // Controlli Media
+                HStack(spacing: 6) {
                     // Traccia Precedente (se in modalità rassegna)
                     if audioManager.isDailyBriefingMode {
                         Button {
@@ -81,8 +99,9 @@ public struct FloatingAudioPlayerView: View {
                             audioManager.previous()
                         } label: {
                             Image(systemName: "backward.fill")
-                                .font(.system(size: 13))
-                                .foregroundStyle(audioManager.hasPrevious ? .white.opacity(0.85) : .white.opacity(0.25))
+                                .font(.system(size: 11))
+                                .foregroundStyle(audioManager.hasPrevious ? .white.opacity(0.9) : .white.opacity(0.25))
+                                .frame(width: 28, height: 28)
                         }
                         .disabled(!audioManager.hasPrevious)
                         .buttonStyle(.plain)
@@ -98,7 +117,7 @@ public struct FloatingAudioPlayerView: View {
                         }
                     } label: {
                         Image(systemName: audioManager.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 15))
+                            .font(.system(size: 13, weight: .bold))
                             .foregroundStyle(.black)
                             .frame(width: 32, height: 32)
                             .background(Circle().fill(CyberTheme.orangePrimary))
@@ -112,38 +131,40 @@ public struct FloatingAudioPlayerView: View {
                             audioManager.next()
                         } label: {
                             Image(systemName: "forward.fill")
-                                .font(.system(size: 13))
-                                .foregroundStyle(audioManager.hasNext ? .white.opacity(0.85) : .white.opacity(0.25))
+                                .font(.system(size: 11))
+                                .foregroundStyle(audioManager.hasNext ? .white.opacity(0.9) : .white.opacity(0.25))
+                                .frame(width: 28, height: 28)
                         }
                         .disabled(!audioManager.hasNext)
                         .buttonStyle(.plain)
                     }
 
-                    // Chiudi / Stop
+                    // Tasto Chiudi / Stop
                     Button {
                         HapticManager.shared.impact(.light)
                         audioManager.stop()
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(.white.opacity(0.45))
-                            .padding(6)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(.white.opacity(0.55))
+                            .frame(width: 26, height: 26)
+                            .background(Circle().fill(Color.white.opacity(0.08)))
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 14)
+            .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
-                Capsule()
-                    .fill(.ultraThinMaterial)
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(red: 0.08, green: 0.10, blue: 0.14).opacity(0.95))
                     .overlay(
-                        Capsule()
+                        RoundedRectangle(cornerRadius: 16)
                             .stroke(
                                 LinearGradient(
                                     colors: [
-                                        CyberTheme.orangePrimary.opacity(0.5),
-                                        Color.white.opacity(0.1)
+                                        CyberTheme.orangePrimary.opacity(0.6),
+                                        Color.white.opacity(0.12)
                                     ],
                                     startPoint: .leading,
                                     endPoint: .trailing
@@ -151,9 +172,9 @@ public struct FloatingAudioPlayerView: View {
                                 lineWidth: 1.2
                             )
                     )
-                    .shadow(color: CyberTheme.orangePrimary.opacity(0.25), radius: 12, x: 0, y: 4)
+                    .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
             )
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 14)
         }
     }
 }
