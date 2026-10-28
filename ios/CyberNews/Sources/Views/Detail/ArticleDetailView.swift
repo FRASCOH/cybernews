@@ -83,7 +83,7 @@ public struct ArticleDetailView: View {
                                         .font(.system(size: 12, weight: .heavy, design: .rounded))
                                         .foregroundStyle(CyberTheme.orangePrimary)
 
-                                    if article.audioUrl != nil {
+                                    if article.resolvedAudioUrl != nil {
                                         Text("HD AI")
                                             .font(.system(size: 9, weight: .heavy, design: .rounded))
                                             .foregroundStyle(CyberTheme.cyanPrimary)
@@ -119,10 +119,10 @@ public struct ArticleDetailView: View {
                                     }
                                 } label: {
                                     HStack(spacing: 8) {
-                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : (article.audioUrl != nil ? "sparkles" : "play.fill"))
+                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : (article.resolvedAudioUrl != nil ? "sparkles" : "play.fill"))
                                             .font(.system(size: 14))
 
-                                        Text(isCurrentArticlePlaying ? "Metti in Pausa" : (isCurrentArticlePaused ? "Riprendi Lettura" : (article.audioUrl != nil ? "Ascolta Voce Neurale AI" : "Ascolta Sintesi Vocale")))
+                                        Text(isCurrentArticlePlaying ? "Metti in Pausa" : (isCurrentArticlePaused ? "Riprendi Lettura" : (article.resolvedAudioUrl != nil ? "Ascolta Voce Neurale AI" : "Ascolta Sintesi Vocale")))
                                             .font(.system(size: 13, weight: .bold, design: .rounded))
                                     }
                                     .foregroundStyle(isCurrentArticlePlaying ? .black : CyberTheme.orangePrimary)

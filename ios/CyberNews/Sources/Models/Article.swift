@@ -69,6 +69,17 @@ public struct Article: Identifiable, Codable, Hashable, Sendable {
         self.audioUrl = audioUrl
     }
 
+    /// URL pubblico dell'audio neurale generato per questo articolo (streaming broadcast HD)
+    public var resolvedAudioUrl: String? {
+        if let audioUrl = audioUrl, !audioUrl.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return audioUrl
+        }
+        if !id.isEmpty {
+            return "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/\(id).mp3"
+        }
+        return nil
+    }
+
     public var formattedRelativeTime: String {
         guard let publishedAt = publishedAt else { return "Oggi" }
         // Se la stringa è già relativa o ISO

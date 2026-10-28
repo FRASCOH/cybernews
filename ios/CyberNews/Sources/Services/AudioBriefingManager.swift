@@ -10,6 +10,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     // Motore Neurale Edge TTS via AVPlayer & Fallback su dispositivo
     private let synthesizer = AVSpeechSynthesizer()
     private var player: AVPlayer?
+    private var playerStatusObserver: NSKeyValueObservation?
     private var playerItemDidPlayToEndObserver: NSObjectProtocol?
     private var playerItemFailedObserver: NSObjectProtocol?
 
@@ -57,6 +58,9 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     }
 
     private func cleanupPlayer() {
+        playerStatusObserver?.invalidate()
+        playerStatusObserver = nil
+
         if let observer = playerItemDidPlayToEndObserver {
             NotificationCenter.default.removeObserver(observer)
             playerItemDidPlayToEndObserver = nil
@@ -112,7 +116,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         ArticleReadTracker.shared.markAsRead(id: article.id)
 
         // Controllo se è disponibile l'audio neurale studio ad alta definizione
-        if let audioUrlString = article.audioUrl,
+        if let audioUrlString = article.resolvedAudioUrl,
            let streamURL = URL(string: audioUrlString),
            !audioUrlString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             playNeuralAudio(url: streamURL, article: article)
@@ -130,9 +134,31 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
             synthesizer.stopSpeaking(at: .immediate)
         }
 
+        print("🎙️ [AudioBriefingManager] Avvio streaming neurale HD per: \(article.titleIt)")
+        print("     URL: \(url.absoluteString)")
+
         let playerItem = AVPlayerItem(url: url)
         let newPlayer = AVPlayer(playerItem: playerItem)
+        newPlayer.automaticallyWaitsToMinimizeStalling = true
         self.player = newPlayer
+
+        // Monitoraggio stato per gestione errori o avvio fluido
+        playerStatusObserver = playerItem.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                switch item.status {
+                case .failed:
+                    print("⚠️ [AudioBriefingManager] Fallito caricamento stream (\(String(describing: item.error))), fallback su sintesi locale")
+                    self.cleanupPlayer()
+                    self.playSynthesizerAudio(article: article, isIntro: false)
+                case .readyToPlay:
+                    print("✅ [AudioBriefingManager] Stream neurale pronto, avvio riproduzione")
+                    self.player?.play()
+                default:
+                    break
+                }
+            }
+        }
 
         // Avanzamento automatico al termine dell'audio
         playerItemDidPlayToEndObserver = NotificationCenter.default.addObserver(
