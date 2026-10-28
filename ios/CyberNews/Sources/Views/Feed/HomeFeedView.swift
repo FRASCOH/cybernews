@@ -3,14 +3,13 @@ import SwiftData
 
 public struct HomeFeedView: View {
     @ObservedObject public var viewModel: NewsFeedViewModel
-    @ObservedObject private var notificationManager = NotificationManager.shared
+    @ObservedObject private var readTracker = ArticleReadTracker.shared
     @Query private var savedArticles: [SavedArticle]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
     @State private var selectedArticleForDetail: Article? = nil
     @State private var isSearchVisible: Bool = false
-    @State private var showNotificationsCenter: Bool = false
 
     public init(viewModel: NewsFeedViewModel) {
         self.viewModel = viewModel
@@ -23,45 +22,11 @@ public struct HomeFeedView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Top Header: Logo CyberNews + Icona Notifiche + Search Icon
+                // Top Header: Logo CyberNews + Search Icon
                 HStack(spacing: 12) {
                     CyberLogoView()
 
                     Spacer()
-
-                    // Tasto Centro Notifiche con Badge Unread
-                    Button {
-                        HapticManager.shared.impact(.light)
-                        showNotificationsCenter = true
-                    } label: {
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "bell.fill")
-                                .font(.system(size: 15))
-                                .foregroundStyle(notificationManager.unreadCount > 0 ? CyberTheme.orangePrimary : .white.opacity(0.8))
-                                .frame(width: 38, height: 38)
-                                .background(
-                                    Circle()
-                                        .fill(Color.white.opacity(0.06))
-                                        .overlay(
-                                            Circle()
-                                                .stroke(notificationManager.unreadCount > 0 ? CyberTheme.orangePrimary.opacity(0.4) : Color.white.opacity(0.10), lineWidth: 1)
-                                        )
-                                )
-
-                            if notificationManager.unreadCount > 0 {
-                                Text("\(notificationManager.unreadCount)")
-                                    .font(.system(size: 9, weight: .heavy, design: .rounded))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 16, height: 16)
-                                    .background(
-                                        Circle()
-                                            .fill(CyberTheme.threatCritico)
-                                    )
-                                    .offset(x: 3, y: -3)
-                            }
-                        }
-                    }
-                    .buttonStyle(.plain)
 
                     // Tasto Ricerca
                     Button {
@@ -149,6 +114,7 @@ public struct HomeFeedView: View {
                            viewModel.selectedCategory == .all && viewModel.searchText.isEmpty && viewModel.selectedTag == nil {
                             Button {
                                 HapticManager.shared.impact(.medium)
+                                readTracker.markAsRead(id: topBreaking.id)
                                 selectedArticleForDetail = topBreaking
                             } label: {
                                 HStack(spacing: 12) {
@@ -219,10 +185,12 @@ public struct HomeFeedView: View {
                         // Lista Card Notizie
                         ForEach(viewModel.filteredArticles) { article in
                             let isArticleSaved = savedArticles.contains(where: { $0.id == article.id })
+                            let isArticleRead = readTracker.isRead(id: article.id)
 
                             ArticleCardView(
                                 article: article,
                                 isSaved: isArticleSaved,
+                                isRead: isArticleRead,
                                 onSaveToggle: {
                                     toggleSaveArticle(article)
                                 },
@@ -232,6 +200,7 @@ public struct HomeFeedView: View {
                             )
                             .onTapGesture {
                                 HapticManager.shared.impact(.light)
+                                readTracker.markAsRead(id: article.id)
                                 selectedArticleForDetail = article
                             }
                         }
@@ -252,9 +221,6 @@ public struct HomeFeedView: View {
             ArticleDetailView(article: article) { tag in
                 viewModel.selectTag(tag)
             }
-        }
-        .sheet(isPresented: $showNotificationsCenter) {
-            NotificationsCenterView()
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {

@@ -319,6 +319,9 @@ public struct ArticleDetailView: View {
                         .ignoresSafeArea()
                 }
             }
+            .onAppear {
+                ArticleReadTracker.shared.markAsRead(id: article.id)
+            }
             .onDisappear {
                 // Ferma l'audio se la vista viene chiusa
                 audioManager.stop()

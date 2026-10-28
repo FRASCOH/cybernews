@@ -3,26 +3,50 @@ import SwiftUI
 public struct ArticleCardView: View {
     public let article: Article
     public var isSaved: Bool = false
+    public var isRead: Bool = true
     public var onSaveToggle: (() -> Void)? = nil
     public var onTagTap: ((String) -> Void)? = nil
 
     public init(
         article: Article,
         isSaved: Bool = false,
+        isRead: Bool = true,
         onSaveToggle: (() -> Void)? = nil,
         onTagTap: ((String) -> Void)? = nil
     ) {
         self.article = article
         self.isSaved = isSaved
+        self.isRead = isRead
         self.onSaveToggle = onSaveToggle
         self.onTagTap = onTagTap
     }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Header Card: Fonte + Data + Badge Rischio
+            // Header Card: Badge Nuova + Fonte + Data + Badge Rischio
             HStack(alignment: .center) {
                 HStack(spacing: 6) {
+                    if !isRead {
+                        HStack(spacing: 3) {
+                            Circle()
+                                .fill(CyberTheme.orangePrimary)
+                                .frame(width: 5, height: 5)
+                            Text("NUOVA")
+                                .font(.system(size: 8, weight: .heavy, design: .rounded))
+                                .foregroundStyle(CyberTheme.orangePrimary)
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(
+                            Capsule()
+                                .fill(CyberTheme.orangePrimary.opacity(0.18))
+                                .overlay(
+                                    Capsule()
+                                        .stroke(CyberTheme.orangePrimary.opacity(0.4), lineWidth: 0.8)
+                                )
+                        )
+                    }
+
                     Image(systemName: "newspaper.fill")
                         .font(.system(size: 11))
                         .foregroundStyle(CyberTheme.orangePrimary)
@@ -46,7 +70,7 @@ public struct ArticleCardView: View {
 
             // Titolo Principale in Italiano
             Text(article.titleIt)
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .font(.system(size: 17, weight: isRead ? .medium : .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
@@ -62,7 +86,7 @@ public struct ArticleCardView: View {
 
                     Text(article.summaryPoints.joined(separator: " "))
                         .font(.system(size: 13, weight: .regular))
-                        .foregroundStyle(.white.opacity(0.80))
+                        .foregroundStyle(.white.opacity(isRead ? 0.72 : 0.88))
                         .lineSpacing(3)
                         .lineLimit(3)
                         .fixedSize(horizontal: false, vertical: true)
@@ -141,5 +165,12 @@ public struct ArticleCardView: View {
         }
         .padding(18)
         .glassmorphic(cornerRadius: 24)
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    !isRead ? CyberTheme.orangePrimary.opacity(0.25) : Color.clear,
+                    lineWidth: 1
+                )
+        )
     }
 }
