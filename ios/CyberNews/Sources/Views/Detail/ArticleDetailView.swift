@@ -344,7 +344,6 @@ public struct ArticleDetailView: View {
                                     ForEach(article.tags, id: \.self) { tag in
                                         Button {
                                             HapticManager.shared.impact(.light)
-                                            audioManager.stop()
                                             dismiss()
                                             onTagTap?(tag)
                                         } label: {
@@ -405,7 +404,6 @@ public struct ArticleDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        audioManager.stop()
                         dismiss()
                     } label: {
                         Image(systemName: "xmark.circle.fill")
@@ -436,10 +434,6 @@ public struct ArticleDetailView: View {
             }
             .onAppear {
                 ArticleReadTracker.shared.markAsRead(id: article.id)
-            }
-            .onDisappear {
-                // Ferma l'audio se la vista viene chiusa
-                audioManager.stop()
             }
         }
     }
