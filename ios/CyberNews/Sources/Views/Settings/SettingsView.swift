@@ -6,11 +6,13 @@ public struct SettingsView: View {
     @AppStorage("notify_all_news") private var notifyAllNews: Bool = true
     @AppStorage("notify_critical") private var notifyCritical: Bool = true
     @AppStorage("notify_governance") private var notifyGovernance: Bool = true
+    @AppStorage("apns_device_token") private var apnsDeviceToken: String = ""
 
     @State private var showingTestSentAlert = false
     @State private var testAlertTitle = ""
     @State private var testAlertMessage = ""
     @State private var isPermissionDenied = false
+    @State private var copiedToken = false
 
     public init() {}
 
@@ -131,6 +133,82 @@ public struct SettingsView: View {
                                 .buttonStyle(.plain)
                                 .padding(.top, 6)
                             }
+                        }
+                    }
+                    .padding(18)
+                    .glassmorphic(cornerRadius: 20)
+
+                    // Card Apple APNs Direct
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                                .font(.system(size: 16))
+                                .foregroundStyle(CyberTheme.cyanPrimary)
+
+                            Text("APPLE PUSH (APNs DIRETTO)")
+                                .font(.system(size: 12, weight: .heavy, design: .rounded))
+                                .foregroundStyle(CyberTheme.cyanPrimary)
+
+                            Spacer()
+
+                            if !apnsDeviceToken.isEmpty {
+                                Text("ATTIVO")
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.green.opacity(0.15))
+                                    .foregroundStyle(Color.green)
+                                    .clipShape(Capsule())
+                            }
+                        }
+
+                        if !apnsDeviceToken.isEmpty {
+                            Text("Dispositivo registrato con successo ad Apple APNs. Il token push per il tuo iPhone è pronto:")
+                                .font(.system(size: 13, weight: .regular))
+                                .foregroundStyle(.white.opacity(0.8))
+                                .lineSpacing(2)
+
+                            Text(apnsDeviceToken)
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .foregroundStyle(CyberTheme.cyanPrimary)
+                                .lineLimit(2)
+                                .truncationMode(.middle)
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color.black.opacity(0.4))
+                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+                            Button {
+                                UIPasteboard.general.string = apnsDeviceToken
+                                HapticManager.shared.notification(.success)
+                                withAnimation {
+                                    copiedToken = true
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                    withAnimation {
+                                        copiedToken = false
+                                    }
+                                }
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Image(systemName: copiedToken ? "checkmark.circle.fill" : "doc.on.doc.fill")
+                                    Text(copiedToken ? "Token Copiato negli Appunti!" : "Copia Token APNs iPhone")
+                                }
+                                .font(.system(size: 13, weight: .bold, design: .rounded))
+                                .foregroundStyle(copiedToken ? Color.green : CyberTheme.cyanPrimary)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(CyberTheme.cyanPrimary.opacity(0.12))
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            Text("In attesa del token di registrazione Apple... Apri l'app su un iPhone fisico con connessione internet attiva per registrare il dispositivo.")
+                                .font(.system(size: 13, weight: .regular))
+                                .foregroundStyle(.white.opacity(0.65))
+                                .lineSpacing(2)
                         }
                     }
                     .padding(18)

@@ -189,4 +189,30 @@ public final class NewsAPIService {
             )
         ]
     }
+
+    // MARK: - Device Token Registration
+    public func registerDeviceToken(_ token: String) async {
+        guard !token.isEmpty, let url = URL(string: "\(supabaseURL)/rest/v1/device_tokens") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
+        request.setValue("Bearer \(supabaseAnonKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+
+        let payload: [String: Any] = [
+            "device_token": token,
+            "platform": "ios"
+        ]
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: payload)
+            let (_, response) = try await URLSession.shared.data(for: request)
+            if let httpResp = response as? HTTPURLResponse, (200...299).contains(httpResp.statusCode) {
+                print("📲 Token APNs registrato con successo nel database cloud.")
+            }
+        } catch {
+            print("ℹ️ Sincronizzazione token APNs: \(error.localizedDescription)")
+        }
+    }
 }

@@ -37,19 +37,29 @@ if __name__ == "__main__":
     tg_token = os.getenv("TELEGRAM_BOT_TOKEN")
     tg_chat = os.getenv("TELEGRAM_CHAT_ID")
     os_app = os.getenv("ONESIGNAL_APP_ID")
+    apns_key = os.getenv("APNS_KEY_ID")
+    apns_team = os.getenv("APNS_TEAM_ID")
+    apns_token = os.getenv("APNS_DEVICE_TOKEN")
 
-    print("\n🔍 Verifica configurazione notifiche remote:")
-    print(f"  • Telegram Bot Token: {' Configurato' if tg_token else '❌ Mancante'}")
-    print(f"  • Telegram Chat ID:   {' Configurato' if tg_chat else '❌ Mancante'}")
-    print(f"  • OneSignal App ID:   {' Configurato' if os_app else '❌ Mancante'}")
+    import glob
+    has_p8 = bool(os.getenv("APNS_PRIVATE_KEY") or os.getenv("APNS_P8_PATH") or glob.glob("backend/AuthKey_*.p8") or glob.glob("AuthKey_*.p8"))
 
-    if not tg_token and not os_app:
-        print("\n⚠️ Nessun canale di notifica remota configurato in backend/.env!")
-        print("Aggiungi TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID nel tuo file backend/.env per ricevere gli alert su iPhone.")
+    print("\n🔍 Verifica canali notifiche remote:")
+    print(f"  • Apple APNs Key (.p8): {' Configurato' if has_p8 else '❌ Mancante (richiede AuthKey_*.p8)'}")
+    print(f"  • Apple APNs Team ID:   {' Configurato' if apns_team else '❌ Mancante'}")
+    print(f"  • Apple APNs Key ID:    {' Configurato' if apns_key else '❌ Mancante'}")
+    print(f"  • Apple Device Token:   {' Configurato' if apns_token else '⏳ In attesa dall\'iPhone'}")
+    print(f"  • Telegram Bot Token:   {' Configurato' if tg_token else '❌ Mancante'}")
+    print(f"  • Telegram Chat ID:     {' Configurato' if tg_chat else '❌ Mancante'}")
+    print(f"  • OneSignal App ID:     {' Configurato' if os_app else '❌ Mancante'}")
+
+    if not tg_token and not os_app and not (has_p8 and apns_token):
+        print("\n⚠️ Nessun canale di notifica remota attivo pronto all'invio!")
+        print("Configura i parametri Apple APNs (.p8) o Telegram in backend/.env per ricevere gli allarmi.")
     else:
         print("\n🚀 Invio allarme di prova in corso...")
         success = dispatch_remote_alerts(mock_critical_article)
         if success:
-            print(" Allarme inviato! Controlla il tuo iPhone.")
+            print(" Allarme inviato con successo! Controlla il tuo iPhone.")
         else:
-            print("⚠️ Invio non riuscito. Controlla i log sopra per i dettagli.")
+            print("⚠️ Invio parziale o non riuscito. Controlla i messaggi sopra per i dettagli.")

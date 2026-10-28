@@ -19,6 +19,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
         print("📲 APNs Device Token ricevuto:", token)
         UserDefaults.standard.set(token, forKey: "apns_device_token")
+        Task {
+            await NewsAPIService.shared.registerDeviceToken(token)
+        }
     }
 
     func application(
