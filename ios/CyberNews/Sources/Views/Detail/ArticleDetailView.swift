@@ -145,6 +145,30 @@ public struct ArticleDetailView: View {
                                 }
                                 .buttonStyle(.plain)
 
+                                // Selettore Velocità (1x, 1.25x, 1.5x, 2x)
+                                Button {
+                                    HapticManager.shared.impact(.light)
+                                    audioManager.cyclePlaybackRate()
+                                } label: {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "gauge.with.needle")
+                                            .font(.system(size: 11))
+                                        Text(audioManager.formattedRate)
+                                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    }
+                                    .foregroundStyle(audioManager.playbackRate > 1.0 ? CyberTheme.cyanPrimary : .white.opacity(0.85))
+                                    .padding(.horizontal, 11)
+                                    .padding(.vertical, 9)
+                                    .background(
+                                        Capsule()
+                                            .fill(audioManager.playbackRate > 1.0 ? CyberTheme.cyanPrimary.opacity(0.18) : Color.white.opacity(0.08))
+                                            .overlay(
+                                                Capsule().stroke(audioManager.playbackRate > 1.0 ? CyberTheme.cyanPrimary.opacity(0.4) : Color.white.opacity(0.1), lineWidth: 1)
+                                            )
+                                    )
+                                }
+                                .buttonStyle(.plain)
+
                                 if isCurrentArticlePlaying || isCurrentArticlePaused {
                                     Button {
                                         HapticManager.shared.impact(.light)

@@ -92,6 +92,26 @@ public struct FloatingAudioPlayerView: View {
 
                 // Controlli Media
                 HStack(spacing: 6) {
+                    // Selettore Velocità (1x, 1.25x, 1.5x, 2x)
+                    Button {
+                        HapticManager.shared.impact(.light)
+                        audioManager.cyclePlaybackRate()
+                    } label: {
+                        Text(audioManager.formattedRate)
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundStyle(audioManager.playbackRate > 1.0 ? CyberTheme.cyanPrimary : .white.opacity(0.8))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 4)
+                            .background(
+                                Capsule()
+                                    .fill(audioManager.playbackRate > 1.0 ? CyberTheme.cyanPrimary.opacity(0.18) : Color.white.opacity(0.08))
+                                    .overlay(
+                                        Capsule().stroke(audioManager.playbackRate > 1.0 ? CyberTheme.cyanPrimary.opacity(0.4) : Color.white.opacity(0.08), lineWidth: 1)
+                                    )
+                            )
+                    }
+                    .buttonStyle(.plain)
+
                     // Traccia Precedente (se in modalità rassegna)
                     if audioManager.isDailyBriefingMode {
                         Button {

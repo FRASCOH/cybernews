@@ -20,6 +20,41 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     @Published public var currentArticleId: String? = nil
     @Published public var currentArticle: Article? = nil
 
+    // MARK: - Velocità di Riproduzione (1.0x, 1.25x, 1.5x, 2.0x)
+    @Published public var playbackRate: Float = 1.0
+
+    public var formattedRate: String {
+        if playbackRate == 1.0 {
+            return "1x"
+        } else if playbackRate == 1.25 {
+            return "1.25x"
+        } else if playbackRate == 1.5 {
+            return "1.5x"
+        } else if playbackRate == 2.0 {
+            return "2x"
+        } else {
+            return String(format: "%.1fx", playbackRate)
+        }
+    }
+
+    public func cyclePlaybackRate() {
+        let speeds: [Float] = [1.0, 1.25, 1.5, 2.0]
+        if let idx = speeds.firstIndex(where: { abs($0 - playbackRate) < 0.05 }), idx + 1 < speeds.count {
+            setPlaybackRate(speeds[idx + 1])
+        } else {
+            setPlaybackRate(1.0)
+        }
+    }
+
+    public func setPlaybackRate(_ rate: Float) {
+        self.playbackRate = rate
+        UserDefaults.standard.set(rate, forKey: "cybernews_audio_rate")
+        if isPlaying && isNeuralVoice {
+            player?.rate = rate
+        }
+        updatePlaybackState(isPlaying: isPlaying)
+    }
+
     // MARK: - Playlist / Rassegna Continua
     @Published public var playlist: [Article] = []
     @Published public var currentIndex: Int = 0
@@ -40,6 +75,10 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
 
     override private init() {
         super.init()
+        let savedRate = UserDefaults.standard.float(forKey: "cybernews_audio_rate")
+        if savedRate >= 1.0 && savedRate <= 2.0 {
+            self.playbackRate = savedRate
+        }
         synthesizer.delegate = self
         setupRemoteCommandCenter()
     }
@@ -138,6 +177,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         print("     URL: \(url.absoluteString)")
 
         let playerItem = AVPlayerItem(url: url)
+        playerItem.audioTimePitchAlgorithm = .timeDomain
         let newPlayer = AVPlayer(playerItem: playerItem)
         newPlayer.automaticallyWaitsToMinimizeStalling = true
         self.player = newPlayer
@@ -152,8 +192,8 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
                     self.cleanupPlayer()
                     self.playSynthesizerAudio(article: article, isIntro: false)
                 case .readyToPlay:
-                    print("✅ [AudioBriefingManager] Stream neurale pronto, avvio riproduzione")
-                    self.player?.play()
+                    print("✅ [AudioBriefingManager] Stream neurale pronto, avvio riproduzione a \(self.playbackRate)x")
+                    self.player?.playImmediately(atRate: self.playbackRate)
                 default:
                     break
                 }
@@ -199,7 +239,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         isNeuralVoice = true
 
         updateNowPlayingInfo(article: article, isNeural: true)
-        newPlayer.play()
+        newPlayer.playImmediately(atRate: playbackRate)
     }
 
     // MARK: - Fallback Riproduzione Sintetizzatore On-Device
@@ -247,7 +287,8 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
             utterance.voice = italianVoice
         }
 
-        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.95
+        let baseRate = AVSpeechUtteranceDefaultSpeechRate * 0.95
+        utterance.rate = min(AVSpeechUtteranceMaximumSpeechRate, max(AVSpeechUtteranceMinimumSpeechRate, baseRate * (playbackRate / 1.0)))
         utterance.pitchMultiplier = 1.0
         utterance.postUtteranceDelay = 0.3
 
@@ -293,7 +334,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
 
     public func resume() {
         if isNeuralVoice, let p = player {
-            p.play()
+            p.playImmediately(atRate: playbackRate)
             isPlaying = true
             isPaused = false
             updatePlaybackState(isPlaying: true)
@@ -380,7 +421,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         let voiceBadge = isNeural ? "Voce Neurale AI" : "Voce Dispositivo"
         nowPlayingInfo[MPMediaItemPropertyArtist] = "CyberNews • \(article.sourceName) (\(voiceBadge))"
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = isDailyBriefingMode ? "Rassegna del Giorno (\(playlistProgressText))" : "Cyber Briefing"
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? Double(playbackRate) : 0.0
 
         if isNeural, let item = player?.currentItem {
             let duration = CMTimeGetSeconds(item.duration)
@@ -394,7 +435,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
 
     private func updatePlaybackState(isPlaying: Bool) {
         if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
-            info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
+            info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? Double(playbackRate) : 0.0
             MPNowPlayingInfoCenter.default().nowPlayingInfo = info
         }
     }
