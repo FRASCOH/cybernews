@@ -7,12 +7,14 @@ public struct SettingsView: View {
     @AppStorage("notify_critical") private var notifyCritical: Bool = true
     @AppStorage("notify_governance") private var notifyGovernance: Bool = true
     @AppStorage("apns_device_token") private var apnsDeviceToken: String = ""
+    @AppStorage("apns_registration_error") private var apnsError: String = ""
 
     @State private var showingTestSentAlert = false
     @State private var testAlertTitle = ""
     @State private var testAlertMessage = ""
     @State private var isPermissionDenied = false
     @State private var copiedToken = false
+    @State private var isRegistering = false
 
     public init() {}
 
@@ -205,10 +207,59 @@ public struct SettingsView: View {
                             }
                             .buttonStyle(.plain)
                         } else {
-                            Text("In attesa del token di registrazione Apple... Apri l'app su un iPhone fisico con connessione internet attiva per registrare il dispositivo.")
-                                .font(.system(size: 13, weight: .regular))
-                                .foregroundStyle(.white.opacity(0.65))
-                                .lineSpacing(2)
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("In attesa del token da Apple... Assicurati che l'app sia avviata su un iPhone fisico collegato ad internet.")
+                                    .font(.system(size: 13, weight: .regular))
+                                    .foregroundStyle(.white.opacity(0.65))
+                                    .lineSpacing(2)
+
+                                if !apnsError.isEmpty {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Dettaglio stato:")
+                                            .font(.system(size: 11, weight: .bold))
+                                            .foregroundStyle(CyberTheme.threatAlto)
+                                        Text(apnsError)
+                                            .font(.system(size: 11, design: .monospaced))
+                                            .foregroundStyle(.white.opacity(0.8))
+                                    }
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(CyberTheme.threatAlto.opacity(0.12))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                }
+
+                                Button {
+                                    HapticManager.shared.impact(.medium)
+                                    isRegistering = true
+                                    NotificationManager.shared.requestAuthorization { _ in
+                                        DispatchQueue.main.async {
+                                            UIApplication.shared.registerForRemoteNotifications()
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                isRegistering = false
+                                            }
+                                        }
+                                    }
+                                } label: {
+                                    HStack(spacing: 6) {
+                                        if isRegistering {
+                                            ProgressView()
+                                                .tint(CyberTheme.cyanPrimary)
+                                        } else {
+                                            Image(systemName: "arrow.clockwise.circle.fill")
+                                        }
+                                        Text(isRegistering ? "Connessione ad Apple in corso..." : "Richiedi Registrazione Token APNs")
+                                    }
+                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .foregroundStyle(CyberTheme.cyanPrimary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                            .fill(CyberTheme.cyanPrimary.opacity(0.12))
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
                     .padding(18)

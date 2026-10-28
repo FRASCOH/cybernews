@@ -76,12 +76,13 @@
 		6C8A374DC1ACED1F1BBC4479 /* BookmarksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksView.swift; sourceTree = "<group>"; };
 		73B7CD11A88FC0B6F7238D6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		85194DA7A9BDD0C31674811F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyberNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DD3C9EFFEF754EA869CA2DD /* CyberNews.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CyberNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9074656C45F63F586D17881F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9CF3BB99260AF7DABE4CAFAA /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
 		9D8A7FE0FF9442FE2CA0044E /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
 		A22E164138CC0E88FCBD8237 /* CyberTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyberTheme.swift; sourceTree = "<group>"; };
 		C5F5CA6D02517C354D922BAD /* SavedArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedArticle.swift; sourceTree = "<group>"; };
+		C809F7069DD423B983A6BB60 /* CyberNews.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CyberNews.entitlements; sourceTree = "<group>"; };
 		C8B95D3725EBC40F307B1D17 /* latest_news.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = latest_news.json; sourceTree = "<group>"; };
 		CB2A2C2703CC3D3B85E8E35C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3C2744A8E2BDC3F5513BD67 /* CyberNewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyberNewsApp.swift; sourceTree = "<group>"; };
@@ -89,7 +90,7 @@
 		EF67500304487B9570DAC98A /* TagFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFilterBar.swift; sourceTree = "<group>"; };
 		F263A6D61B3E3DE6DC3E721A /* ArticleReadTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReadTracker.swift; sourceTree = "<group>"; };
 		F32DB55DDF7FB2895A481940 /* ArticleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardView.swift; sourceTree = "<group>"; };
-		F9C87D2D0A26CDD038B9CE63 /* CyberNewsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CyberNewsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9C87D2D0A26CDD038B9CE63 /* CyberNewsWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CyberNewsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -142,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				9074656C45F63F586D17881F /* Assets.xcassets */,
+				C809F7069DD423B983A6BB60 /* CyberNews.entitlements */,
 				CB2A2C2703CC3D3B85E8E35C /* Info.plist */,
 				C8B95D3725EBC40F307B1D17 /* latest_news.json */,
 			);
@@ -312,7 +314,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2710;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					3C2B7267233364F5B905DD50 = {
+						DevelopmentTeam = "";
+					};
+					D7621F8838E6AF0D919E23B3 = {
+						DevelopmentTeam = "";
+					};
+				};
 			};
 			buildConfigurationList = 2935F39986B633C2047FADD0 /* Build configuration list for PBXProject "CyberNews" */;
 			developmentRegion = en;
@@ -406,7 +416,6 @@
 		07A736FE52439BF8D2294752 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				INFOPLIST_FILE = CyberNewsWidget/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -427,8 +436,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CyberNews/Resources/CyberNews.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CyberNews/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -449,8 +458,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CyberNews/Resources/CyberNews.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CyberNews/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -504,7 +513,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -518,7 +526,6 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
@@ -563,7 +570,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -584,7 +590,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
@@ -594,7 +599,6 @@
 		DE451F6DB1BF942EE4FC3A09 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = N6TKCS2AYD;
 				INFOPLIST_FILE = CyberNewsWidget/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

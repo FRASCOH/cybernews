@@ -28,7 +28,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        print("ℹ️ Registrazione APNs remota:", error.localizedDescription)
+        print("❌ Registrazione APNs remota:", error.localizedDescription)
+        UserDefaults.standard.set(error.localizedDescription, forKey: "apns_registration_error")
     }
 
     func application(

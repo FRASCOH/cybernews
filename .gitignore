@@ -4,6 +4,7 @@
 .env.*.local
 *.key
 *.pem
+*.p8
 credentials.json
 
 # Python
