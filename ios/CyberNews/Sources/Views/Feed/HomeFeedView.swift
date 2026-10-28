@@ -6,6 +6,7 @@ public struct HomeFeedView: View {
     @ObservedObject private var notificationManager = NotificationManager.shared
     @Query private var savedArticles: [SavedArticle]
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var selectedArticleForDetail: Article? = nil
     @State private var isSearchVisible: Bool = false
@@ -254,6 +255,13 @@ public struct HomeFeedView: View {
         }
         .sheet(isPresented: $showNotificationsCenter) {
             NotificationsCenterView()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                Task {
+                    await viewModel.loadArticles(forceRefresh: true)
+                }
+            }
         }
     }
 

@@ -19,7 +19,7 @@ public final class NewsFeedViewModel: ObservableObject {
         }
 
         Task {
-            await loadArticles(forceRefresh: false)
+            await loadArticles(forceRefresh: true)
         }
     }
 

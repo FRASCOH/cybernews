@@ -11,8 +11,8 @@ public final class NewsAPIService {
     }
 
     // Credenziali Supabase predefinite (chiave anon pubblica protetta da RLS in sola lettura)
-    public var supabaseURL: String = "https://stkmmwwpwrbnkigkuwdp.supabase.co"
-    public var supabaseAnonKey: String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21td3dwd3JibmtpZ2t1d2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTgyMTksImV4cCI6MjEwODY3NDIxOX0.oT8tH06YDvfve36AIg0bvrrIa2bjXCFIJxPYLBxcoB0"
+    public let supabaseURL: String = "https://stkmmwwpwrbnkigkuwdp.supabase.co"
+    public let supabaseAnonKey: String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21td3dwd3JibmtpZ2t1d2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTgyMTksImV4cCI6MjEwODY3NDIxOX0.oT8tH06YDvfve36AIg0bvrrIa2bjXCFIJxPYLBxcoB0"
 
     private var memoryCache: [Article] = []
     private var lastFetchTime: Date? = nil
