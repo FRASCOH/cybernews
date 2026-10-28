@@ -46,6 +46,19 @@ public struct FloatingAudioPlayerView: View {
                                 Text(article.sourceName)
                                     .font(.system(size: 10, weight: .bold, design: .rounded))
                                     .foregroundStyle(CyberTheme.orangePrimary)
+
+                                if audioManager.isNeuralVoice {
+                                    HStack(spacing: 2) {
+                                        Image(systemName: "sparkles")
+                                            .font(.system(size: 7))
+                                        Text("AI VOICE")
+                                            .font(.system(size: 8, weight: .heavy, design: .rounded))
+                                    }
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 1)
+                                    .background(Capsule().fill(CyberTheme.cyanPrimary.opacity(0.18)))
+                                    .foregroundStyle(CyberTheme.cyanPrimary)
+                                }
                             }
 
                             Text(article.titleIt)

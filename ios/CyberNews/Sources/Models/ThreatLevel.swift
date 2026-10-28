@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum ThreatLevel: String, Codable, CaseIterable {
+public enum ThreatLevel: String, Codable, CaseIterable, Sendable {
     case critico     = "CRITICO"
     case alto        = "ALTO"
     case medio       = "MEDIO"

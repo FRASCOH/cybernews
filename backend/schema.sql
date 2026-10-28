@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS public.news_articles (
     source_url TEXT NOT NULL,
     published_at TEXT,
     is_breaking BOOLEAN DEFAULT false,
+    audio_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

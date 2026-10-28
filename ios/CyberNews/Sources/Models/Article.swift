@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Article: Identifiable, Codable, Hashable {
+public struct Article: Identifiable, Codable, Hashable, Sendable {
     public let id: String
     public let urlHash: String
     public let titleIt: String
@@ -15,6 +15,7 @@ public struct Article: Identifiable, Codable, Hashable {
     public let sourceUrl: String
     public let publishedAt: String?
     public let isBreaking: Bool?
+    public let audioUrl: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -31,6 +32,7 @@ public struct Article: Identifiable, Codable, Hashable {
         case sourceUrl = "source_url"
         case publishedAt = "published_at"
         case isBreaking = "is_breaking"
+        case audioUrl = "audio_url"
     }
 
     public init(
@@ -47,7 +49,8 @@ public struct Article: Identifiable, Codable, Hashable {
         sourceName: String,
         sourceUrl: String,
         publishedAt: String? = nil,
-        isBreaking: Bool? = false
+        isBreaking: Bool? = false,
+        audioUrl: String? = nil
     ) {
         self.id = id
         self.urlHash = urlHash
@@ -63,6 +66,7 @@ public struct Article: Identifiable, Codable, Hashable {
         self.sourceUrl = sourceUrl
         self.publishedAt = publishedAt
         self.isBreaking = isBreaking
+        self.audioUrl = audioUrl
     }
 
     public var formattedRelativeTime: String {

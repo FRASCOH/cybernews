@@ -35,6 +35,14 @@ except ImportError:
         merge_article_sources = lambda e, s, u, t, tags: e
         extract_cves = lambda t: []
 
+try:
+    from audio_generator import generate_article_audio
+except ImportError:
+    try:
+        from backend.audio_generator import generate_article_audio
+    except ImportError:
+        generate_article_audio = lambda a, s=None: None
+
 # Carica le variabili da backend/.env
 load_dotenv()
 
@@ -167,9 +175,14 @@ def init_local_db():
             source_name TEXT,
             source_url TEXT,
             published_at TEXT,
-            created_at TEXT
+            created_at TEXT,
+            audio_url TEXT
         )
     """)
+    try:
+        cursor.execute("ALTER TABLE articles ADD COLUMN audio_url TEXT")
+    except Exception:
+        pass
     conn.commit()
     conn.close()
 
@@ -317,8 +330,8 @@ def save_article(article_data: Dict[str, Any]):
         INSERT OR REPLACE INTO articles (
             id, url_hash, title_it, original_title, summary_points, action_mitigation,
             threat_level, category, target_audience, tags, source_name, source_url,
-            published_at, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            published_at, created_at, audio_url
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         article_data["id"],
         article_data["url_hash"],
@@ -334,6 +347,7 @@ def save_article(article_data: Dict[str, Any]):
         article_data["source_url"],
         article_data["published_at"],
         article_data["created_at"],
+        article_data.get("audio_url")
     ))
     conn.commit()
     conn.close()
@@ -341,7 +355,7 @@ def save_article(article_data: Dict[str, Any]):
     # Salva su Supabase se connesso
     if supabase_client:
         try:
-            supabase_client.table("news_articles").upsert({
+            payload = {
                 "id": article_data["id"],
                 "url_hash": article_data["url_hash"],
                 "title_it": article_data["title_it"],
@@ -356,7 +370,18 @@ def save_article(article_data: Dict[str, Any]):
                 "source_url": article_data["source_url"],
                 "published_at": article_data["published_at"],
                 "is_breaking": article_data["threat_level"] == "CRITICO",
-            }).execute()
+            }
+            if article_data.get("audio_url"):
+                payload["audio_url"] = article_data["audio_url"]
+
+            try:
+                supabase_client.table("news_articles").upsert(payload).execute()
+            except Exception as up_err:
+                if "audio_url" in payload:
+                    payload.pop("audio_url")
+                    supabase_client.table("news_articles").upsert(payload).execute()
+                else:
+                    raise up_err
         except Exception as e:
             print(f"⚠️ Errore salvataggio Supabase: {e}")
 
@@ -367,7 +392,7 @@ def export_json_feed():
     cursor.execute("""
         SELECT id, url_hash, title_it, original_title, summary_points, action_mitigation,
                threat_level, category, target_audience, tags, source_name, source_url,
-               published_at, created_at
+               published_at, created_at, audio_url
         FROM articles ORDER BY created_at DESC LIMIT 50
     """)
     rows = cursor.fetchall()
@@ -390,7 +415,8 @@ def export_json_feed():
             "source_url": r[11],
             "published_at": r[12],
             "created_at": r[13],
-            "is_breaking": r[6] == "CRITICO"
+            "is_breaking": r[6] == "CRITICO",
+            "audio_url": r[14] if len(r) > 14 else None
         })
 
     json_path = os.path.join(os.path.dirname(__file__), "latest_news.json")
@@ -511,6 +537,15 @@ def run_ingestion(limit_per_source: int = 3):
                     "published_at": pub_date,
                     "created_at": now_iso
                 }
+
+                # 🎙️ Generazione Audio Neurale (Microsoft Edge TTS + Supabase Storage)
+                try:
+                    audio_url = generate_article_audio(article_record, supabase_client)
+                    if audio_url:
+                        article_record["audio_url"] = audio_url
+                        print(f"    🎙️ Audio neurale generato con successo: {audio_url}")
+                except Exception as audio_err:
+                    print(f"    ⚠️ Errore generazione audio: {audio_err}")
 
                 save_article(article_record)
                 recent_articles.insert(0, article_record)

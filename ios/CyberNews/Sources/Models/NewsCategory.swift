@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum NewsCategory: String, Codable, CaseIterable, Identifiable {
+public enum NewsCategory: String, Codable, CaseIterable, Identifiable, Sendable {
     case all               = "ALL"
     case nis2GoldenPower   = "NIS2_GOLDEN_POWER"
     case vulnerabilita     = "VULNERABILITA_ZERODAY"

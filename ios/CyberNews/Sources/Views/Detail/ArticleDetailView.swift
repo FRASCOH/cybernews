@@ -82,6 +82,15 @@ public struct ArticleDetailView: View {
                                     Text("CYBER BRIEFING VOCALE")
                                         .font(.system(size: 12, weight: .heavy, design: .rounded))
                                         .foregroundStyle(CyberTheme.orangePrimary)
+
+                                    if article.audioUrl != nil {
+                                        Text("HD AI")
+                                            .font(.system(size: 9, weight: .heavy, design: .rounded))
+                                            .foregroundStyle(CyberTheme.cyanPrimary)
+                                            .padding(.horizontal, 5)
+                                            .padding(.vertical, 2)
+                                            .background(Capsule().fill(CyberTheme.cyanPrimary.opacity(0.18)))
+                                    }
                                 }
 
                                 Spacer()
@@ -110,10 +119,10 @@ public struct ArticleDetailView: View {
                                     }
                                 } label: {
                                     HStack(spacing: 8) {
-                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : "play.fill")
+                                        Image(systemName: isCurrentArticlePlaying ? "pause.fill" : (article.audioUrl != nil ? "sparkles" : "play.fill"))
                                             .font(.system(size: 14))
 
-                                        Text(isCurrentArticlePlaying ? "Metti in Pausa" : (isCurrentArticlePaused ? "Riprendi Lettura" : "Ascolta Sintesi Vocale"))
+                                        Text(isCurrentArticlePlaying ? "Metti in Pausa" : (isCurrentArticlePaused ? "Riprendi Lettura" : (article.audioUrl != nil ? "Ascolta Voce Neurale AI" : "Ascolta Sintesi Vocale")))
                                             .font(.system(size: 13, weight: .bold, design: .rounded))
                                     }
                                     .foregroundStyle(isCurrentArticlePlaying ? .black : CyberTheme.orangePrimary)

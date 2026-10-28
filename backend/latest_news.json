@@ -24,7 +24,8 @@
     "source_url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2026",
     "published_at": "1 mese fa",
     "created_at": "2026-10-27T12:00:00.950482+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/f612d52aa54e233b493f83f35a37c12e.mp3"
   },
   {
     "id": "b99a4e342af5daee5d7bd2def10fb1e0",
@@ -51,7 +52,8 @@
     "source_url": "https://www.securityweek.com/cisa-alert-critical-infrastructure-ot-scada/",
     "published_at": "3 settimane fa",
     "created_at": "2026-10-27T11:59:54.815534+00:00",
-    "is_breaking": true
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/b99a4e342af5daee5d7bd2def10fb1e0.mp3"
   },
   {
     "id": "eba5abcaee67eb73a68f66cf503dc60d",
@@ -78,7 +80,8 @@
     "source_url": "https://thehackernews.com/2026/10/npm-pypi-supply-chain-attacks.html",
     "published_at": "3 settimane fa",
     "created_at": "2026-10-27T11:59:53.425323+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/eba5abcaee67eb73a68f66cf503dc60d.mp3"
   },
   {
     "id": "3bdae01a07ff010ac46b002207a87438",
@@ -105,7 +108,8 @@
     "source_url": "https://cert-agid.gov.it/notizie/campagne-malware-settimanali-italia",
     "published_at": "2 settimane fa",
     "created_at": "2026-10-27T11:59:47.044506+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/3bdae01a07ff010ac46b002207a87438.mp3"
   },
   {
     "id": "db26b70ad51f7ca62e9cab9da202fd87",
@@ -132,7 +136,8 @@
     "source_url": "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/mfa-linee-guida",
     "published_at": "2 settimane fa",
     "created_at": "2026-10-27T11:59:38.045975+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/db26b70ad51f7ca62e9cab9da202fd87.mp3"
   },
   {
     "id": "4ee488db4bc081e4c3202f0492611e2c",
@@ -159,7 +164,8 @@
     "source_url": "https://www.bleepingcomputer.com/news/security/ransomware-akira-vmware-esxi-attacks/",
     "published_at": "2 settimane fa",
     "created_at": "2026-10-27T11:59:35.810754+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/4ee488db4bc081e4c3202f0492611e2c.mp3"
   },
   {
     "id": "eb80a07fedf5a98770c2e19611d5df7d",
@@ -186,7 +192,8 @@
     "source_url": "https://www.cybersecurity360.it/normative/dora-regolamento-finanziario-linee-guida-eba",
     "published_at": "1 settimana fa",
     "created_at": "2026-10-27T11:59:31.715381+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/eb80a07fedf5a98770c2e19611d5df7d.mp3"
   },
   {
     "id": "c19460da32eea4a9927ef68dc30196c3",
@@ -213,7 +220,8 @@
     "source_url": "https://thehackernews.com/2026/10/ivanti-epmm-connect-secure-flaws.html",
     "published_at": "1 settimana fa",
     "created_at": "2026-10-27T11:59:21.155112+00:00",
-    "is_breaking": true
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/c19460da32eea4a9927ef68dc30196c3.mp3"
   },
   {
     "id": "7ac4ec3321c3a1983ffce87e1e8980ac",
@@ -240,7 +248,8 @@
     "source_url": "https://www.csirt.gov.it/notizie/bollettino-palo-alto-panos",
     "published_at": "1 settimana fa",
     "created_at": "2026-10-27T11:59:19.427124+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/7ac4ec3321c3a1983ffce87e1e8980ac.mp3"
   },
   {
     "id": "119ee305bd23412e8162d4815feaf99d",
@@ -267,7 +276,8 @@
     "source_url": "https://www.bleepingcomputer.com/news/security/apple-coregraphics-zeroday-ios-macos-patch/",
     "published_at": "6 giorni fa",
     "created_at": "2026-10-27T11:59:14.928883+00:00",
-    "is_breaking": true
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/119ee305bd23412e8162d4815feaf99d.mp3"
   },
   {
     "id": "5b3da9e33c069dd55b1b0d801c56ce67",
@@ -294,7 +304,8 @@
     "source_url": "https://www.cybersecurity360.it/normative/iso-27001-2022-scadenza-transizione",
     "published_at": "5 giorni fa",
     "created_at": "2026-10-27T11:59:11.433481+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/5b3da9e33c069dd55b1b0d801c56ce67.mp3"
   },
   {
     "id": "b3b2f0060d8097630f6cbfd2d6029f65",
@@ -321,7 +332,8 @@
     "source_url": "https://www.agendadigitale.eu/sicurezza/golden-power-cloud-5g",
     "published_at": "4 giorni fa",
     "created_at": "2026-10-27T11:59:05.047949+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/b3b2f0060d8097630f6cbfd2d6029f65.mp3"
   },
   {
     "id": "6bc94f0973465afb383360fda88ef7d4",
@@ -348,7 +360,8 @@
     "source_url": "https://www.acn.gov.it/portale-nis2/comunicati",
     "published_at": "3 giorni fa",
     "created_at": "2026-10-27T11:58:58.948982+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/6bc94f0973465afb383360fda88ef7d4.mp3"
   },
   {
     "id": "a48f786ebd8aba67d5b382a9a5cf0094",
@@ -375,7 +388,8 @@
     "source_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-php2shell",
     "published_at": "Ieri, 21:00",
     "created_at": "2026-10-27T11:58:57.640002+00:00",
-    "is_breaking": true
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/a48f786ebd8aba67d5b382a9a5cf0094.mp3"
   },
   {
     "id": "ba9da2792d3101df9f1ce51231d1395c",
@@ -402,7 +416,8 @@
     "source_url": "https://thehackernews.com/2026/10/php2shell-critical-rce-vulnerabilities.html",
     "published_at": "Ieri, 18:30",
     "created_at": "2026-10-27T11:58:51.749136+00:00",
-    "is_breaking": true
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/ba9da2792d3101df9f1ce51231d1395c.mp3"
   },
   {
     "id": "5a56b75d9a1b94de8c8e2d34a3f2b83a",
@@ -428,7 +443,8 @@
     "source_url": "https://isc.sans.edu/diary/rss/33462",
     "published_at": "Tue, 27 Oct 2026 02:55:13 GMT",
     "created_at": "2026-10-27T11:50:03.459304+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/5a56b75d9a1b94de8c8e2d34a3f2b83a.mp3"
   },
   {
     "id": "ecbaf890a2970ba2102715a2634fd2c0",
@@ -455,7 +471,8 @@
     "source_url": "https://thehackernews.com/2026/10/australia-gets-into-amadey-malware.html",
     "published_at": "Tue, 27 Oct 2026 15:03:06 +0530",
     "created_at": "2026-10-27T11:50:00.481479+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/ecbaf890a2970ba2102715a2634fd2c0.mp3"
   },
   {
     "id": "bff6c8a42674debe47fb350ac72d1e08",
@@ -482,7 +499,8 @@
     "source_url": "https://www.bleepingcomputer.com/news/apple/apple-backports-coregraphics-zero-day-patches-to-older-iphones/",
     "published_at": "Tue, 27 Oct 2026 06:36:12 -0400",
     "created_at": "2026-10-27T11:49:55.118626+00:00",
-    "is_breaking": true
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/bff6c8a42674debe47fb350ac72d1e08.mp3"
   },
   {
     "id": "e95d50587e2e2bab04919b9ae99c4dcb",
@@ -508,7 +526,8 @@
     "source_url": "https://www.cybersecurity360.it/cultura-cyber/aruba-supersite-creazione-siti-web-intelligenza-artificiale/",
     "published_at": "Tue, 27 Oct 2026 09:52:11 +0000",
     "created_at": "2026-10-27T11:49:47.409743+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/e95d50587e2e2bab04919b9ae99c4dcb.mp3"
   },
   {
     "id": "44aa039194ac91b138f00955b87a7a69",
@@ -535,6 +554,7 @@
     "source_url": "https://cert-agid.gov.it/news/phishing-pagopa-nuove-campagne-a-tema-multe-diffuse-tramite-pec-compromesse/",
     "published_at": "Tue, 27 Oct 2026 08:19:49 +0000",
     "created_at": "2026-10-27T11:49:43.416667+00:00",
-    "is_breaking": false
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/44aa039194ac91b138f00955b87a7a69.mp3"
   }
 ]

@@ -7,10 +7,15 @@ import Combine
 public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     public static let shared = AudioBriefingManager()
 
+    // Motore Neurale Edge TTS via AVPlayer & Fallback su dispositivo
     private let synthesizer = AVSpeechSynthesizer()
+    private var player: AVPlayer?
+    private var playerItemDidPlayToEndObserver: NSObjectProtocol?
+    private var playerItemFailedObserver: NSObjectProtocol?
 
     @Published public var isPlaying: Bool = false
     @Published public var isPaused: Bool = false
+    @Published public var isNeuralVoice: Bool = false
     @Published public var currentArticleId: String? = nil
     @Published public var currentArticle: Article? = nil
 
@@ -49,6 +54,19 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
                 print("⚠️ Errore configurazione AVAudioSession: \(error)")
             }
         }
+    }
+
+    private func cleanupPlayer() {
+        if let observer = playerItemDidPlayToEndObserver {
+            NotificationCenter.default.removeObserver(observer)
+            playerItemDidPlayToEndObserver = nil
+        }
+        if let observer = playerItemFailedObserver {
+            NotificationCenter.default.removeObserver(observer)
+            playerItemFailedObserver = nil
+        }
+        player?.pause()
+        player = nil
     }
 
     // MARK: - Riproduzione Rassegna Continua
@@ -93,6 +111,76 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         // Segna automaticamente come letto
         ArticleReadTracker.shared.markAsRead(id: article.id)
 
+        // Controllo se è disponibile l'audio neurale studio ad alta definizione
+        if let audioUrlString = article.audioUrl,
+           let streamURL = URL(string: audioUrlString),
+           !audioUrlString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            playNeuralAudio(url: streamURL, article: article)
+            return
+        }
+
+        // Fallback su sintetizzatore on-device (se offline o audioUrl non disponibile)
+        playSynthesizerAudio(article: article, isIntro: isIntro)
+    }
+
+    // MARK: - Riproduzione Streaming Neurale (Edge TTS via AVPlayer)
+    private func playNeuralAudio(url: URL, article: Article) {
+        cleanupPlayer()
+        if synthesizer.isSpeaking || synthesizer.isPaused {
+            synthesizer.stopSpeaking(at: .immediate)
+        }
+
+        let playerItem = AVPlayerItem(url: url)
+        let newPlayer = AVPlayer(playerItem: playerItem)
+        self.player = newPlayer
+
+        // Avanzamento automatico al termine dell'audio
+        playerItemDidPlayToEndObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: playerItem,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                if self.isDailyBriefingMode {
+                    if self.hasNext {
+                        self.next()
+                    } else {
+                        self.speakOutroAndStop()
+                    }
+                } else {
+                    self.stop()
+                }
+            }
+        }
+
+        // Fallback di resilienza: se il caricamento da rete fallisce, usa la voce di sistema
+        playerItemFailedObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemFailedToPlayToEndTime,
+            object: playerItem,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                print("⚠️ Stream audio neurale fallito, fallback automatico a voce su dispositivo")
+                self.cleanupPlayer()
+                self.playSynthesizerAudio(article: article, isIntro: false)
+            }
+        }
+
+        isPlaying = true
+        isPaused = false
+        isNeuralVoice = true
+
+        updateNowPlayingInfo(article: article, isNeural: true)
+        newPlayer.play()
+    }
+
+    // MARK: - Fallback Riproduzione Sintetizzatore On-Device
+    private func playSynthesizerAudio(article: Article, isIntro: Bool) {
+        cleanupPlayer()
+        isNeuralVoice = false
+
         // Costruisci il testo parlato
         var speechText = ""
         if isIntro {
@@ -127,7 +215,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         isPlaying = true
         isPaused = false
 
-        updateNowPlayingInfo(article: article)
+        updateNowPlayingInfo(article: article, isNeural: false)
         synthesizer.speak(utterance)
     }
 
@@ -136,6 +224,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
             speakOutroAndStop()
             return
         }
+        cleanupPlayer()
         synthesizer.stopSpeaking(at: .immediate)
         currentIndex += 1
         playCurrentQueueItem(isIntro: false)
@@ -143,13 +232,19 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
 
     public func previous() {
         guard hasPrevious else { return }
+        cleanupPlayer()
         synthesizer.stopSpeaking(at: .immediate)
         currentIndex -= 1
         playCurrentQueueItem(isIntro: false)
     }
 
     public func pause() {
-        if synthesizer.isSpeaking && !synthesizer.isPaused {
+        if isNeuralVoice, let p = player {
+            p.pause()
+            isPlaying = false
+            isPaused = true
+            updatePlaybackState(isPlaying: false)
+        } else if synthesizer.isSpeaking && !synthesizer.isPaused {
             synthesizer.pauseSpeaking(at: .immediate)
             isPlaying = false
             isPaused = true
@@ -158,7 +253,12 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     }
 
     public func resume() {
-        if synthesizer.isPaused {
+        if isNeuralVoice, let p = player {
+            p.play()
+            isPlaying = true
+            isPaused = false
+            updatePlaybackState(isPlaying: true)
+        } else if synthesizer.isPaused {
             synthesizer.continueSpeaking()
             isPlaying = true
             isPaused = false
@@ -167,6 +267,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     }
 
     public func stop() {
+        cleanupPlayer()
         if synthesizer.isSpeaking || synthesizer.isPaused {
             synthesizer.stopSpeaking(at: .immediate)
         }
@@ -175,6 +276,7 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         currentArticleId = nil
         currentArticle = nil
         isDailyBriefingMode = false
+        isNeuralVoice = false
         clearNowPlayingInfo()
 
         Task.detached(priority: .utility) {
@@ -183,6 +285,8 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     }
 
     private func speakOutroAndStop() {
+        cleanupPlayer()
+        isNeuralVoice = false
         let outroText = "Rassegna vocale conclusa. Sei aggiornato su tutte le principali minacce e normative."
         let utterance = AVSpeechUtterance(string: outroText)
         if let italianVoice = AVSpeechSynthesisVoice(language: "it-IT") {
@@ -231,12 +335,20 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         }
     }
 
-    private func updateNowPlayingInfo(article: Article) {
+    private func updateNowPlayingInfo(article: Article, isNeural: Bool = false) {
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = article.titleIt
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "CyberNews • \(article.sourceName)"
+        let voiceBadge = isNeural ? "Voce Neurale AI" : "Voce Dispositivo"
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "CyberNews • \(article.sourceName) (\(voiceBadge))"
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = isDailyBriefingMode ? "Rassegna del Giorno (\(playlistProgressText))" : "Cyber Briefing"
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+
+        if isNeural, let item = player?.currentItem {
+            let duration = CMTimeGetSeconds(item.duration)
+            if duration.isFinite && duration > 0 {
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+            }
+        }
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
