@@ -203,11 +203,17 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     }
 
     // MARK: - Fallback Riproduzione Sintetizzatore On-Device
+    private func cleanTextForSpeech(_ text: String) -> String {
+        text.replacingOccurrences(of: "<[^>]+>", with: " ", options: .regularExpression)
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private func playSynthesizerAudio(article: Article, isIntro: Bool) {
         cleanupPlayer()
         isNeuralVoice = false
 
-        // Costruisci il testo parlato
+        // Costruisci il testo parlato rigorosamente pulito
         var speechText = ""
         if isIntro {
             speechText += "Benvenuto alla rassegna vocale di CyberNews. Ecco le notizie di sicurezza di oggi. "
@@ -215,18 +221,25 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
             speechText += "Prossima notizia. "
         }
 
+        let cleanTitle = cleanTextForSpeech(article.titleIt)
         speechText += "Fonte: \(article.sourceName). Livello di rischio: \(article.threatLevel.rawValue). "
-        speechText += "\(article.titleIt). "
+        speechText += "\(cleanTitle). "
 
         if !article.summaryPoints.isEmpty {
             speechText += "Sintesi: "
             for (idx, point) in article.summaryPoints.enumerated() {
-                speechText += "Punto \(idx + 1): \(point). "
+                let cleanPoint = cleanTextForSpeech(point)
+                if !cleanPoint.isEmpty {
+                    speechText += "Punto \(idx + 1): \(cleanPoint). "
+                }
             }
         }
 
         if let action = article.actionMitigation, !action.isEmpty {
-            speechText += "Azione consigliata: \(action). "
+            let cleanAction = cleanTextForSpeech(action)
+            if !cleanAction.isEmpty {
+                speechText += "Azione consigliata: \(cleanAction). "
+            }
         }
 
         let utterance = AVSpeechUtterance(string: speechText)
