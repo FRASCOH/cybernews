@@ -2,14 +2,12 @@ import SwiftUI
 
 public enum CyberTab: Int, CaseIterable {
     case feed = 0
-    case governance = 1
-    case bookmarks = 2
-    case settings = 3
+    case bookmarks = 1
+    case settings = 2
 
     var title: String {
         switch self {
         case .feed:       return "Feed"
-        case .governance: return "Governance"
         case .bookmarks:  return "Salvati"
         case .settings:   return "Impostazioni"
         }
@@ -18,7 +16,6 @@ public enum CyberTab: Int, CaseIterable {
     var iconName: String {
         switch self {
         case .feed:       return "newspaper.fill"
-        case .governance: return "building.columns.fill"
         case .bookmarks:  return "bookmark.fill"
         case .settings:   return "gearshape.fill"
         }
@@ -38,8 +35,6 @@ public struct MainTabView: View {
                 switch selectedTab {
                 case .feed:
                     HomeFeedView(viewModel: viewModel)
-                case .governance:
-                    GovernanceView(viewModel: viewModel)
                 case .bookmarks:
                     BookmarksView()
                 case .settings:
@@ -48,7 +43,7 @@ public struct MainTabView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            // Floating Glassmorphic Tab Bar
+            // Floating Glassmorphic Tab Bar a 3 Tab
             HStack(spacing: 0) {
                 ForEach(CyberTab.allCases, id: \.self) { tab in
                     let isSelected = tab == selectedTab
@@ -61,12 +56,12 @@ public struct MainTabView: View {
                     } label: {
                         VStack(spacing: 4) {
                             Image(systemName: tab.iconName)
-                                .font(.system(size: 18, weight: isSelected ? .bold : .medium))
+                                .font(.system(size: 19, weight: isSelected ? .bold : .medium))
                                 .foregroundStyle(isSelected ? CyberTheme.orangePrimary : .white.opacity(0.45))
                                 .scaleEffect(isSelected ? 1.12 : 1.0)
 
                             Text(tab.title)
-                                .font(.system(size: 10, weight: isSelected ? .bold : .medium, design: .rounded))
+                                .font(.system(size: 11, weight: isSelected ? .bold : .medium, design: .rounded))
                                 .foregroundStyle(isSelected ? CyberTheme.orangePrimary : .white.opacity(0.45))
                         }
                         .frame(maxWidth: .infinity)
@@ -75,7 +70,7 @@ public struct MainTabView: View {
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 20)
             .background(
                 Capsule()
                     .fill(.ultraThinMaterial)
@@ -96,7 +91,7 @@ public struct MainTabView: View {
                     )
                     .shadow(color: Color.black.opacity(0.45), radius: 16, x: 0, y: 8)
             )
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 36)
             .padding(.bottom, 14)
         }
         .ignoresSafeArea(.keyboard)
