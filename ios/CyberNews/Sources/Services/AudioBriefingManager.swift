@@ -39,12 +39,15 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
     }
 
     private func configureAudioSession() {
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-            try session.setActive(true)
-        } catch {
-            print("⚠️ Errore configurazione AVAudioSession: \(error)")
+        // Esegue la configurazione audio fuori dal Main Thread per evitare Hang Risk
+        Task.detached(priority: .userInitiated) {
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+                try session.setActive(true)
+            } catch {
+                print("⚠️ Errore configurazione AVAudioSession: \(error)")
+            }
         }
     }
 
@@ -173,6 +176,10 @@ public final class AudioBriefingManager: NSObject, ObservableObject, AVSpeechSyn
         currentArticle = nil
         isDailyBriefingMode = false
         clearNowPlayingInfo()
+
+        Task.detached(priority: .utility) {
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 
     private func speakOutroAndStop() {
