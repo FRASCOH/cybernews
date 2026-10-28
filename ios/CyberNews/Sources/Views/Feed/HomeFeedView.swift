@@ -22,11 +22,46 @@ public struct HomeFeedView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Top Header: Logo CyberNews + Search Icon
-                HStack(spacing: 12) {
+                // Top Header: Logo CyberNews + Filtro Non Lette + Search Icon
+                HStack(spacing: 8) {
                     CyberLogoView()
 
                     Spacer()
+
+                    // Tasto Filtro Rapido "Solo Non Lette"
+                    Button {
+                        HapticManager.shared.impact(.medium)
+                        withAnimation(CyberTheme.quickSpring) {
+                            viewModel.showOnlyUnread.toggle()
+                        }
+                    } label: {
+                        HStack(spacing: 5) {
+                            Image(systemName: viewModel.showOnlyUnread ? "eye.fill" : "eye")
+                                .font(.system(size: 13, weight: .bold))
+
+                            if viewModel.unreadCount > 0 {
+                                Text("\(viewModel.unreadCount)")
+                                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 2)
+                                    .background(viewModel.showOnlyUnread ? Color.black.opacity(0.35) : CyberTheme.cyanPrimary)
+                                    .foregroundStyle(viewModel.showOnlyUnread ? CyberTheme.cyanPrimary : .black)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                        .foregroundStyle(viewModel.showOnlyUnread ? CyberTheme.cyanPrimary : .white.opacity(0.75))
+                        .padding(.horizontal, 10)
+                        .frame(height: 38)
+                        .background(
+                            RoundedRectangle(cornerRadius: 19, style: .continuous)
+                                .fill(viewModel.showOnlyUnread ? CyberTheme.cyanPrimary.opacity(0.18) : Color.white.opacity(0.06))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 19, style: .continuous)
+                                        .stroke(viewModel.showOnlyUnread ? CyberTheme.cyanPrimary.opacity(0.55) : Color.white.opacity(0.10), lineWidth: 1)
+                                )
+                        )
+                    }
+                    .buttonStyle(.plain)
 
                     // Tasto Ricerca
                     Button {
@@ -180,6 +215,86 @@ public struct HomeFeedView: View {
                             }
                             .padding(.horizontal, 4)
                             .padding(.top, 2)
+                        }
+
+                        // Badge indicatore filtro "Solo Non Lette" attivo
+                        if viewModel.showOnlyUnread {
+                            HStack {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "eye.fill")
+                                        .font(.system(size: 11))
+                                    Text("FILTRO: SOLO NOTIZIE NON LETTE")
+                                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                                }
+                                .foregroundStyle(CyberTheme.cyanPrimary)
+
+                                Spacer()
+
+                                if viewModel.unreadCount > 0 {
+                                    Button {
+                                        HapticManager.shared.notification(.success)
+                                        readTracker.markAllAsRead(articles: viewModel.articles)
+                                    } label: {
+                                        Text("Segna tutte lette")
+                                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                                            .foregroundStyle(CyberTheme.cyanPrimary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.horizontal, 4)
+                            .padding(.top, 2)
+                        }
+
+                        // Stato vuoto se non ci sono notizie per i filtri applicati
+                        if viewModel.filteredArticles.isEmpty {
+                            if viewModel.showOnlyUnread {
+                                VStack(spacing: 12) {
+                                    Image(systemName: "checkmark.seal.fill")
+                                        .font(.system(size: 38))
+                                        .foregroundStyle(CyberTheme.cyanPrimary)
+
+                                    Text("Tutte le notizie sono state lette!")
+                                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white)
+
+                                    Text("Sei al passo con tutte le ultime minacce e aggiornamenti.")
+                                        .font(.system(size: 13))
+                                        .foregroundStyle(.white.opacity(0.6))
+                                        .multilineTextAlignment(.center)
+
+                                    Button {
+                                        HapticManager.shared.impact(.light)
+                                        withAnimation {
+                                            viewModel.showOnlyUnread = false
+                                        }
+                                    } label: {
+                                        Text("Mostra tutte le notizie")
+                                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                                            .foregroundStyle(CyberTheme.cyanPrimary)
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 8)
+                                            .background(CyberTheme.cyanPrimary.opacity(0.12))
+                                            .clipShape(Capsule())
+                                    }
+                                    .buttonStyle(.plain)
+                                    .padding(.top, 4)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 50)
+                            } else {
+                                VStack(spacing: 10) {
+                                    Image(systemName: "magnifyingglass")
+                                        .font(.system(size: 32))
+                                        .foregroundStyle(.white.opacity(0.3))
+
+                                    Text("Nessuna notizia trovata")
+                                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(.white.opacity(0.7))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 50)
+                            }
                         }
 
                         // Lista Card Notizie

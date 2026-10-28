@@ -7,16 +7,25 @@ public final class NewsFeedViewModel: ObservableObject {
     @Published public var selectedCategory: NewsCategory = .all
     @Published public var selectedTag: String? = nil
     @Published public var searchText: String = ""
+    @Published public var showOnlyUnread: Bool = false
     @Published public var isLoading: Bool = false
     @Published public var errorMessage: String? = nil
 
     private let apiService = NewsAPIService.shared
+    private var cancellables = Set<AnyCancellable>()
 
     public init() {
         // Caricamento istantaneo a latenza 0ms dalla cache
         if let cached = apiService.getCachedArticles(), !cached.isEmpty {
             self.articles = cached
         }
+
+        // Ascolta variazioni dello stato di lettura per aggiornare il filtro reattivamente
+        ArticleReadTracker.shared.$readArticleIds
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
 
         Task {
             await loadArticles(forceRefresh: true)
@@ -65,7 +74,18 @@ public final class NewsFeedViewModel: ObservableObject {
             }
         }
 
+        // 4. Filtro "Solo Non Lette"
+        if showOnlyUnread {
+            let readIds = ArticleReadTracker.shared.readArticleIds
+            result = result.filter { !readIds.contains($0.id) }
+        }
+
         return result
+    }
+
+    public var unreadCount: Int {
+        let readIds = ArticleReadTracker.shared.readArticleIds
+        return articles.filter { !readIds.contains($0.id) }.count
     }
 
     public var breakingArticles: [Article] {
