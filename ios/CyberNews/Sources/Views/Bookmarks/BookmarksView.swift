@@ -5,6 +5,8 @@ public struct BookmarksView: View {
     @Query(sort: \SavedArticle.savedAt, order: .reverse) private var savedArticles: [SavedArticle]
     @Environment(\.modelContext) private var modelContext
     @State private var selectedArticle: Article? = nil
+    @State private var articlePendingDeletion: SavedArticle? = nil
+    @State private var showingOldArticleAlert: Bool = false
 
     public init() {}
 
@@ -74,7 +76,13 @@ public struct BookmarksView: View {
                                         selectedArticle = article
                                     },
                                     onSaveToggle: {
-                                        modelContext.delete(saved)
+                                        if saved.isOlderThanThreeMonths {
+                                            articlePendingDeletion = saved
+                                            showingOldArticleAlert = true
+                                        } else {
+                                            HapticManager.shared.impact(.light)
+                                            modelContext.delete(saved)
+                                        }
                                     }
                                 )
                             }
@@ -89,6 +97,15 @@ public struct BookmarksView: View {
         }
         .sheet(item: $selectedArticle) { article in
             ArticleDetailView(article: article)
+        }
+        .alert("Rimuovere dai Salvati?", isPresented: $showingOldArticleAlert, presenting: articlePendingDeletion) { article in
+            Button("Rimuovi definitivamente", role: .destructive) {
+                HapticManager.shared.notification(.warning)
+                modelContext.delete(article)
+            }
+            Button("Annulla", role: .cancel) {}
+        } message: { _ in
+            Text("Questa notizia risale a più di 3 mesi fa ed è stata archiviata dal feed pubblico. Se la rimuovi dai salvati, non potrai più recuperarla o leggerla offline.")
         }
     }
 }

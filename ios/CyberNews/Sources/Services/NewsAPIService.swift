@@ -82,9 +82,9 @@ public final class NewsAPIService {
             return memoryCache
         }
 
-        // Chiamata REST a Supabase
+        // Chiamata REST a Supabase: bacino di 3 mesi di notizie (fino a 300 articoli)
         if !supabaseURL.isEmpty && !supabaseAnonKey.isEmpty,
-           let url = URL(string: "\(supabaseURL)/rest/v1/news_articles?select=*&order=created_at.desc&limit=50") {
+           let url = URL(string: "\(supabaseURL)/rest/v1/news_articles?select=*&order=created_at.desc&limit=300") {
 
             var request = URLRequest(url: url)
             request.addValue(supabaseAnonKey, forHTTPHeaderField: "apikey")

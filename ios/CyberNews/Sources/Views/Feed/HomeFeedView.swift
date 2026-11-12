@@ -11,6 +11,8 @@ public struct HomeFeedView: View {
 
     @State private var selectedArticleForDetail: Article? = nil
     @State private var isSearchVisible: Bool = false
+    @State private var articlePendingDeletion: SavedArticle? = nil
+    @State private var showingOldArticleAlert: Bool = false
 
     public init(viewModel: NewsFeedViewModel) {
         self.viewModel = viewModel
@@ -400,6 +402,15 @@ public struct HomeFeedView: View {
                 viewModel.selectTag(tag)
             }
         }
+        .alert("Rimuovere dai Salvati?", isPresented: $showingOldArticleAlert, presenting: articlePendingDeletion) { article in
+            Button("Rimuovi definitivamente", role: .destructive) {
+                HapticManager.shared.notification(.warning)
+                modelContext.delete(article)
+            }
+            Button("Annulla", role: .cancel) {}
+        } message: { _ in
+            Text("Questa notizia risale a più di 3 mesi fa ed è stata archiviata dal feed pubblico. Se la rimuovi dai salvati, non potrai più recuperarla o leggerla offline.")
+        }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
                 Task {
@@ -411,8 +422,15 @@ public struct HomeFeedView: View {
 
     private func toggleSaveArticle(_ article: Article) {
         if let existing = savedArticles.first(where: { $0.id == article.id }) {
-            modelContext.delete(existing)
+            if existing.isOlderThanThreeMonths {
+                articlePendingDeletion = existing
+                showingOldArticleAlert = true
+            } else {
+                HapticManager.shared.impact(.light)
+                modelContext.delete(existing)
+            }
         } else {
+            HapticManager.shared.impact(.light)
             let newSaved = SavedArticle(article: article)
             modelContext.insert(newSaved)
         }

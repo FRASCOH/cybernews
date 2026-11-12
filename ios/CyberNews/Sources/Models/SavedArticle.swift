@@ -40,4 +40,19 @@ public final class SavedArticle {
     public var category: NewsCategory {
         NewsCategory(rawValue: categoryRaw) ?? .all
     }
+
+    /// Determina se la notizia risale a più di 3 mesi fa (90 giorni) ed è stata archiviata dal feed pubblico
+    public var isOlderThanThreeMonths: Bool {
+        let ninetyDaysAgo = Calendar.current.date(byAdding: .day, value: -90, to: Date()) ?? Date()
+        if savedAt < ninetyDaysAgo {
+            return true
+        }
+        if let pub = publishedAt?.lowercased() {
+            if pub.contains("3 mesi") || pub.contains("4 mesi") || pub.contains("5 mesi") ||
+               pub.contains("6 mesi") || pub.contains("anno") || pub.contains("anni") {
+                return true
+            }
+        }
+        return false
+    }
 }
