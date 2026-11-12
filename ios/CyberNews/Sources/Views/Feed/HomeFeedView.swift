@@ -366,6 +366,14 @@ public struct HomeFeedView: View {
                                 article: article,
                                 isSaved: isArticleSaved,
                                 isRead: isArticleRead,
+                                onSelect: {
+                                    HapticManager.shared.impact(.light)
+                                    readTracker.markAsRead(id: article.id)
+                                    selectedArticleForDetail = article
+                                },
+                                onReadToggle: {
+                                    readTracker.toggleRead(id: article.id)
+                                },
                                 onSaveToggle: {
                                     toggleSaveArticle(article)
                                 },
@@ -373,11 +381,13 @@ public struct HomeFeedView: View {
                                     viewModel.selectTag(tag)
                                 }
                             )
-                            .onTapGesture {
-                                HapticManager.shared.impact(.light)
-                                readTracker.markAsRead(id: article.id)
-                                selectedArticleForDetail = article
+                            .swipeToRead(isRead: isArticleRead) {
+                                readTracker.toggleRead(id: article.id)
                             }
+                            .transition(.asymmetric(
+                                insertion: .opacity.combined(with: .scale(scale: 0.98)),
+                                removal: .opacity.combined(with: .scale(scale: 0.94))
+                            ))
                         }
 
                         // Spaziatura per non coprire l'ultima card con la tab bar fluttuante

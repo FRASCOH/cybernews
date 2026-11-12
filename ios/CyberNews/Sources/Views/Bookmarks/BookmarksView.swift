@@ -69,14 +69,14 @@ public struct BookmarksView: View {
                                 ArticleCardView(
                                     article: article,
                                     isSaved: true,
+                                    onSelect: {
+                                        HapticManager.shared.impact(.light)
+                                        selectedArticle = article
+                                    },
                                     onSaveToggle: {
                                         modelContext.delete(saved)
                                     }
                                 )
-                                .onTapGesture {
-                                    HapticManager.shared.impact(.light)
-                                    selectedArticle = article
-                                }
                             }
 
                             Color.clear.frame(height: 80)
