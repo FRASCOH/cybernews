@@ -8,43 +8,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
-        application.registerForRemoteNotifications()
         return true
-    }
-
-    func application(
-        _ application: UIApplication,
-        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
-    ) {
-        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        print("📲 APNs Device Token ricevuto:", token)
-        UserDefaults.standard.set(token, forKey: "apns_device_token")
-        Task {
-            await NewsAPIService.shared.registerDeviceToken(token)
-        }
-    }
-
-    func application(
-        _ application: UIApplication,
-        didFailToRegisterForRemoteNotificationsWithError error: Error
-    ) {
-        print("❌ Registrazione APNs remota:", error.localizedDescription)
-        UserDefaults.standard.set(error.localizedDescription, forKey: "apns_registration_error")
-    }
-
-    func application(
-        _ application: UIApplication,
-        didReceiveRemoteNotification userInfo: [AnyHashable : Any],
-        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
-    ) {
-        Task {
-            if let fresh = try? await NewsAPIService.shared.fetchArticles(forceRefresh: true) {
-                NotificationManager.shared.checkAndNotifyNewArticles(articles: fresh)
-                completionHandler(.newData)
-            } else {
-                completionHandler(.noData)
-            }
-        }
     }
 }
 
