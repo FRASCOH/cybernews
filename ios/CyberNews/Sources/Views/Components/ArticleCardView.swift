@@ -31,7 +31,7 @@ public struct ArticleCardView: View {
         VStack(alignment: .leading, spacing: 14) {
             // Header Card: Fonte + Data + Badge Rischio
             HStack(alignment: .center) {
-                HStack(spacing: 6) {
+                HStack(spacing: 5) {
                     Circle()
                         .fill(CyberTheme.cyanPrimary)
                         .frame(width: 7, height: 7)
@@ -42,9 +42,21 @@ public struct ArticleCardView: View {
                         .font(.system(size: 11))
                         .foregroundStyle(isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary)
 
-                    Text(article.sourceName)
+                    Text(article.primarySourceName)
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.white.opacity(0.85))
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+
+                    if article.additionalSourcesCount > 0 {
+                        Text("+\(article.additionalSourcesCount)")
+                            .font(.system(size: 9, weight: .heavy, design: .rounded))
+                            .foregroundStyle(CyberTheme.cyanPrimary)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 1.5)
+                            .background(CyberTheme.cyanPrimary.opacity(0.14))
+                            .clipShape(Capsule())
+                    }
 
                     Text("•")
                         .foregroundStyle(.white.opacity(0.3))
@@ -52,9 +64,11 @@ public struct ArticleCardView: View {
                     Text(article.formattedRelativeTime)
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white.opacity(0.5))
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                 }
 
-                Spacer()
+                Spacer(minLength: 6)
 
                 HStack(spacing: 6) {
                     if let firstCVE = article.detectedCVEs.first {
@@ -73,6 +87,7 @@ public struct ArticleCardView: View {
 
                     ThreatBadgeView(level: article.threatLevel, compact: true)
                 }
+                .fixedSize(horizontal: true, vertical: false)
             }
 
             // Titolo Principale in Italiano a tutta larghezza (peso font fisso per evitare reflow del testo)

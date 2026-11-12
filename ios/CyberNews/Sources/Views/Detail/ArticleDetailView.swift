@@ -34,24 +34,37 @@ public struct ArticleDetailView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         // Header: Fonte, Data e Badge Rischio
-                        HStack(alignment: .center) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack(spacing: 6) {
+                        HStack(alignment: .top) {
+                            VStack(alignment: .leading, spacing: 5) {
+                                HStack(alignment: .top, spacing: 6) {
                                     Image(systemName: "shield.checkered")
                                         .font(.system(size: 13))
                                         .foregroundStyle(CyberTheme.orangePrimary)
+                                        .padding(.top, 2)
 
-                                    Text(article.sourceName)
-                                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                                        .foregroundStyle(.white)
+                                    if article.sourceNamesList.count > 1 {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(article.primarySourceName)
+                                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                                .foregroundStyle(.white)
+
+                                            Text("Confermato anche da: \(article.sourceNamesList.dropFirst().joined(separator: ", "))")
+                                                .font(.system(size: 11, weight: .medium))
+                                                .foregroundStyle(CyberTheme.cyanPrimary)
+                                        }
+                                    } else {
+                                        Text(article.primarySourceName)
+                                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                                            .foregroundStyle(.white)
+                                    }
                                 }
 
-                                Text(article.publishedAt ?? "Oggi")
+                                Text(article.formattedRelativeTime)
                                     .font(.system(size: 12, weight: .medium))
                                     .foregroundStyle(.white.opacity(0.5))
                             }
 
-                            Spacer()
+                            Spacer(minLength: 12)
 
                             ThreatBadgeView(level: article.threatLevel)
                         }

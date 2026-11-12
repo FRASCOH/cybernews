@@ -94,6 +94,34 @@ public struct Article: Identifiable, Codable, Hashable, Sendable {
         ArticleDateParser.formatRelativeTime(for: effectiveDate, originalString: publishedAt)
     }
 
+    /// Lista di tutte le fonti individuali verificate citate (es. ["BleepingComputer", "Cybersecurity360"])
+    public var sourceNamesList: [String] {
+        let raw = sourceName.components(separatedBy: ",")
+        let cleaned = raw.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+        return cleaned.isEmpty ? [sourceName] : cleaned
+    }
+
+    /// Nome sintetico e pulito della fonte principale (evita stringhe composite troppo lunghe nella card)
+    public var primarySourceName: String {
+        let first = sourceNamesList.first ?? sourceName
+        switch first {
+        case "Presidenza del Consiglio":
+            return "Governo IT"
+        default:
+            return first
+        }
+    }
+
+    /// Numero di ulteriori fonti verificate per questa notizia (es. +1, +2)
+    public var additionalSourcesCount: Int {
+        max(0, sourceNamesList.count - 1)
+    }
+
+    /// Tutte le fonti formattate per la vista estesa di dettaglio
+    public var allSourcesDisplay: String {
+        sourceNamesList.joined(separator: " • ")
+    }
+
     /// Riconoscimento automatico delle vulnerabilità CVE citate nel testo e nei tag
     public var detectedCVEs: [String] {
         let pattern = #"\bCVE-\d{4}-\d{4,7}\b"#

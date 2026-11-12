@@ -54,10 +54,11 @@ public struct FloatingAudioPlayerView: View {
                                     .background(Capsule().fill(CyberTheme.cyanPrimary.opacity(0.18)))
                             }
 
-                            Text(article.sourceName)
+                            Text(article.primarySourceName)
                                 .font(.system(size: 10, weight: .bold, design: .rounded))
                                 .foregroundStyle(CyberTheme.orangePrimary)
                                 .lineLimit(1)
+                                .truncationMode(.tail)
 
                             if audioManager.isNeuralVoice {
                                 HStack(spacing: 2) {
