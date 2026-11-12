@@ -115,7 +115,7 @@ struct ConfigurableProvider: AppIntentTimelineProvider {
     }
 
     private func fetchLiveFromSupabase() async -> [[String: Any]]? {
-        let endpoint = "https://stkmmwwpwrbnkigkuwdp.supabase.co/rest/v1/news_articles?select=*&order=created_at.desc&limit=150"
+        let endpoint = "https://stkmmwwpwrbnkigkuwdp.supabase.co/rest/v1/news_articles?select=*&order=created_at.desc&limit=300"
         let anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21td3dwd3JibmtpZ2t1d2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTgyMTksImV4cCI6MjEwODY3NDIxOX0.oT8tH06YDvfve36AIg0bvrrIa2bjXCFIJxPYLBxcoB0"
 
         guard let url = URL(string: endpoint) else { return nil }
