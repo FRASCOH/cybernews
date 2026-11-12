@@ -384,10 +384,6 @@ public struct HomeFeedView: View {
                             .swipeToRead(isRead: isArticleRead) {
                                 readTracker.toggleRead(id: article.id)
                             }
-                            .transition(.asymmetric(
-                                insertion: .opacity.combined(with: .scale(scale: 0.98)),
-                                removal: .opacity.combined(with: .scale(scale: 0.94))
-                            ))
                         }
 
                         // Spaziatura per non coprire l'ultima card con la tab bar fluttuante

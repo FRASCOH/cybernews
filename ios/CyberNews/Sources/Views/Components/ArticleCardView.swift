@@ -32,12 +32,11 @@ public struct ArticleCardView: View {
             // Header Card: Fonte + Data + Badge Rischio
             HStack(alignment: .center) {
                 HStack(spacing: 6) {
-                    if !isRead {
-                        Circle()
-                            .fill(CyberTheme.cyanPrimary)
-                            .frame(width: 7, height: 7)
-                            .shadow(color: CyberTheme.cyanPrimary.opacity(0.8), radius: 3)
-                    }
+                    Circle()
+                        .fill(CyberTheme.cyanPrimary)
+                        .frame(width: 7, height: 7)
+                        .shadow(color: CyberTheme.cyanPrimary.opacity(0.8), radius: 3)
+                        .opacity(isRead ? 0 : 1)
 
                     Image(systemName: "newspaper.fill")
                         .font(.system(size: 11))
@@ -76,10 +75,10 @@ public struct ArticleCardView: View {
                 }
             }
 
-            // Titolo Principale in Italiano a tutta larghezza
+            // Titolo Principale in Italiano a tutta larghezza (peso font fisso per evitare reflow del testo)
             Text(article.titleIt)
-                .font(.system(size: 17, weight: isRead ? .medium : .bold, design: .rounded))
-                .foregroundStyle(.white)
+                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .foregroundStyle(isRead ? .white.opacity(0.72) : .white)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
@@ -160,7 +159,7 @@ public struct ArticleCardView: View {
                 }
 
                 HStack(spacing: 8) {
-                    // Tasto Segna come letto / Non letto
+                    // Tasto Segna come letto / Non letto (dimensione fissa per impedire lo spostamento del footer)
                     if let onReadToggle = onReadToggle {
                         Button {
                             onReadToggle()
@@ -172,8 +171,7 @@ public struct ArticleCardView: View {
                                     .font(.system(size: 10.5, weight: .bold, design: .rounded))
                             }
                             .foregroundStyle(isRead ? .white.opacity(0.55) : CyberTheme.cyanPrimary)
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 6)
+                            .frame(width: 94, height: 28)
                             .background(
                                 Capsule()
                                     .fill(isRead ? Color.white.opacity(0.05) : CyberTheme.cyanPrimary.opacity(0.14))
@@ -188,9 +186,7 @@ public struct ArticleCardView: View {
                         .highPriorityGesture(
                             TapGesture().onEnded {
                                 HapticManager.shared.impact(.medium)
-                                withAnimation(CyberTheme.quickSpring) {
-                                    onReadToggle()
-                                }
+                                onReadToggle()
                             }
                         )
                     }
