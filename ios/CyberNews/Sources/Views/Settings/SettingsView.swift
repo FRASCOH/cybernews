@@ -170,14 +170,23 @@ public struct SettingsView: View {
                     .padding(18)
                     .glassmorphic(cornerRadius: 20)
 
-                    // Info Versione
-                    VStack(alignment: .center, spacing: 4) {
+                    // Info Versione & Credits
+                    VStack(alignment: .center, spacing: 6) {
                         Text("CyberNews for iOS • v1.0.0")
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white.opacity(0.5))
 
-                        Text("Made with SwiftUI & Gemini AI")
-                            .font(.system(size: 11, weight: .regular))
+                        HStack(spacing: 5) {
+                            Image(systemName: "person.crop.circle.fill")
+                                .font(.system(size: 12))
+                                .foregroundStyle(CyberTheme.orangePrimary)
+                            Text("Ideata e Sviluppata da Lorenzo Frasconi")
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .foregroundStyle(CyberTheme.orangePrimary)
+                        }
+
+                        Text("© 2026 Lorenzo Frasconi. Tutti i diritti riservati.")
+                            .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(.white.opacity(0.35))
                     }
                     .frame(maxWidth: .infinity)
