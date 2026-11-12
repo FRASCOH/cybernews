@@ -36,27 +36,16 @@ public struct ArticleDetailView: View {
                         // Header: Fonte, Data e Badge Rischio
                         HStack(alignment: .top) {
                             VStack(alignment: .leading, spacing: 5) {
-                                HStack(alignment: .top, spacing: 6) {
+                                HStack(alignment: .firstTextBaseline, spacing: 6) {
                                     Image(systemName: "shield.checkered")
                                         .font(.system(size: 13))
                                         .foregroundStyle(CyberTheme.orangePrimary)
-                                        .padding(.top, 2)
 
-                                    if article.sourceNamesList.count > 1 {
-                                        VStack(alignment: .leading, spacing: 2) {
-                                            Text(article.primarySourceName)
-                                                .font(.system(size: 14, weight: .bold, design: .rounded))
-                                                .foregroundStyle(.white)
-
-                                            Text("Confermato anche da: \(article.sourceNamesList.dropFirst().joined(separator: ", "))")
-                                                .font(.system(size: 11, weight: .medium))
-                                                .foregroundStyle(CyberTheme.cyanPrimary)
-                                        }
-                                    } else {
-                                        Text(article.primarySourceName)
-                                            .font(.system(size: 14, weight: .bold, design: .rounded))
-                                            .foregroundStyle(.white)
-                                    }
+                                    Text(article.sourceName)
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white)
+                                        .lineLimit(2)
+                                        .fixedSize(horizontal: false, vertical: true)
                                 }
 
                                 Text(article.formattedRelativeTime)

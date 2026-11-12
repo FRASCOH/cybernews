@@ -29,65 +29,61 @@ public struct ArticleCardView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Header Card: Fonte + Data + Badge Rischio
-            HStack(alignment: .center) {
-                HStack(spacing: 5) {
-                    Circle()
-                        .fill(CyberTheme.cyanPrimary)
-                        .frame(width: 7, height: 7)
-                        .shadow(color: CyberTheme.cyanPrimary.opacity(0.8), radius: 3)
-                        .opacity(isRead ? 0 : 1)
+            // Header Card: Fonte su 2 righe con ampio respiro e massima leggibilità + Badge Rischio
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    // Riga 1: Pallino non letto + Icona testata + Nome/i Fonte completi
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Circle()
+                            .fill(CyberTheme.cyanPrimary)
+                            .frame(width: 7, height: 7)
+                            .shadow(color: CyberTheme.cyanPrimary.opacity(0.8), radius: 3)
+                            .opacity(isRead ? 0 : 1)
+                            .alignmentGuide(.firstTextBaseline) { d in d[VerticalAlignment.center] }
 
-                    Image(systemName: "newspaper.fill")
-                        .font(.system(size: 11))
-                        .foregroundStyle(isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary)
+                        Image(systemName: "newspaper.fill")
+                            .font(.system(size: 11))
+                            .foregroundStyle(isRead ? CyberTheme.orangePrimary : CyberTheme.cyanPrimary)
+                            .alignmentGuide(.firstTextBaseline) { d in d[VerticalAlignment.center] }
 
-                    Text(article.primarySourceName)
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.85))
-                        .lineLimit(1)
-                        .truncationMode(.tail)
+                        Text(article.sourceName)
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.92))
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
 
-                    if article.additionalSourcesCount > 0 {
-                        Text("+\(article.additionalSourcesCount)")
-                            .font(.system(size: 9, weight: .heavy, design: .rounded))
-                            .foregroundStyle(CyberTheme.cyanPrimary)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 1.5)
-                            .background(CyberTheme.cyanPrimary.opacity(0.14))
+                    // Riga 2: Data/Orario relativo + eventuale badge CVE associato
+                    HStack(spacing: 6) {
+                        Text(article.formattedRelativeTime)
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.5))
+
+                        if let firstCVE = article.detectedCVEs.first {
+                            Text("•")
+                                .foregroundStyle(.white.opacity(0.3))
+
+                            HStack(spacing: 3) {
+                                Image(systemName: "shield.lefthalf.filled")
+                                    .font(.system(size: 8))
+                                Text(firstCVE)
+                                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                            }
+                            .foregroundStyle(CyberTheme.threatCritico)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(CyberTheme.threatCritico.opacity(0.15))
                             .clipShape(Capsule())
-                    }
-
-                    Text("•")
-                        .foregroundStyle(.white.opacity(0.3))
-
-                    Text(article.formattedRelativeTime)
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.5))
-                        .lineLimit(1)
-                        .fixedSize(horizontal: true, vertical: false)
-                }
-
-                Spacer(minLength: 6)
-
-                HStack(spacing: 6) {
-                    if let firstCVE = article.detectedCVEs.first {
-                        HStack(spacing: 4) {
-                            Image(systemName: "shield.lefthalf.filled")
-                                .font(.system(size: 8))
-                            Text(firstCVE)
-                                .font(.system(size: 9, weight: .bold, design: .monospaced))
                         }
-                        .foregroundStyle(CyberTheme.threatCritico)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                        .background(CyberTheme.threatCritico.opacity(0.15))
-                        .clipShape(Capsule())
                     }
-
-                    ThreatBadgeView(level: article.threatLevel, compact: true)
+                    .padding(.leading, 19)
                 }
-                .fixedSize(horizontal: true, vertical: false)
+
+                Spacer(minLength: 8)
+
+                ThreatBadgeView(level: article.threatLevel, compact: true)
+                    .fixedSize(horizontal: true, vertical: false)
             }
 
             // Titolo Principale in Italiano a tutta larghezza (peso font fisso per evitare reflow del testo)

@@ -54,7 +54,7 @@ public struct FloatingAudioPlayerView: View {
                                     .background(Capsule().fill(CyberTheme.cyanPrimary.opacity(0.18)))
                             }
 
-                            Text(article.primarySourceName)
+                            Text(article.sourceName)
                                 .font(.system(size: 10, weight: .bold, design: .rounded))
                                 .foregroundStyle(CyberTheme.orangePrimary)
                                 .lineLimit(1)
