@@ -98,8 +98,9 @@ public final class NewsAPIService {
                     let decoder = JSONDecoder()
                     let fetchedArticles = try decoder.decode([Article].self, from: data)
                     if !fetchedArticles.isEmpty {
-                        saveToDiskAndShared(articles: fetchedArticles)
-                        return fetchedArticles
+                        let sorted = fetchedArticles.sorted(by: >)
+                        saveToDiskAndShared(articles: sorted)
+                        return sorted
                     }
                 }
             } catch {
@@ -109,8 +110,9 @@ public final class NewsAPIService {
 
         // Fallback 1: Cache disco precedentemente salvata
         if let diskArticles = loadFromDisk(), !diskArticles.isEmpty {
-            self.memoryCache = diskArticles
-            return diskArticles
+            let sorted = diskArticles.sorted(by: >)
+            self.memoryCache = sorted
+            return sorted
         }
 
         // Fallback 2: Feed JSON bundle pre-incluso
@@ -118,7 +120,8 @@ public final class NewsAPIService {
            let data = try? Data(contentsOf: bundleUrl),
            let localArticles = try? JSONDecoder().decode([Article].self, from: data),
            !localArticles.isEmpty {
-            return localArticles
+            let sorted = localArticles.sorted(by: >)
+            return sorted
         }
 
         // Fallback 3: Dati seed di emergenza

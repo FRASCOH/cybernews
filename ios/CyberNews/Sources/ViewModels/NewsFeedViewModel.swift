@@ -15,9 +15,9 @@ public final class NewsFeedViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     public init() {
-        // Caricamento istantaneo a latenza 0ms dalla cache
+        // Caricamento istantaneo a latenza 0ms dalla cache (ordinato dalla più recente alla meno recente)
         if let cached = apiService.getCachedArticles(), !cached.isEmpty {
-            self.articles = cached
+            self.articles = cached.sorted(by: >)
         }
 
         // Ascolta variazioni dello stato di lettura per aggiornare il filtro reattivamente
@@ -80,7 +80,8 @@ public final class NewsFeedViewModel: ObservableObject {
             result = result.filter { !readIds.contains($0.id) }
         }
 
-        return result
+        // Rigoroso ordinamento cronologico: sempre dalla più recente alla meno recente
+        return result.sorted(by: >)
     }
 
     public var unreadCount: Int {
@@ -89,7 +90,7 @@ public final class NewsFeedViewModel: ObservableObject {
     }
 
     public var breakingArticles: [Article] {
-        articles.filter { $0.threatLevel == .critico || ($0.isBreaking ?? false) }
+        articles.filter { $0.threatLevel == .critico || ($0.isBreaking ?? false) }.sorted(by: >)
     }
 
     public func loadArticles(forceRefresh: Bool = false) async {
@@ -98,11 +99,12 @@ public final class NewsFeedViewModel: ObservableObject {
 
         do {
             let fetched = try await apiService.fetchArticles(forceRefresh: forceRefresh)
+            let sorted = fetched.sorted(by: >)
             withAnimation(CyberTheme.smoothSpring) {
-                self.articles = fetched
+                self.articles = sorted
             }
             // Notifica per nuovi articoli
-            NotificationManager.shared.checkAndNotifyNewArticles(articles: fetched)
+            NotificationManager.shared.checkAndNotifyNewArticles(articles: sorted)
         } catch {
             self.errorMessage = "Impossibile aggiornare i dati: \(error.localizedDescription)"
         }

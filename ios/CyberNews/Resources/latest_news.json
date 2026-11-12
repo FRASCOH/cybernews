@@ -1,89 +1,60 @@
 [
   {
-    "id": "nis2_497b2ab1f6eb037b",
-    "url_hash": "73819a1bac42d6fa1cfcd9ee8c61a48b71ba547f6029f9c0f05f1291e1c78af4",
-    "title_it": "Banca d'Italia e ACN: Chiarimenti sulla convergenza tra DORA e NIS2 nel fintech",
-    "original_title": "Bank of Italy and ACN issue clarification on DORA and NIS2 regulatory overlap",
+    "id": "nis2_0dfb7b83c005ec75",
+    "url_hash": "b423a62d175168a88ff0017c321dbb4b9da80ba9ee2aead88c1bf6e72a6cc4b6",
+    "title_it": "ACN: Linee guida definitive sulla notifica obbligatoria degli incidenti NIS2",
+    "original_title": "ACN issues final guidelines on NIS2 mandatory early warning incident notifications",
     "summary_points": [
-      "Chiarita la prevalenza della disciplina speciale DORA (Digital Operational Resilience Act) per gli istituti di credito e le piattaforme di pagamento.",
-      "Rimane tuttavia l'obbligo di coordinamento con il CSIRT Italia per minacce ibride e incidenti sistemici nazionali.",
-      "Richiesti test TLPT (Threat-Led Penetration Testing) periodici per le banche a rilevanza sistemica."
+      "L'Agenzia per la Cybersicurezza Nazionale ha emanato la circolare applicativa del D.Lgs. 138/2024 con la tempistica perentoria di allerta precoce entro 24 ore.",
+      "Tutti i soggetti essenziali e importanti devono integrare i propri SIEM e SOC con i canali di reporting sicuro del CSIRT Italia.",
+      "Definite le soglie quantitative di impatto: interruzione di servizi oltre 2 ore o violazione di dati confidenziali richiedono notifica immediata."
     ],
-    "action_mitigation": "Allineare i framework di cyber resilienza interna al regolamento DORA pur mantenendo i canali di comunicazione aperti con ACN.",
-    "threat_level": "MEDIO",
-    "category": "NIS2_GOLDEN_POWER",
-    "target_audience": "Risk Manager & CISO Finanza",
-    "tags": [
-      "DORA",
-      "NIS2",
-      "BancaDItalia",
-      "Fintech",
-      "TLPT",
-      "ResilienzaOperativa"
-    ],
-    "source_name": "Banca d'Italia",
-    "source_url": "https://www.bancaditalia.it/compiti/vigilanza/resilienza-operativa-dora",
-    "published_at": "3 giorni fa",
-    "created_at": "2026-11-09T17:27:58.555469+00:00",
-    "is_breaking": false,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_497b2ab1f6eb037b.mp3"
-  },
-  {
-    "id": "nis2_33678504647106a0",
-    "url_hash": "5a4d1dd89d72687ac8617509a403e4af44996635f9554750c16c92134da059d8",
-    "title_it": "ACN: Avviata la campagna di audit sulla supply chain dei soggetti essenziali",
-    "original_title": "ACN kicks off supply chain cybersecurity audits for essential entities",
-    "summary_points": [
-      "Focus ispettivo sulla sicurezza della catena di fornitura (terze parti, software house, manutentori e MSP).",
-      "I soggetti essenziali sono responsabili della verifica di sicurezza dei propri fornitori secondo l'articolo 21 della NIS2.",
-      "L'Agenzia potrà richiedere i report di assessment e i contratti di servizio (SLA) con i vendor tecnologici."
-    ],
-    "action_mitigation": "Inviare un questionario di vendor risk assessment a tutti i fornitori critici e pretendere clausole di notifica incidenti entro 12 ore.",
+    "action_mitigation": "Aggiornare il piano di Incident Response aziendale formalizzando i flussi di escalation e testare le credenziali di accesso al portale ACN.",
     "threat_level": "ALTO",
     "category": "NIS2_GOLDEN_POWER",
-    "target_audience": "CISO & Procurement",
+    "target_audience": "CISO & DPO",
     "tags": [
       "NIS2",
-      "SupplyChain",
-      "ThirdPartyRisk",
-      "Audit",
       "ACN",
-      "VendorManagement"
+      "CSIRT",
+      "Compliance",
+      "IncidentResponse",
+      "D.Lgs.138/2024"
     ],
     "source_name": "ACN",
-    "source_url": "https://www.acn.gov.it/portale-nis2/audit-supply-chain",
-    "published_at": "2 giorni fa",
-    "created_at": "2026-11-10T17:27:58.555469+00:00",
-    "is_breaking": false,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_33678504647106a0.mp3"
+    "source_url": "https://www.acn.gov.it/comunicati/nis2-linee-guida-notifiche",
+    "published_at": "Oggi, 15:45",
+    "created_at": "2026-11-12T16:27:58.555469+00:00",
+    "is_breaking": true,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_0dfb7b83c005ec75.mp3"
   },
   {
-    "id": "nis2_fc485806673257c1",
-    "url_hash": "6144032165c97c16f8d4b741db8951e8c4bcfdea0476c31f045a9076f15445ee",
-    "title_it": "Infrastrutture critiche: Estesi i poteri speciali alle landing station sottomarine",
-    "original_title": "Italy extends Golden Power protections to submarine communication cable landing stations",
+    "id": "nis2_14fa396bdbedd5f2",
+    "url_hash": "934d3ec0d114aa4eabf1755154becb8abfb7b64f701623dfd614b9ef367ae903",
+    "title_it": "Golden Power: Prescrizioni restrittive su accordi cloud e datacenter critici",
+    "original_title": "Government imposes Golden Power security vetoes on critical hyperscale cloud tenders",
     "summary_points": [
-      "Le stazioni di atterraggio dei cavi internet sottomarini nel Mediterraneo entrano ufficialmente nel perimetro di sicurezza nazionale.",
-      "Ogni modifica societaria o fornitura tecnologica da parte di entità non comunitarie dovrà essere preventivamente autorizzata.",
-      "Previsto il pattugliamento fisico e il monitoraggio telemetry H24 dei nodi di interconnessione strategici da parte della Marina e ACN."
+      "Il Consiglio dei Ministri ha deliberato l'esercizio dei poteri speciali Golden Power con severe prescrizioni di sovranità tecnologica.",
+      "Imposta la localizzazione esclusiva dei dati sensibili e delle chiavi di cifratura (HSM) entro i confini dello Spazio Economico Europeo.",
+      "Obbligo di audit semestrale e validazione preventiva del codice sorgente affidata ai laboratori accreditati CVCN."
     ],
-    "action_mitigation": "I carrier e gli operatori telco devono censire tutti gli apparati attivi DWDM e inviare la scheda di rilevazione al nucleo Golden Power.",
-    "threat_level": "MEDIO",
+    "action_mitigation": "Effettuare una revisione legale e architetturale di tutti i contratti in essere con fornitori cloud extra-UE per verificare la conformità ai vincoli Golden Power.",
+    "threat_level": "CRITICO",
     "category": "NIS2_GOLDEN_POWER",
-    "target_audience": "Telco & Network Engineers",
+    "target_audience": "CISO & Legal",
     "tags": [
       "GoldenPower",
-      "Telco",
-      "CaviSottomarini",
-      "InfrastruttureCritiche",
-      "Dorsali"
+      "Cloud",
+      "SovranitaDigitale",
+      "CVCN",
+      "InfrastruttureStrategiche"
     ],
-    "source_name": "Agenda Digitale",
-    "source_url": "https://www.agendadigitale.eu/sicurezza/golden-power-cavi-sottomarini",
-    "published_at": "Ieri, 10:15",
-    "created_at": "2026-11-11T10:27:58.555469+00:00",
+    "source_name": "Presidenza del Consiglio",
+    "source_url": "https://governo.it/it/dipartimenti/dipartimento-il-coordinamento-amministrativo/golden-power",
+    "published_at": "Oggi, 11:20",
+    "created_at": "2026-11-12T13:27:58.555469+00:00",
     "is_breaking": false,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_fc485806673257c1.mp3"
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_14fa396bdbedd5f2.mp3"
   },
   {
     "id": "nis2_61adeb3a123f1ec2",
@@ -115,61 +86,90 @@
     "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_61adeb3a123f1ec2.mp3"
   },
   {
-    "id": "nis2_14fa396bdbedd5f2",
-    "url_hash": "934d3ec0d114aa4eabf1755154becb8abfb7b64f701623dfd614b9ef367ae903",
-    "title_it": "Golden Power: Prescrizioni restrittive su accordi cloud e datacenter critici",
-    "original_title": "Government imposes Golden Power security vetoes on critical hyperscale cloud tenders",
+    "id": "nis2_fc485806673257c1",
+    "url_hash": "6144032165c97c16f8d4b741db8951e8c4bcfdea0476c31f045a9076f15445ee",
+    "title_it": "Infrastrutture critiche: Estesi i poteri speciali alle landing station sottomarine",
+    "original_title": "Italy extends Golden Power protections to submarine communication cable landing stations",
     "summary_points": [
-      "Il Consiglio dei Ministri ha deliberato l'esercizio dei poteri speciali Golden Power con severe prescrizioni di sovranità tecnologica.",
-      "Imposta la localizzazione esclusiva dei dati sensibili e delle chiavi di cifratura (HSM) entro i confini dello Spazio Economico Europeo.",
-      "Obbligo di audit semestrale e validazione preventiva del codice sorgente affidata ai laboratori accreditati CVCN."
+      "Le stazioni di atterraggio dei cavi internet sottomarini nel Mediterraneo entrano ufficialmente nel perimetro di sicurezza nazionale.",
+      "Ogni modifica societaria o fornitura tecnologica da parte di entità non comunitarie dovrà essere preventivamente autorizzata.",
+      "Previsto il pattugliamento fisico e il monitoraggio telemetry H24 dei nodi di interconnessione strategici da parte della Marina e ACN."
     ],
-    "action_mitigation": "Effettuare una revisione legale e architetturale di tutti i contratti in essere con fornitori cloud extra-UE per verificare la conformità ai vincoli Golden Power.",
-    "threat_level": "CRITICO",
+    "action_mitigation": "I carrier e gli operatori telco devono censire tutti gli apparati attivi DWDM e inviare la scheda di rilevazione al nucleo Golden Power.",
+    "threat_level": "MEDIO",
     "category": "NIS2_GOLDEN_POWER",
-    "target_audience": "CISO & Legal",
+    "target_audience": "Telco & Network Engineers",
     "tags": [
       "GoldenPower",
-      "Cloud",
-      "SovranitaDigitale",
-      "CVCN",
-      "InfrastruttureStrategiche"
+      "Telco",
+      "CaviSottomarini",
+      "InfrastruttureCritiche",
+      "Dorsali"
     ],
-    "source_name": "Presidenza del Consiglio",
-    "source_url": "https://governo.it/it/dipartimenti/dipartimento-il-coordinamento-amministrativo/golden-power",
-    "published_at": "Oggi, 11:20",
-    "created_at": "2026-11-12T13:27:58.555469+00:00",
+    "source_name": "Agenda Digitale",
+    "source_url": "https://www.agendadigitale.eu/sicurezza/golden-power-cavi-sottomarini",
+    "published_at": "Ieri, 10:15",
+    "created_at": "2026-11-11T10:27:58.555469+00:00",
     "is_breaking": false,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_14fa396bdbedd5f2.mp3"
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_fc485806673257c1.mp3"
   },
   {
-    "id": "nis2_0dfb7b83c005ec75",
-    "url_hash": "b423a62d175168a88ff0017c321dbb4b9da80ba9ee2aead88c1bf6e72a6cc4b6",
-    "title_it": "ACN: Linee guida definitive sulla notifica obbligatoria degli incidenti NIS2",
-    "original_title": "ACN issues final guidelines on NIS2 mandatory early warning incident notifications",
+    "id": "nis2_33678504647106a0",
+    "url_hash": "5a4d1dd89d72687ac8617509a403e4af44996635f9554750c16c92134da059d8",
+    "title_it": "ACN: Avviata la campagna di audit sulla supply chain dei soggetti essenziali",
+    "original_title": "ACN kicks off supply chain cybersecurity audits for essential entities",
     "summary_points": [
-      "L'Agenzia per la Cybersicurezza Nazionale ha emanato la circolare applicativa del D.Lgs. 138/2024 con la tempistica perentoria di allerta precoce entro 24 ore.",
-      "Tutti i soggetti essenziali e importanti devono integrare i propri SIEM e SOC con i canali di reporting sicuro del CSIRT Italia.",
-      "Definite le soglie quantitative di impatto: interruzione di servizi oltre 2 ore o violazione di dati confidenziali richiedono notifica immediata."
+      "Focus ispettivo sulla sicurezza della catena di fornitura (terze parti, software house, manutentori e MSP).",
+      "I soggetti essenziali sono responsabili della verifica di sicurezza dei propri fornitori secondo l'articolo 21 della NIS2.",
+      "L'Agenzia potrà richiedere i report di assessment e i contratti di servizio (SLA) con i vendor tecnologici."
     ],
-    "action_mitigation": "Aggiornare il piano di Incident Response aziendale formalizzando i flussi di escalation e testare le credenziali di accesso al portale ACN.",
+    "action_mitigation": "Inviare un questionario di vendor risk assessment a tutti i fornitori critici e pretendere clausole di notifica incidenti entro 12 ore.",
     "threat_level": "ALTO",
     "category": "NIS2_GOLDEN_POWER",
-    "target_audience": "CISO & DPO",
+    "target_audience": "CISO & Procurement",
     "tags": [
       "NIS2",
+      "SupplyChain",
+      "ThirdPartyRisk",
+      "Audit",
       "ACN",
-      "CSIRT",
-      "Compliance",
-      "IncidentResponse",
-      "D.Lgs.138/2024"
+      "VendorManagement"
     ],
     "source_name": "ACN",
-    "source_url": "https://www.acn.gov.it/comunicati/nis2-linee-guida-notifiche",
-    "published_at": "Oggi, 15:45",
-    "created_at": "2026-11-12T16:27:58.555469+00:00",
-    "is_breaking": true,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_0dfb7b83c005ec75.mp3"
+    "source_url": "https://www.acn.gov.it/portale-nis2/audit-supply-chain",
+    "published_at": "2 giorni fa",
+    "created_at": "2026-11-10T17:27:58.555469+00:00",
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_33678504647106a0.mp3"
+  },
+  {
+    "id": "nis2_497b2ab1f6eb037b",
+    "url_hash": "73819a1bac42d6fa1cfcd9ee8c61a48b71ba547f6029f9c0f05f1291e1c78af4",
+    "title_it": "Banca d'Italia e ACN: Chiarimenti sulla convergenza tra DORA e NIS2 nel fintech",
+    "original_title": "Bank of Italy and ACN issue clarification on DORA and NIS2 regulatory overlap",
+    "summary_points": [
+      "Chiarita la prevalenza della disciplina speciale DORA (Digital Operational Resilience Act) per gli istituti di credito e le piattaforme di pagamento.",
+      "Rimane tuttavia l'obbligo di coordinamento con il CSIRT Italia per minacce ibride e incidenti sistemici nazionali.",
+      "Richiesti test TLPT (Threat-Led Penetration Testing) periodici per le banche a rilevanza sistemica."
+    ],
+    "action_mitigation": "Allineare i framework di cyber resilienza interna al regolamento DORA pur mantenendo i canali di comunicazione aperti con ACN.",
+    "threat_level": "MEDIO",
+    "category": "NIS2_GOLDEN_POWER",
+    "target_audience": "Risk Manager & CISO Finanza",
+    "tags": [
+      "DORA",
+      "NIS2",
+      "BancaDItalia",
+      "Fintech",
+      "TLPT",
+      "ResilienzaOperativa"
+    ],
+    "source_name": "Banca d'Italia",
+    "source_url": "https://www.bancaditalia.it/compiti/vigilanza/resilienza-operativa-dora",
+    "published_at": "3 giorni fa",
+    "created_at": "2026-11-09T17:27:58.555469+00:00",
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/nis2_497b2ab1f6eb037b.mp3"
   },
   {
     "id": "f612d52aa54e233b493f83f35a37c12e",
@@ -592,61 +592,6 @@
     "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/ba9da2792d3101df9f1ce51231d1395c.mp3"
   },
   {
-    "id": "5a56b75d9a1b94de8c8e2d34a3f2b83a",
-    "url_hash": "b8af17c4e8e231442f93f67766af49c666e8a317704e8b7ed956c1ce31f9ae52",
-    "title_it": "SANS ISC Stormcast: Aggiornamento Minacce del 27 Ottobre 2026",
-    "original_title": "ISC Stormcast For Tuesday, October 27th, 2026 https://isc.sans.edu/podcastdetail/10152, (Tue, Oct 27th)",
-    "summary_points": [
-      "Pubblicato il bollettino giornaliero ISC Stormcast di SANS Institute relativo alle ultime minacce informatiche.",
-      "Analizzati vettori d'attacco emergenti e anomalie di traffico rilevate dai sensori globali dell'Internet Storm Center.",
-      "Fornito un quadro operativo di situational awareness per la gestione tempestiva degli incidenti."
-    ],
-    "action_mitigation": "Verificare i log dei sistemi di sicurezza per intercettare eventuali indicatori di compromissione (IoC) recenti.",
-    "threat_level": "INFORMATIVO",
-    "category": "THREAT_INTEL",
-    "target_audience": "CISO",
-    "tags": [
-      "SANS",
-      "Stormcast",
-      "ThreatIntel",
-      "IncidentResponse"
-    ],
-    "source_name": "SANS ISC",
-    "source_url": "https://isc.sans.edu/diary/rss/33462",
-    "published_at": "Tue, 27 Oct 2026 02:55:13 GMT",
-    "created_at": "2026-10-27T11:50:03.459304+00:00",
-    "is_breaking": false,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/5a56b75d9a1b94de8c8e2d34a3f2b83a.mp3"
-  },
-  {
-    "id": "ecbaf890a2970ba2102715a2634fd2c0",
-    "url_hash": "eae2a3c7c621fbaa9377337e2a6174c936467e94d1f172c44c7b9931a768facd",
-    "title_it": "ASD australiana neutralizza il backend del malware Amadey",
-    "original_title": "Australia Gets Into Amadey Malware Backend, Cuts Off Access to 180,000 Infected Computers",
-    "summary_points": [
-      "L'Australian Signals Directorate (ASD) ha compromesso e disconnesso il backend del malware Amadey.",
-      "L'azione ha interrotto l'accesso e il furto di dati da 180.000 computer infetti a livello globale.",
-      "L'operazione riduce significativamente la capacità operativa della botnet e il rischio di esfiltrazione dati."
-    ],
-    "action_mitigation": "Verificare la presenza di IOC associati ad Amadey tramite strumenti EDR e avviare procedure di bonifica per gli endpoint compromessi.",
-    "threat_level": "ALTO",
-    "category": "THREAT_INTEL",
-    "target_audience": "SysAdmin",
-    "tags": [
-      "Amadey",
-      "Malware",
-      "ASD",
-      "Botnet",
-      "ThreatIntel"
-    ],
-    "source_name": "The Hacker News",
-    "source_url": "https://thehackernews.com/2026/10/australia-gets-into-amadey-malware.html",
-    "published_at": "Tue, 27 Oct 2026 15:03:06 +0530",
-    "created_at": "2026-10-27T11:50:00.481479+00:00",
-    "is_breaking": false,
-    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/ecbaf890a2970ba2102715a2634fd2c0.mp3"
-  },
-  {
     "id": "bff6c8a42674debe47fb350ac72d1e08",
     "url_hash": "a40721cff07a0d8ded284c44fb2fc26a5c11fea5b7b432c0a68625104358a7e6",
     "title_it": "Apple rilascia patch zero-day per dispositivi iOS meno recenti",
@@ -702,6 +647,34 @@
     "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/e95d50587e2e2bab04919b9ae99c4dcb.mp3"
   },
   {
+    "id": "ecbaf890a2970ba2102715a2634fd2c0",
+    "url_hash": "eae2a3c7c621fbaa9377337e2a6174c936467e94d1f172c44c7b9931a768facd",
+    "title_it": "ASD australiana neutralizza il backend del malware Amadey",
+    "original_title": "Australia Gets Into Amadey Malware Backend, Cuts Off Access to 180,000 Infected Computers",
+    "summary_points": [
+      "L'Australian Signals Directorate (ASD) ha compromesso e disconnesso il backend del malware Amadey.",
+      "L'azione ha interrotto l'accesso e il furto di dati da 180.000 computer infetti a livello globale.",
+      "L'operazione riduce significativamente la capacità operativa della botnet e il rischio di esfiltrazione dati."
+    ],
+    "action_mitigation": "Verificare la presenza di IOC associati ad Amadey tramite strumenti EDR e avviare procedure di bonifica per gli endpoint compromessi.",
+    "threat_level": "ALTO",
+    "category": "THREAT_INTEL",
+    "target_audience": "SysAdmin",
+    "tags": [
+      "Amadey",
+      "Malware",
+      "ASD",
+      "Botnet",
+      "ThreatIntel"
+    ],
+    "source_name": "The Hacker News",
+    "source_url": "https://thehackernews.com/2026/10/australia-gets-into-amadey-malware.html",
+    "published_at": "Tue, 27 Oct 2026 15:03:06 +0530",
+    "created_at": "2026-10-27T11:50:00.481479+00:00",
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/ecbaf890a2970ba2102715a2634fd2c0.mp3"
+  },
+  {
     "id": "44aa039194ac91b138f00955b87a7a69",
     "url_hash": "bc4305b4e1ef1b7a8e60dc9703fef1edc85ebfb56306347e3510f6884405d3dc",
     "title_it": "Campagna Phishing PagoPA tramite PEC compromesse",
@@ -728,5 +701,32 @@
     "created_at": "2026-10-27T11:49:43.416667+00:00",
     "is_breaking": false,
     "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/44aa039194ac91b138f00955b87a7a69.mp3"
+  },
+  {
+    "id": "5a56b75d9a1b94de8c8e2d34a3f2b83a",
+    "url_hash": "b8af17c4e8e231442f93f67766af49c666e8a317704e8b7ed956c1ce31f9ae52",
+    "title_it": "SANS ISC Stormcast: Aggiornamento Minacce del 27 Ottobre 2026",
+    "original_title": "ISC Stormcast For Tuesday, October 27th, 2026 https://isc.sans.edu/podcastdetail/10152, (Tue, Oct 27th)",
+    "summary_points": [
+      "Pubblicato il bollettino giornaliero ISC Stormcast di SANS Institute relativo alle ultime minacce informatiche.",
+      "Analizzati vettori d'attacco emergenti e anomalie di traffico rilevate dai sensori globali dell'Internet Storm Center.",
+      "Fornito un quadro operativo di situational awareness per la gestione tempestiva degli incidenti."
+    ],
+    "action_mitigation": "Verificare i log dei sistemi di sicurezza per intercettare eventuali indicatori di compromissione (IoC) recenti.",
+    "threat_level": "INFORMATIVO",
+    "category": "THREAT_INTEL",
+    "target_audience": "CISO",
+    "tags": [
+      "SANS",
+      "Stormcast",
+      "ThreatIntel",
+      "IncidentResponse"
+    ],
+    "source_name": "SANS ISC",
+    "source_url": "https://isc.sans.edu/diary/rss/33462",
+    "published_at": "Tue, 27 Oct 2026 02:55:13 GMT",
+    "created_at": "2026-10-27T11:50:03.459304+00:00",
+    "is_breaking": false,
+    "audio_url": "https://stkmmwwpwrbnkigkuwdp.supabase.co/storage/v1/object/public/news-audio/5a56b75d9a1b94de8c8e2d34a3f2b83a.mp3"
   }
 ]
