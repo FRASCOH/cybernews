@@ -162,7 +162,6 @@ public struct ArticleCardView: View {
                     // Tasto Segna come letto / Non letto (dimensione fissa per impedire lo spostamento del footer)
                     if let onReadToggle = onReadToggle {
                         Button {
-                            onReadToggle()
                         } label: {
                             HStack(spacing: 4) {
                                 Image(systemName: isRead ? "checkmark.circle.fill" : "circle")
@@ -194,7 +193,6 @@ public struct ArticleCardView: View {
                     // Tasto Segnalibro
                     if let onSaveToggle = onSaveToggle {
                         Button {
-                            onSaveToggle()
                         } label: {
                             Image(systemName: isSaved ? "bookmark.fill" : "bookmark")
                                 .font(.system(size: 13, weight: .semibold))

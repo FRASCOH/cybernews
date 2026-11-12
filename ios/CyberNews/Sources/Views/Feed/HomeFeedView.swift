@@ -381,9 +381,6 @@ public struct HomeFeedView: View {
                                     viewModel.selectTag(tag)
                                 }
                             )
-                            .swipeToRead(isRead: isArticleRead) {
-                                readTracker.toggleRead(id: article.id)
-                            }
                         }
 
                         // Spaziatura per non coprire l'ultima card con la tab bar fluttuante
